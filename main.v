@@ -20,8 +20,8 @@ module PipelineProcessor(
     wire [31:0] alu_result;
     wire [31:0] data_out;
     wire [31:0] sign_ext_imm;
-    wire regwrite, memread, memwrite, branch, memtoreg, alusrc, PCselect;
-    wire [1:0] aluop;
+    wire regwrite, memread, memwrite, branch, alusrc, PCselect;
+    wire [1:0] aluop, memtoreg;
     wire [3:0] alu_control_input;
     wire zero;
     wire [31:0] temp_PCAd; // Temporary signal for MUX2x1 output
@@ -30,9 +30,9 @@ module PipelineProcessor(
     ADDconst ac(.in1(PCAd), .out1(nextPCconst));
     ADDshift as(.in1(PCAd), .in2(sign_ext_imm), .out1(PCbranch));
     assign PCselect = (branch & zero);
-    MUX2x1 pcmux(.in1(nextPCconst), .in2(PCbranch), .out1(temp_PCAd), .control(PCselect)); 
-    MUX2x1 alumux(.in1(readdata2), .in2(sign_ext_imm), .out1(aluin2), .control(alusrc));
-    MUX2x1 memmux(.in1(alu_result), .in2(data_out), .out1(regwritedata), .control(memtoreg));
+    MUX2x1 pcmux(.in1(nextPCconst), .in2(PCbranch), .out(temp_PCAd), .control(PCselect)); 
+    MUX2x1 alumux(.in1(readdata2), .in2(sign_ext_imm), .out(aluin2), .control(alusrc));
+    MUX4x1 memmux(.in1(alu_result), .in2(data_out), .out(regwritedata), .control(memtoreg));
     RegisterFile RF1(.readreg1(instruction[19:15]), .readreg2(instruction[24:20]), .writereg(instruction[11:7]), .writedata(regwritedata), .regwrite(regwrite), .readdata1(readdata1), .readdata2(readdata2));
     Control CU(.opcode(instruction[6:0]), .branch(branch), .memread(memread), .memtoreg(memtoreg), .aluop(aluop), .memwrite(memwrite), .alusrc(alusrc), .regwrite(regwrite));
     ALUcontrol ALC(.in1({instruction[30], instruction[14:12]}), .aluop(aluop), .out1(alu_control_input));
