@@ -2,3 +2,6 @@
 !.gitignore
 !*.v
 !*.txt
+!*.s
+!cases/
+!results/

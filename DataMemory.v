@@ -7,11 +7,12 @@ module DataMemory(
     input memwrite,
     output reg [31:0] readdata
 );
-    integer i;
+    integer i = 0;
     reg [7:0] data [127:0];
     initial 
         begin  
-           for(i=0;i<128;i=i+1)  
+            readdata<=0;
+            for(i=0;i<128;i=i+1)  
                 data[i] <= 8'b00000000;  
         end  
         always @(*)
@@ -34,7 +35,7 @@ module DataMemory(
            end
            
            always @ (*) begin
-           if (memwrite) begin//read
+           if (memread) begin//read
             case (fun3)
                 3'b010: begin //load word
                     readdata <= {data[address+3], data[address+2], data[address+1], data[address]};
@@ -46,7 +47,7 @@ module DataMemory(
                 3'b100: begin //load byte unsigned
                     readdata <= {{24{1'b0}}, data[address]};
                 end
-                default: readdata<= readdata;
+                default: readdata<= 0;
             endcase
          end
         end

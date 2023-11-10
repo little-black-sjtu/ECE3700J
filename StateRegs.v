@@ -16,9 +16,9 @@ module IF_ID_State_Reg(
     end
 
     always @ (posedge clock) begin
-        currPC_out = currPC;
+        currPC_out <= currPC; // there should be "<="
         nextPC_out<= nextPC;
-        Instruct_out = Instruct;
+        Instruct_out <= Instruct;
     end
     
 endmodule
@@ -150,7 +150,7 @@ module MEM_WB_State_Reg(
 );
 
     initial begin
-        RegWrite_out = 0; MemtoReg_out = 0; ReadData_out = 0; ALUResult_out = 0; write_rd_out = 0;
+        RegWrite_out = 0; MemtoReg_out = 0; ReadData_out = 0; ALUResult_out = 0; write_rd_out = 0; nextPC_out = 0;
     end
     
     always @ (posedge clock) begin

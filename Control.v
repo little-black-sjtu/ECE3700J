@@ -84,7 +84,7 @@ initial begin
          memread <= 0; 
          memwrite <= 0; 
          alusrc <= 1; 
-         jump <= 1; 
+         jump <= 0; 
          regwrite <= 1;
             end 
 //          7'b1110011: 
