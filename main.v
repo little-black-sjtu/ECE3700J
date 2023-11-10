@@ -19,39 +19,175 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 //Pipeline processor
-module PipelineProcessor(
-    input clk
-);
-    reg [31:0] PCAd=0;
-    wire [31:0] nextPCconst,PCbranch;
-    wire [31:0] instruction;
-    wire [31:0] readdata1, readdata2,regwritedata,aluin2;
-    wire [31:0] alu_result;
-    wire [31:0] data_out;
-    wire [31:0] sign_ext_imm;
-    wire regwrite, memread, memwrite, branch, memtoreg, alusrc,PCselect;
-    wire [1:0] aluop;
-    wire [3:0] alu_control_input;
-    wire zero;
-    wire [31:0] temp_PCAd; // Temporary signal for MUX2x1 output
+module Pipelineprocessor(input clock); //Top Module
 
-    InstructionMemory IM(.address(PCAd/4), .instruction(instruction));
-    ADDconst ac(.in1(PCAd),.out1(nextPCconst));
-    ADDshift as(.in1(PCAd),.in2(sign_ext_imm),.out1(PCbranch));
-    assign PCselect = (branch & zero);
-    MUX2x1 pcmux(.in1(nextPCconst),.in2(PCbranch),.out1(temp_PCAd),.control(PCselect)); 
-    MUX2x1 alumux(.in1(readdata2),.in2(sign_ext_imm),.out1(aluin2),.control(alusrc));
-    MUX2x1 memmux(.in1(alu_result),.in2(data_out),.out1(regwritedata),.control(memtoreg));
-    RegisterFile RF1(.readreg1(instruction[19:15]), .readreg2(instruction[24:20]), .writereg(instruction[11:7]), .writedata(regwritedata), .regwrite(regwrite), .readdata1(readdata1), .readdata2(readdata2),.clk(clk));
-    Control CU(.in1(instruction[6:0]), .branch(branch), .memread(memread), .memtoreg(memtoreg), .aluop(aluop), .memwrite(memwrite), .alusrc(alusrc), .regwrite(regwrite));
-    ALUcontrol ALC(.in1({instruction[30], instruction[14:12]}), .aluop(aluop), .out1(alu_control_input));
-    immgen img(.instr(instruction),.imm(sign_ext_imm));
-    ALU ALU1(.in1(readdata1), .in2(aluin2), .control(alu_control_input), .zero(zero), .result(alu_result));
-    DataMemory DataMem1(.address(alu_result), .writedata(readdata2), .memread(memread), .memwrite(memwrite), .readdata(data_out),.clk(clk));
+    wire            [31:0]          Instrct, Imm, data_1, data_2, MUX_ALU, loadPC, W_data, Add_1, Add_2, ALUResult, Read_Mem, JumpTo;
+    wire            [31:0]          IF_ID_nextPC, IF_ID_crntPC, IF_ID_Instrct;
+    wire            [31:0]          ID_EX_nextPC, ID_EX_crntPC, ID_EX_data_1, ID_EX_data_2, ID_EX_Imm;
+    wire            [31:0]          EX_MEM_nextPC, EX_MEM_JumpTo, EX_MEM_ALUResult, EX_MEM_data_2;
+    wire            [31:0]          MEM_WB_nextPC, MEM_WB_Read_Mem, MEM_WB_ALUResult;
+    wire            [4:0]           ID_EX_Reg_rd, EX_MEM_Reg_rd, MEM_WB_Reg_rd;
+    wire            [3:0]           ALUControl, ID_EX_ALUInstrct;
+    wire            [2:0]           EX_MEM_Funct3;
+    wire            [1:0]           ALUOp, MemtoReg, ID_EX_ALUOp, ID_EX_MemtoReg, EX_MEM_MemtoReg, MEM_WB_MemtoReg;
+    wire                            Branch, isBranch, MemRead, MemWrite, ALUSrc, isJump, RegWrite, isZero;
+    wire                            ID_EX_Branch, ID_EX_MemRead, ID_EX_MemWrite, ID_EX_ALUSrc, ID_EX_isJump, ID_EX_RegWrite;
+    wire                            EX_MEM_Branch, EX_MEM_MemRead, EX_MEM_MemWrite, EX_MEM_RegWrite, EX_MEM_isZero, MEM_WB_RegWrite;                         
+    reg             [31:0]          PC;  
+        
+    initial PC = 0;   
+      
+ 
+    always @ (posedge clock ) PC <= loadPC;
     
-    always @(posedge clk) begin
-        PCAd = temp_PCAd; // Update PCAd at every clock edge
-    end
+    InstructionMemory IM (
+        .instruction (Instrct),
+        .address (PC/4)
+    );
+    Control CU (
+        .opcode (IF_ID_Instrct[6:0]),
+        .branch (Branch),
+        .memread (MemRead),
+        .memwrite (MemWrite),
+        .memtoreg (MemtoReg),
+        .aluop (ALUOp),
+        .alusrc (ALUSrc),
+        .jump (isJump),
+        .regwrite (RegWrite)
+    );
+    RegisterFile RF (
+        .regwrite (MEM_WB_RegWrite),
+        .writedata (W_data),
+        .readreg1 (IF_ID_Instrct[19:15]),
+        .readreg2 (IF_ID_Instrct[24:20]),
+        .writereg (MEM_WB_Reg_rd),
+        .readdata1 (data_1),
+        .readdata2 (data_2)
+    );
+    immgen ImmGen (
+        .instr (IF_ID_Instrct),
+        .imm (Imm)
+    );
+    ALU ALU (     
+        .in1 (ID_EX_data_1),
+        .in2 (MUX_ALU),
+        .control (ALUControl),
+        .zero (isZero),
+        .result (ALUResult)
+    ); 
+    ALUcontrol ALU_Ctrl (
+        .aluop (ID_EX_ALUOp),
+        .in1 (ID_EX_ALUInstrct),
+        .out1 (ALUControl)
+    );
+    DataMemory DM (
+        .memwrite (EX_MEM_MemWrite),
+        .memread (EX_MEM_MemRead),
+        .fun3 (EX_MEM_Funct3),
+        .address (EX_MEM_ALUResult),
+        .writedata (EX_MEM_data_2),
+        .readdata (Read_Mem)        
+    );
+    
+    IF_ID_State_Reg IF_ID(
+        .clock (clock),
+        .currPC (PC),
+        .nextPC (Add_1),
+        .Instruct (Instrct),
+        .currPC_out (IF_ID_crntPC),
+        .nextPC_out (IF_ID_nextPC),
+        .Instruct_out (IF_ID_Instrct)
+    );
+    ID_EX_State_Reg ID_EX(
+        .clock (clock),
+        .RegWrite (RegWrite),
+        .MemtoReg (MemtoReg),
+        .MemRead (MemRead),
+        .MemWrite (MemWrite),
+        .Branch (Branch),
+        .Jump (isJump),
+        .ALUSrc (ALUSrc),
+        .ALUOp (ALUOp),
+        .crntPC (IF_ID_crntPC),
+        .nextPC (IF_ID_nextPC),
+        .Read_rs1 (data_1),
+        .Read_rs2 (data_2),
+        .Imm_Gen (Imm),
+        .Write_rd (IF_ID_Instrct[11:7]),
+        .ALU_Instruct ({IF_ID_Instrct[30],IF_ID_Instrct[14:12]}),
+        .RegWrite_out (ID_EX_RegWrite),
+        .MemtoReg_out (ID_EX_MemtoReg),
+        .MemRead_out (ID_EX_MemRead),
+        .MemWrite_out (ID_EX_MemWrite),
+        .Branch_out (ID_EX_Branch),
+        .Jump_out (ID_EX_isJump),
+        .ALUSrc_out (ID_EX_ALUSrc),
+        .ALUOp_out (ID_EX_ALUOp),
+        .crntPC_out (ID_EX_crntPC),
+        .nextPC_out (ID_EX_nextPC),
+        .Read_rs1_out (ID_EX_data_1),
+        .Read_rs2_out (ID_EX_data_2),
+        .Imm_Gen_out (ID_EX_Imm),
+        .write_rd_out (ID_EX_Reg_rd),
+        .ALU_Instruct_out (ID_EX_ALUInstrct)
+    );
+    EX_MEM_State_Reg EX_MEM(
+        .clock (clock),
+        .RegWrite (ID_EX_RegWrite),
+        .MemtoReg (ID_EX_MemtoReg),
+        .MemRead (ID_EX_MemRead),
+        .MemWrite (ID_EX_MemWrite),
+        .Branch (ID_EX_Branch),
+        .Zero (isZero),
+        .nextPC (ID_EX_nextPC),
+        .ALUResult (ALUResult),
+        .AddSum (JumpTo),
+        .Read_rs2 (ID_EX_data_2),
+        .Funct3 (ID_EX_ALUInstrct[2:0]),
+        .Write_rd (ID_EX_Reg_rd),
+        .RegWrite_out (EX_MEM_RegWrite),
+        .MemtoReg_out (EX_MEM_MemtoReg),
+        .MemRead_out (EX_MEM_MemRead),
+        .MemWrite_out (EX_MEM_MemWrite),
+        .Branch_out (EX_MEM_Branch),
+        .Zero_out (EX_MEM_isZero),
+        .nextPC_out (EX_MEM_nextPC),
+        .ALUResult_out (EX_MEM_ALUResult),
+        .AddSum_out (EX_MEM_JumpTo),
+        .Read_rs2_out (EX_MEM_data_2),
+        .Funct3_out (EX_MEM_Funct3),
+        .write_rd_out (EX_MEM_Reg_rd)
+    );
+    MEM_WB_State_Reg MEM_WB(
+        .clock (clock),
+        .RegWrite (EX_MEM_RegWrite),
+        .MemtoReg (EX_MEM_MemtoReg),
+        .nextPC (EX_MEM_nextPC),
+        .ReadData (Read_Mem),
+        .ALUResult (EX_MEM_ALUResult),
+        .Write_rd (EX_MEM_Reg_rd),
+        .RegWrite_out (MEM_WB_RegWrite),
+        .MemtoReg_out (MEM_WB_MemtoReg),
+        .nextPC_out (MEM_WB_nextPC),
+        .ReadData_out (MEM_WB_Read_Mem),
+        .ALUResult_out (MEM_WB_ALUResult),
+        .write_rd_out (MEM_WB_Reg_rd)
+    );
+    
+    //Mux: Input_1, Input_2, (Input_3, Input_4,) Select, Output.
+//    _32_bit_2to1_MUX  Mux_1(.data1(Add_1), .data2(EX_MEM_JumpTo), .sel(isBranch), .result(loadPC));
+    MUX2x1  Mux_1(.in1(Add_1), .in2(JumpTo), .control(isBranch), .out1(loadPC));
+    MUX2x1  Mux_2(.in1(ID_EX_data_2), .in2(ID_EX_Imm), .control(ID_EX_ALUSrc), .out1(MUX_ALU));
+    MUX2x1  Mux_3(.in1(Add_2), .in2(ALUResult), .control(ID_EX_isJump), .out1(JumpTo)); //Lab4_latest
+    MUX4x1  Mux_4(.data1(MEM_WB_ALUResult), .data2(MEM_WB_Read_Mem), .data3(MEM_WB_nextPC), .data4(MEM_WB_nextPC),
+                            .sel(MEM_WB_MemtoReg), .result(W_data)); //Lab4_latest
+    
+    //Adder: Input_1, Input_2, Output.
+    ADDconst Adder_1(.in1(PC), .out1(Add_1)); //PC+4
+    ADDshift Adder_2(.in1(ID_EX_crntPC), .in2(ID_EX_Imm), .out1(Add_2)); //PC+Imm
+    
+//    and (isBranch, EX_MEM_Branch, EX_MEM_isZero);
+    and (isBranch, ID_EX_Branch, isZero);     
 endmodule
 
 // InstructionMemory
@@ -59,9 +195,9 @@ module InstructionMemory(
     input [31:0] address,
     output reg [31:0] instruction
 );
-    reg [31:0] instructions [0:63];
+    reg [31:0] instructions [0:128];
     initial begin
-        $readmemb("D:\\370\\LAB3\\testcase.txt", instructions);
+        $readmemb("D:\\370\\Lab4\\Lab4_testcase.txt", instructions);
     end
     always @(*)
         instruction = instructions[address];
@@ -100,10 +236,11 @@ module DataMemory(
     input memwrite,
     output reg [31:0] readdata
 );
-    integer i;
+    integer i=0;
     reg [7:0] data [127:0];
     initial 
         begin  
+           readdata<=0;
            for(i=0;i<128;i=i+1)  
                 data[i] <= 8'b00000000;  
         end  
@@ -139,7 +276,7 @@ module DataMemory(
                 3'b100: begin //load byte unsigned
                     readdata <= {{24{1'b0}}, data[address]};
                 end
-                default: readdata<= readdata;
+                default: readdata<= 0;
             endcase
          end
         end
@@ -161,7 +298,7 @@ begin
 end
 endmodule 
 
-module MUX4x2
+module MUX4x1
 (
     input       [1:0]          sel,
     input       [31:0]         data1, data2, data3, data4,
@@ -288,7 +425,7 @@ initial begin
          memread <= 0; 
          memwrite <= 0; 
          alusrc <= 1; 
-         jump <= 1; 
+         jump <= 0; 
          regwrite <= 1;
             end 
 //          7'b1110011: 
@@ -338,19 +475,19 @@ begin
 //add,sub,and,or,sll,srl
     if (aluop==2'b10) begin
         if(in1[3]==0&&in1[2:0]==3'b000) out1=4'b0010;//add=0010
-        else if(in1[3]==1&&in1[2:0]==3'b000) out1=4'b0110;//sub=0110
+        else if(in1[3]==1&&in1[2:0]==3'b000) out1=4'b1000;//sub=1000
         else if(in1[3]==0&&in1[2:0]==3'b111) out1=4'b0000;//and=0000
-        else if(in1[3]==0&&in1[2:0]==3'b110) out1=4'b0001;//or=0001
-        else if(in1==4'b1001) out1 = 4'b0001; //sll=0001
-        else if(in1==4'b1101) out1 = 4'b0101;//srl=0101
+        else if(in1[3]==0&&in1[2:0]==3'b110) out1=4'b0110;//or=0110
+        else if(in1==4'b0001) out1 = 4'b0001; //sll=0001
+        else if(in1==4'b0101) out1 = 4'b0101;//srl=0101
         else if(in1==4'b1101) out1 = 4'b1101;//sra=1101
     end
 //beq,bne,blt,bge
     if (aluop==2'b01) begin
-        if(in1[2:0]==3'b000) out1=4'b0110;//beq=0110
+        if(in1[2:0]==3'b000) out1=4'b1111;//beq=1111
         else if(in1[2:0]==3'b001) out1=4'b1001;//bne=1001
-        else if(in1[2:0]==3'b100) out1=4'b1110;//bge=1110
-        else if(in1[2:0]==3'b101) out1=4'b1100;//blt=1100
+        else if(in1[2:0]==3'b100) out1=4'b1110;//blt=1110
+        else if(in1[2:0]==3'b101) out1=4'b1100;//bge=1100
     end
 end
 endmodule //done
@@ -366,12 +503,12 @@ always@(*)
 begin
     case (control)
             4'b0000: begin result = in1&in2; zero = 1'b0; end//and
-            4'b0001: begin result = in1|in2; zero = 1'b0; end//or
-            4'b0010: begin result = in1+in2; zero = 1'b0; end//add
+            4'b0110: begin result = in1|in2; zero = 1'b0; end//or
+            4'b0010: begin result = in1+in2; zero = 1'b1; end//add and for jal jalr
             4'b0001: begin result = in1<<in2; zero = 1'b0; end//sll
             4'b0101: begin result = in1>>in2; zero = 1'b0; end//srl
             4'b1101: begin result = $signed(($signed(in1))>>>in2); zero = 1'b0; end//sra
-            4'b0110: begin//sub
+            4'b1000: begin//sub
                         result = in1-in2;
                         if (result==0) zero = 1'b1;
                         else zero = 1'b0;
@@ -381,14 +518,19 @@ begin
                         if (result!=0) zero = 1'b1;
                         else zero = 1'b0;
                      end
-            4'b1110: begin // bge
+            4'b1111: begin // beq
                         result = in1-in2;
-                        if ($signed(in1) < $signed(in2)) zero = 1'b0;
+                        if (result==0) zero = 1'b1;
+                        else zero = 1'b0;
+                     end
+            4'b1110: begin // blt
+                        result = in1-in2;
+                        if ($signed(in1) >= $signed(in2)) zero = 1'b0;
                         else zero = 1'b1;
                      end
-             4'b1100: begin // blt
+             4'b1100: begin // bge
                         result = in1-in2;
-                        if ($signed(in1) < $signed(in2)) zero = 1'b1;
+                        if ($signed(in1) >= $signed(in2)) zero = 1'b1;
                         else zero = 1'b0;
                      end     
                      
@@ -587,7 +729,7 @@ module MEM_WB_State_Reg(
 );
 
     initial begin
-        RegWrite_out = 0; MemtoReg_out = 0; ReadData_out = 0; ALUResult_out = 0; write_rd_out = 0;
+        RegWrite_out = 0; MemtoReg_out = 0; ReadData_out = 0; ALUResult_out = 0; write_rd_out = 0; nextPC_out=0;
     end
     
     always @ (posedge clock) begin
