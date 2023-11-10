@@ -13,7 +13,7 @@
 module PipelineProcessor(
     input clk
 );
-    reg [31:0] PCAd=0;
+    reg [31:0] PCAd = 0;
     wire [31:0] nextPCconst, PCbranch;
     wire [31:0] instruction;
     wire [31:0] readdata1, readdata2, regwritedata, aluin2;

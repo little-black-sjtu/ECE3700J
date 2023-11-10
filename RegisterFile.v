@@ -11,7 +11,7 @@ module RegisterFile(input [4:0] readreg1,
     
     initial 
         begin  
-           for(i=0;i<32;i=i+1)  
+           for(i = 0; i < 32; i = i+1)  
                 registers[i] <= 0;  
         end  
     

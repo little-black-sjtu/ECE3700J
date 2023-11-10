@@ -14,9 +14,9 @@ initial begin
          alusrc <= 0; 
          jump <= 0; 
          regwrite <= 0;
-    end
+   end
    
-    always @ (opcode) begin
+   always @ (opcode) begin
         case (opcode)
         //I-type, lw, lb, lbu
             7'b0000011: begin 

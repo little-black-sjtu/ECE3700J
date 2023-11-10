@@ -26,9 +26,9 @@ module DataMemory(
                    data[address+3] <= writedata[31:24];  
                   end
                   3'b000:begin
-                    data[address]<=writedata[7:0];
+                    data[address] <= writedata[7:0];
                   end
-                  default:data[address]<=data[address];
+                  default:data[address] <=data [address];
                 endcase
              end
            end
