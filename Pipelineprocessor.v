@@ -8,6 +8,8 @@
 `include "ImmGen.v"
 `include "Utils.v"
 `include "StateRegs.v"
+`include "forward_unit.v"
+
 
 module Pipelineprocessor(input clock); //Top Module
 
