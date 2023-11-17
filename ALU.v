@@ -1,47 +1,36 @@
 //ALU
-module ALU(in1,in2,control,zero,result);
+module ALU(in1,in2,control,result);
 input [31:0] in1,in2;
 input [3:0] control;
 output zero;
 output [31:0] result;
 reg [31:0] result;
-reg zero;
 always@(*)
 begin
     case (control)
-            4'b0000: begin result = in1&in2; zero = 1'b0; end//and
-            4'b0110: begin result = in1|in2; zero = 1'b0; end//or
-            4'b0010: begin result = in1+in2; zero = 1'b1; end//add and for jal jalr
-            4'b0001: begin result = in1<<in2; zero = 1'b0; end//sll
-            4'b0101: begin result = in1>>in2; zero = 1'b0; end//srl
-            4'b1101: begin result = $signed(($signed(in1))>>>in2); zero = 1'b0; end//sra
+            4'b0000: begin result = in1&in2; end//and
+            4'b0110: begin result = in1|in2; end//or
+            4'b0010: begin result = in1+in2; end//add and for jal jalr
+            4'b0001: begin result = in1<<in2; end//sll
+            4'b0101: begin result = in1>>in2; end//srl
+            4'b1101: begin result = $signed(($signed(in1))>>>in2); end//sra
             4'b1000: begin//sub
                         result = in1-in2;
-                        if (result==0) zero = 1'b1;
-                        else zero = 1'b0;
                      end
             4'b1001: begin // bne
                         result = in1-in2;
-                        if (result!=0) zero = 1'b1;
-                        else zero = 1'b0;
                      end
             4'b1111: begin // beq
                         result = in1-in2;
-                        if (result==0) zero = 1'b1;
-                        else zero = 1'b0;
                      end
             4'b1110: begin // blt
                         result = in1-in2;
-                        if ($signed(in1) >= $signed(in2)) zero = 1'b0;
-                        else zero = 1'b1;
                      end
              4'b1100: begin // bge
                         result = in1-in2;
-                        if ($signed(in1) >= $signed(in2)) zero = 1'b1;
-                        else zero = 1'b0;
                      end     
                      
-            default begin result = 0; zero = 1'b0; end
+            default begin result = 0; end
         endcase
 end
 endmodule //done

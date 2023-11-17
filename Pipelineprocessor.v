@@ -8,29 +8,45 @@
 `include "ImmGen.v"
 `include "Utils.v"
 `include "StateRegs.v"
-`include "forward_unit.v"
+`include "Forward_unit.v"
+`include "Comparator.v"
+`include "Hazard_detection.v"
 
 
 module Pipelineprocessor(input clock); //Top Module
 
-    wire            [31:0]          Instrct, Imm, data_1, data_2, MUX_ALU, loadPC, W_data, Add_1, Add_2, ALUResult, Read_Mem, JumpTo;
+    wire            [31:0]          Instrct, Imm, Imm_shift, data_1, data_2, MUX_ALU, loadPC, W_data, Add_1, Add_2,Add_3, ALUResult, Read_Mem, JumpTo,ALUin1,ALUin2;
     wire            [31:0]          IF_ID_nextPC, IF_ID_crntPC, IF_ID_Instrct;
-    wire            [31:0]          ID_EX_nextPC, ID_EX_crntPC, ID_EX_data_1, ID_EX_data_2, ID_EX_Imm;
-    wire            [31:0]          EX_MEM_nextPC, EX_MEM_JumpTo, EX_MEM_ALUResult, EX_MEM_data_2;
-    wire            [31:0]          MEM_WB_nextPC, MEM_WB_Read_Mem, MEM_WB_ALUResult;
-    wire            [4:0]           ID_EX_Reg_rd, EX_MEM_Reg_rd, MEM_WB_Reg_rd;
+    wire            [31:0]          ID_EX_nextPC, ID_EX_crntPC, ID_EX_data_1, ID_EX_data_2, ID_EX_Imm, EX_MEM_Imm, MEM_WB_Imm;
+    wire            [31:0]          EX_MEM_nextPC, EX_MEM_JumpTo, EX_MEM_ALUResult,EX_MEM_data_1, EX_MEM_data_2,mem_write_content;
+    wire            [31:0]          MEM_WB_nextPC, MEM_WB_Read_Mem, MEM_WB_ALUResult,MEM_WB_data_1,MEM_WB_data_2;
+    wire            [31:0]          mux2_out, mux3_out;
+    wire            [4:0]           EX_MEM_Rs2_Addr, ID_EX_Reg_rd, EX_MEM_Reg_rd, MEM_WB_Reg_rd, ID_EX_Rs1_Addr, ID_EX_Rs2_Addr;
     wire            [3:0]           ALUControl, ID_EX_ALUInstrct;
     wire            [2:0]           EX_MEM_Funct3;
-    wire            [1:0]           ALUOp, MemtoReg, ID_EX_ALUOp, ID_EX_MemtoReg, EX_MEM_MemtoReg, MEM_WB_MemtoReg;
-    wire                            Branch, isBranch, MemRead, MemWrite, ALUSrc, isJump, RegWrite, isZero;
-    wire                            ID_EX_Branch, ID_EX_MemRead, ID_EX_MemWrite, ID_EX_ALUSrc, ID_EX_isJump, ID_EX_RegWrite;
-    wire                            EX_MEM_Branch, EX_MEM_MemRead, EX_MEM_MemWrite, EX_MEM_RegWrite, EX_MEM_isZero, MEM_WB_RegWrite;                         
+    wire            [1:0]           ALUOp, MemtoReg, ID_EX_ALUOp, ID_EX_MemtoReg, EX_MEM_MemtoReg, MEM_WB_MemtoReg,forwarda_control,forwardb_control;
+    wire                            PC_write, Branch, isBranch, MemRead, MemWrite, ALUSrc, isJump, RegWrite, isZero,whether_hazard,ForwardEq1,ForwardEq2;
+    wire                            if_flush, IF_ID_write, ID_EX_Branch, ID_EX_MemRead, ID_EX_MemWrite, ID_EX_ALUSrc, ID_EX_isJump, ID_EX_RegWrite;
+    wire                            EX_MEM_Branch, EX_MEM_MemRead, EX_MEM_MemWrite, EX_MEM_RegWrite, EX_MEM_isZero, MEM_WB_RegWrite, MEM_WB_MemRead;
+    wire            [9:0]           allControlIn, allControlOut;              
     reg             [31:0]          PC;  
         
     initial PC = 0;   
-      
+
+    assign Imm_shift = {Imm[30:0],1'b0}; //NewBug_22
+ //  allControl = {ALUOp, MemtoReg, Branch, MemRead, MemWrite, ALUSrc, Jump, RegWrite}
+    assign RegWrite = allControlOut[0];
+    assign isJump   = allControlOut[1]; //Bug_11
+    assign ALUSrc   = allControlOut[2];
+    assign MemWrite = allControlOut[3];
+    assign MemRead  = allControlOut[4];
+    assign Branch   = allControlOut[5];
+    assign MemtoReg = allControlOut[7:6];
+    assign ALUOp    = allControlOut[9:8];
  
-    always @ (posedge clock ) PC <= loadPC;
+
+    always @ (posedge clock ) 
+        if (PC_write == 1'b1)  PC <= loadPC;
     
     InstructionMemory IM (
         .address (PC/4),
@@ -38,16 +54,18 @@ module Pipelineprocessor(input clock); //Top Module
     );
     Control CU (
         .opcode (IF_ID_Instrct[6:0]),
-        .branch (Branch),
-        .memread (MemRead),
-        .memwrite (MemWrite),
-        .memtoreg (MemtoReg),
-        .aluop (ALUOp),
-        .alusrc (ALUSrc),
-        .jump (isJump),
-        .regwrite (RegWrite)
+        // .branch (Branch),
+        // .memread (MemRead),
+        // .memwrite (MemWrite),
+        // .memtoreg (MemtoReg),
+        // .aluop (ALUOp),
+        // .alusrc (ALUSrc),
+        // .jump (isJump),
+        // .regwrite (RegWrite)
+        .allControl (allControlOut)
     );
     RegisterFile RF (
+        .clock(clock),
         .regwrite (MEM_WB_RegWrite),
         .writedata (W_data),
         .readreg1 (IF_ID_Instrct[19:15]),
@@ -55,6 +73,12 @@ module Pipelineprocessor(input clock); //Top Module
         .writereg (MEM_WB_Reg_rd),
         .readdata1 (data_1),
         .readdata2 (data_2)
+    );
+    Comparator cmp (
+        .func ({IF_ID_Instrct[2], IF_ID_Instrct[14:12]}),
+        .in1 (mux2_out),
+        .in2 (mux3_out),
+        .isZero (isZero)
     );
     ImmGen ImmGen (
         .instr (IF_ID_Instrct),
@@ -64,7 +88,6 @@ module Pipelineprocessor(input clock); //Top Module
         .in1 (ID_EX_data_1),
         .in2 (MUX_ALU),
         .control (ALUControl),
-        .zero (isZero),
         .result (ALUResult)
     ); 
     ALUcontrol ALU_Ctrl (
@@ -73,6 +96,7 @@ module Pipelineprocessor(input clock); //Top Module
         .out1 (ALUControl)
     );
     DataMemory DM (
+        .clock (clock),
         .memwrite (EX_MEM_MemWrite),
         .memread (EX_MEM_MemRead),
         .fun3 (EX_MEM_Funct3),
@@ -83,7 +107,8 @@ module Pipelineprocessor(input clock); //Top Module
     
     IF_ID_State_Reg IF_ID(
         .clock (clock),
-        .currPC (PC),
+        .IF_Flush(if_flush),
+        .IF_ID_Write(IF_ID_write), 
         .nextPC (Add_1),
         .Instruct (Instrct),
         .currPC_out (IF_ID_crntPC),
@@ -96,7 +121,7 @@ module Pipelineprocessor(input clock); //Top Module
         .MemtoReg (MemtoReg),
         .MemRead (MemRead),
         .MemWrite (MemWrite),
-        .Branch (Branch),
+        //.Branch (Branch),
         .Jump (isJump),
         .ALUSrc (ALUSrc),
         .ALUOp (ALUOp),
@@ -104,6 +129,8 @@ module Pipelineprocessor(input clock); //Top Module
         .nextPC (IF_ID_nextPC),
         .Read_rs1 (data_1),
         .Read_rs2 (data_2),
+        .Reg_rs1_addr (IF_ID_Instrct[19:15]),
+        .Reg_rs2_addr (IF_ID_Instrct[24:20]),
         .Imm_Gen (Imm),
         .Write_rd (IF_ID_Instrct[11:7]),
         .ALU_Instruct ({IF_ID_Instrct[30],IF_ID_Instrct[14:12]}),
@@ -111,7 +138,7 @@ module Pipelineprocessor(input clock); //Top Module
         .MemtoReg_out (ID_EX_MemtoReg),
         .MemRead_out (ID_EX_MemRead),
         .MemWrite_out (ID_EX_MemWrite),
-        .Branch_out (ID_EX_Branch),
+        //.Branch_out (ID_EX_Branch),
         .Jump_out (ID_EX_isJump),
         .ALUSrc_out (ID_EX_ALUSrc),
         .ALUOp_out (ID_EX_ALUOp),
@@ -119,6 +146,8 @@ module Pipelineprocessor(input clock); //Top Module
         .nextPC_out (ID_EX_nextPC),
         .Read_rs1_out (ID_EX_data_1),
         .Read_rs2_out (ID_EX_data_2),
+        .Reg_rs1_addr_out (ID_EX_Rs1_Addr),
+        .Reg_rs2_addr_out (ID_EX_Rs2_Addr),
         .Imm_Gen_out (ID_EX_Imm),
         .write_rd_out (ID_EX_Reg_rd),
         .ALU_Instruct_out (ID_EX_ALUInstrct)
@@ -129,11 +158,18 @@ module Pipelineprocessor(input clock); //Top Module
         .MemtoReg (ID_EX_MemtoReg),
         .MemRead (ID_EX_MemRead),
         .MemWrite (ID_EX_MemWrite),
-        .Branch (ID_EX_Branch),
-        .Zero (isZero),
+        //.Branch (ID_EX_Branch),
+
+        .imm_out (EX_MEM_Imm),
+        .Reg_rs2_addr (ID_EX_Rs2_Addr),
+        //.imm_out (EX_MEM_Imm),
+        .Reg_rs2_addr_out (EX_MEM_Rs2_Addr),        
+
+        //.Zero (isZero),
         .nextPC (ID_EX_nextPC),
         .ALUResult (ALUResult),
         .AddSum (JumpTo),
+        .Read_rs1 (ID_EX_data_1),
         .Read_rs2 (ID_EX_data_2),
         .Funct3 (ID_EX_ALUInstrct[2:0]),
         .Write_rd (ID_EX_Reg_rd),
@@ -141,43 +177,95 @@ module Pipelineprocessor(input clock); //Top Module
         .MemtoReg_out (EX_MEM_MemtoReg),
         .MemRead_out (EX_MEM_MemRead),
         .MemWrite_out (EX_MEM_MemWrite),
-        .Branch_out (EX_MEM_Branch),
-        .Zero_out (EX_MEM_isZero),
+        //.Branch_out (EX_MEM_Branch),
+        //.Zero_out (EX_MEM_isZero),
         .nextPC_out (EX_MEM_nextPC),
         .ALUResult_out (EX_MEM_ALUResult),
-        .AddSum_out (EX_MEM_JumpTo),
+        //.AddSum_out (EX_MEM_JumpTo),
+        .Read_rs1_out (EX_MEM_data_1),
         .Read_rs2_out (EX_MEM_data_2),
         .Funct3_out (EX_MEM_Funct3),
         .write_rd_out (EX_MEM_Reg_rd)
     );
     MEM_WB_State_Reg MEM_WB(
         .clock (clock),
+        .MemRead (EX_MEM_MemRead),
         .RegWrite (EX_MEM_RegWrite),
         .MemtoReg (EX_MEM_MemtoReg),
+        .imm (EX_MEM_Imm),
         .nextPC (EX_MEM_nextPC),
         .ReadData (Read_Mem),
+        .Read_rs1 (EX_MEM_data_1),
+        .Read_rs2 (EX_MEM_data_2),
         .ALUResult (EX_MEM_ALUResult),
         .Write_rd (EX_MEM_Reg_rd),
+        .MemRead_out (MEM_WB_MemRead),
         .RegWrite_out (MEM_WB_RegWrite),
         .MemtoReg_out (MEM_WB_MemtoReg),
+        .imm_out (MEM_WB_Imm),
         .nextPC_out (MEM_WB_nextPC),
         .ReadData_out (MEM_WB_Read_Mem),
+        .Read_rs1_out (MEM_WB_data_1),
+        .Read_rs2_out (MEM_WB_data_2),
         .ALUResult_out (MEM_WB_ALUResult),
         .write_rd_out (MEM_WB_Reg_rd)
     );
-    
+    Forward_unit FU (
+        .idex_r1 (ID_EX_Rs1_Addr),
+        .idex_r2 (ID_EX_Rs2_Addr),
+        .ifid_r1 (IF_ID_Instrct[19:15]),
+        .ifid_r2 (IF_ID_Instrct[24:20]),
+        .exmem_r2 (EX_MEM_Rs2_Addr),
+        .memwb_reg_rd (MEM_WB_Reg_rd),
+        .exmem_reg_rd (EX_MEM_Reg_rd),
+        .idex_reg_rd (ID_EX_Reg_rd),
+        .memwb_reg_write (MEM_WB_RegWrite),
+        .exmem_reg_write (EX_MEM_RegWrite),
+        .exmem_mem_write (EX_MEM_MemWrite),
+        .exmem_mem_read (EX_MEM_MemRead),
+        .memwb_mem_read (MEM_WB_MemRead),
+        .idex_mem_read (ID_EX_MemRead),
+        .idex_mem_write (ID_EX_MemWrite),
+        .idex_reg_write (ID_EX_RegWrite),
+        .ifid_branch (Branch),
+        .o_forward_a (forwarda_control),
+        .o_forward_b (forwardb_control),
+        .o_forward_eq1 (ForwardEq1),
+        .o_forward_eq2 (ForwardEq2),
+        .o_mem_src (MemSrc)
+    );
+
+    Hazard_detection HD (
+        .ifid_r1 (IF_ID_Instrct[19:15]),
+        .ifid_r2 (IF_ID_Instrct[24:20]),
+        .idex_rd (ID_EX_Reg_rd),
+        .exmem_rd (EX_MEM_Reg_rd),
+        .idex_mem_read (ID_EX_MemRead),
+        .exmem_mem_read (EX_MEM_MemRead),
+        .id_branch (allControlIn[5]),
+        .id_mem_write (ID_EX_MemWrite),
+        .idex_regwrite (ID_EX_RegWrite),
+        .ifid_write (IF_ID_write),
+        .PC_write (PC_write),
+        .whether_hazard (whether_hazard)
+    );
+
     //Mux: Input_1, Input_2, (Input_3, Input_4,) Select, Output.
 //    _32_bit_2to1_MUX  Mux_1(.data1(Add_1), .data2(EX_MEM_JumpTo), .sel(isBranch), .result(loadPC));
-    MUX2x1  Mux_1(.in1(Add_1), .in2(JumpTo), .control(isBranch), .out(loadPC));
-    MUX2x1  Mux_2(.in1(ID_EX_data_2), .in2(ID_EX_Imm), .control(ID_EX_ALUSrc), .out(MUX_ALU));
+    MUX3x1  Mux_1(.in1(Add_1), .in2(Add_2),.in3(Add_3) ,.control({isJump,isBranch}), .out1(loadPC));
+    MUX2x1  Mux_2(.in1(ALUin2), .in2(ID_EX_Imm), .control(ID_EX_ALUSrc), .out(MUX_ALU));
     MUX2x1  Mux_3(.in1(Add_2), .in2(ALUResult), .control(ID_EX_isJump), .out(JumpTo)); //Lab4_latest
-    MUX4x1  Mux_4(.in1(MEM_WB_ALUResult), .in2(MEM_WB_Read_Mem), .in3(MEM_WB_nextPC), .in4(MEM_WB_nextPC),
-                            .control(MEM_WB_MemtoReg), .out(W_data)); //Lab4_latest
+    MUX4x1  Mux_4(.data1(MEM_WB_Read_Mem), .data2(MEM_WB_nextPC), .data3(MEM_WB_Imm), .data4(MEM_WB_ALUResult),
+                                    .sel(MEM_WB_MemtoReg), .out(W_data)); //Lab4_latest
+    MUX3x1 Mux_forwarda(.in1(ID_EX_data_1),.in2(EX_MEM_data_1),.in3(MEM_WB_data_1),.out1(ALUin1),.control(forwarda_control));
+    MUX3x1 Mux_forwardb(.in1(ID_EX_data_2),.in2(EX_MEM_data_2),.in3(MEM_WB_data_2),.out1(ALUin2),.control(forwardb_control));
     
     //Adder: Input_1, Input_2, Output.
     ADDconst Adder_1(.in1(PC), .out1(Add_1)); //PC+4
     ADDshift Adder_2(.in1(ID_EX_crntPC), .in2(ID_EX_Imm), .out1(Add_2)); //PC+Imm
+    Adder Adder_3(.data1(data_1), .data2(Imm), .result(Add_3));  //j
     
 //    and (isBranch, EX_MEM_Branch, EX_MEM_isZero);
-    and (isBranch, ID_EX_Branch, isZero);     
+    and (isBranch, Branch, isZero); 
+    or  (IF_Flush, isBranch, isJump);      
 endmodule

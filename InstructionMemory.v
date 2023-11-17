@@ -5,7 +5,7 @@ module InstructionMemory(
 );
     reg [31:0] instructions [0:128];
     initial begin
-        $readmemb("cases/Lab4_testcase.txt", instructions);
+        $readmemb("cases/Lab5_test.txt", instructions);
     end
     always @(*)
         instruction = instructions[address];

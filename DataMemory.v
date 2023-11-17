@@ -3,19 +3,19 @@ module DataMemory(
     input [31:0] address,
     input [31:0] writedata,
     input [2:0] fun3,
-    input memread,
+    input memread,clock,
     input memwrite,
     output reg [31:0] readdata
 );
-    integer i = 0;
+    integer i=0;
     reg [7:0] data [127:0];
     initial 
         begin  
-            readdata<=0;
-            for(i=0;i<128;i=i+1)  
+           readdata<=0;
+           for(i=0;i<128;i=i+1)  
                 data[i] <= 8'b00000000;  
         end  
-        always @(*)
+        always @(negedge clock)
         begin  
            if (memwrite) //write 
             begin
@@ -27,9 +27,9 @@ module DataMemory(
                    data[address+3] <= writedata[31:24];  
                   end
                   3'b000:begin
-                    data[address] <= writedata[7:0];
+                    data[address]<=writedata[7:0];
                   end
-                  default:data[address] <=data [address];
+                  default:data[address]<=data[address];
                 endcase
              end
            end

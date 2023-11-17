@@ -1,4 +1,5 @@
-module Forwardunit
+// Forward_unit
+module Forward_unit
 (
     input [4:0] idex_r1,
     input [4:0] idex_r2,
