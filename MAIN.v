@@ -19,7 +19,7 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 //Pipeline processor
-module Pipelineprocessor(input clock); //Top Module
+module PipelineprocessorPro(input clock); //Top Module
 
     wire            [31:0]          Instrct, Imm, Imm_shift, data_1, data_2, MUX_ALU, loadPC, W_data, Add_1, Add_2,Add_3, ALUResult, Read_Mem, JumpTo,ALUin1,ALUin2;
     wire            [31:0]          IF_ID_nextPC, IF_ID_crntPC, IF_ID_Instrct;
@@ -27,11 +27,11 @@ module Pipelineprocessor(input clock); //Top Module
     wire            [31:0]          EX_MEM_nextPC, EX_MEM_JumpTo, EX_MEM_ALUResult,EX_MEM_data_1, EX_MEM_data_2,mem_write_content;
     wire            [31:0]          MEM_WB_nextPC, MEM_WB_Read_Mem, MEM_WB_ALUResult,MEM_WB_data_1,MEM_WB_data_2;
     wire            [31:0]          mux2_out, mux3_out;
-    wire            [4:0]           ID_EX_Reg_rd, EX_MEM_Reg_rd, MEM_WB_Reg_rd, ID_EX_Rs1_Addr, ID_EX_Rs2_Addr;
+    wire            [4:0]           ID_EX_Reg_rd, EX_MEM_Reg_rd, MEM_WB_Reg_rd, ID_EX_Rs1_Addr, ID_EX_Rs2_Addr,EX_MEM_Rs2_Addr;
     wire            [3:0]           ALUControl, ID_EX_ALUInstrct;
     wire            [2:0]           EX_MEM_Funct3;
     wire            [1:0]           ALUOp, MemtoReg, ID_EX_ALUOp, ID_EX_MemtoReg, EX_MEM_MemtoReg, MEM_WB_MemtoReg,forwarda_control,forwardb_control;
-    wire                            Branch, isBranch, MemRead, MemWrite, ALUSrc, isJump, RegWrite, isZero,whether_hazard,ForwardEq1,ForwardEq2;
+    wire                            PC_write,Branch, isBranch, MemRead, MemWrite, ALUSrc, isJump, RegWrite, isZero,whether_hazard,ForwardEq1,ForwardEq2;
     wire                            if_flush, ID_EX_Branch, ID_EX_MemRead, ID_EX_MemWrite, ID_EX_ALUSrc, ID_EX_isJump, ID_EX_RegWrite;
     wire                            EX_MEM_Branch, EX_MEM_MemRead, EX_MEM_MemWrite, EX_MEM_RegWrite, EX_MEM_isZero, MEM_WB_RegWrite, MEM_WB_MemRead;
     wire            [9:0]           allControlIn, allControlOut;              
@@ -287,13 +287,13 @@ module InstructionMemory(
 );
     reg [31:0] instructions [0:128];
     initial begin
-        $readmemb("D:\\370\\Lab5\\Lab5_testcase.txt", instructions);
+        $readmemb("D:\\370\\Lab5\\lab5_testcase.txt", instructions);
     end
     always @(*)
         instruction = instructions[address];
 endmodule//done
 
-// RegisterFileÄ£¿é
+// RegisterFileÄ£ï¿½ï¿½
 module RegisterFile(input [4:0] readreg1,
     input [4:0] readreg2,
     input [4:0] writereg,
@@ -336,7 +336,7 @@ module Comparator
 endmodule
 
 
-// DataMemoryÄ£¿é
+// DataMemoryÄ£ï¿½ï¿½
 module DataMemory(
     input [31:0] address,
     input [31:0] writedata,
@@ -544,13 +544,12 @@ begin
 end
 endmodule //done
 
-module ALU(in1,in2,control,zero,result);
+module ALU(in1,in2,control,result);
 input [31:0] in1,in2;
 input [3:0] control;
-output zero;
 output [31:0] result;
 reg [31:0] result;
-reg zero;
+
 always@(*)
 begin
     case (control)

@@ -1,3 +1,4 @@
+`include "MAIN.v"
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
 // Company: 
@@ -22,20 +23,33 @@
 module Test_Branch;
     reg clk;
     
-	Pipelineprocessor test (
+	PipelineprocessorPro P (
 		.clock(clk)
 	);
 
+    integer file;
+
 	initial begin
 		clk = 0; 
+        file = $fopen("results/result.txt", "w");
+        $dumpfile("tb_PipelineprocessorPro.vcd");
+        $dumpvars(0, Test_Branch);
+
 	end
+
 
     initial begin
         while ($time <100) @(posedge clk)begin
             $display("===============================================");
-            $display("Clock cycle %d, PC = %H", $time/2, test.PC);
-            $display("ra = %H, t0 = %H, t1 = %H", test.RF.registers[1], test.RF.registers[5], test.RF.registers[6]);
-            $display("t2 = %H, t3 = %H, t4 = %H", test.RF.registers[7], test.RF.registers[28], test.RF.registers[29]);
+        $fdisplay(file, "PC:%d, ID:%d", $signed(P.PC), $signed(P.PC/4+1));
+        $fdisplay(file, "Ins:%b", P.Instrct);
+        $fdisplay(file, "ra:%h (hex), %d (int), %b (bit)", P.RF.registers[1], $signed(P.RF.registers[1]), P.RF.registers[1]);
+        $fdisplay(file, "t0:%h (hex), %d (int), %b (bit)", P.RF.registers[5], $signed(P.RF.registers[5]), P.RF.registers[5]);
+        $fdisplay(file, "t1:%h (hex), %d (int), %b (bit)", P.RF.registers[6], $signed(P.RF.registers[6]), P.RF.registers[6]);
+        $fdisplay(file, "t2:%h (hex), %d (int), %b (bit)", P.RF.registers[7], $signed(P.RF.registers[7]), P.RF.registers[7]);
+        $fdisplay(file, "t3:%h (hex), %d (int), %b (bit)", P.RF.registers[28], $signed(P.RF.registers[28]), P.RF.registers[28]);
+        $fdisplay(file, "t4:%h (hex), %d (int), %b (bit)", P.RF.registers[29], $signed(P.RF.registers[29]), P.RF.registers[29]);
+        $fdisplay(file, "\n");
             $display("===============================================");
         end
         $finish();
