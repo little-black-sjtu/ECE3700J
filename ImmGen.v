@@ -28,7 +28,7 @@ module ImmGen(instr, imm);
                         end 
             //J-type: jal
             7'b1101111: begin 
-                            imm = {{21{instr[31]}}, instr[19:12], instr[20], instr[30:21]};
+                            imm = {{12{instr[31]}}, instr[31], instr[19:12], instr[20], instr[30:21]};
                         end 
 
             default:    begin 

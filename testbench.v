@@ -20,6 +20,7 @@ initial begin
 end
 
 initial begin
+    #2;
     forever #CLK_PERIOD begin
         $fdisplay(file, "PC:%d, ID:%d", $signed(P.PC), $signed(P.PC/4+1));
         $fdisplay(file, "Ins:%b", P.Instrct);

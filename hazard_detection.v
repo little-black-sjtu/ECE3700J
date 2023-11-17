@@ -24,30 +24,30 @@ initial begin
     always @(*) begin 
         if (idex_mem_read && !id_mem_write) begin
             if (idex_rd == ifid_r1 || idex_rd == ifid_r2) begin
-                PC_write=1'b0; ifid_write=1'b0; whether_hazard=1'b1;
+                PC_write=1'b0; ifid_write=1'b0; whether_hazard=1'b0;
             end
             else begin
-                PC_write=1'b1; ifid_write=1'b1; whether_hazard=1'b0;
+                PC_write=1'b1; ifid_write=1'b1; whether_hazard=1'b1;
             end  
         end
         else if (id_branch && idex_regwrite) begin
             if ((idex_rd!=0) && (ifid_r1 == idex_rd || ifid_r2 == idex_rd)) begin
-                PC_write=1'b0; ifid_write=1'b0; whether_hazard=1'b1;
+                PC_write=1'b0; ifid_write=1'b0; whether_hazard=1'b0;
             end
             else begin
-                PC_write=1'b1; ifid_write=1'b1; whether_hazard=1'b0;
+                PC_write=1'b1; ifid_write=1'b1; whether_hazard=1'b1;
             end  
         end
         else if (id_branch && exmem_mem_read) begin
             if ((exmem_rd!=0) && (ifid_r1 == exmem_rd || ifid_r2 == exmem_rd)) begin
-                PC_write=1'b0; ifid_write=1'b0; whether_hazard=1'b1;
+                PC_write=1'b0; ifid_write=1'b0; whether_hazard=1'b0;
             end
             else begin
-                PC_write=1'b1; ifid_write=1'b1; whether_hazard=1'b0;
+                PC_write=1'b1; ifid_write=1'b1; whether_hazard=1'b1;
             end  
         end
         else begin
-            PC_write=1'b1; ifid_write=1'b1; whether_hazard=1'b0;
+            PC_write=1'b1; ifid_write=1'b1; whether_hazard=1'b1;
         end
     end
 endmodule
