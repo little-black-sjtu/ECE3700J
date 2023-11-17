@@ -21,3 +21,14 @@ begin
     out1=in1+4;
 end
 endmodule 
+
+module Adder
+(
+    input       [31:0]          data1, data2,
+    output reg  [31:0]          result
+);
+    
+    always @ (*) begin
+        result = data1 + data2;
+    end
+endmodule

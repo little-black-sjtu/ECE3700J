@@ -1,3 +1,4 @@
+// hazard detection
 module Hazard_detection(
     input [4:0]ifid_r1,
     input [4:0]ifid_r2,
@@ -6,7 +7,7 @@ module Hazard_detection(
     input idex_mem_read,
     //input idex_mem_write,
     input exmem_mem_read,
-    input whether_branch,
+    input id_branch,
     input id_mem_write,
     input idex_regwrite,
 
@@ -16,7 +17,7 @@ module Hazard_detection(
     output reg whether_hazard
 );
 
-    initial begin
+initial begin
         PC_write=1'b1; ifid_write=1'b1; whether_hazard=1'b1;
     end
 
@@ -29,7 +30,7 @@ module Hazard_detection(
                 PC_write=1'b1; ifid_write=1'b1; whether_hazard=1'b0;
             end  
         end
-        else if (whether_branch && idex_regwrite) begin
+        else if (id_branch && idex_regwrite) begin
             if ((idex_rd!=0) && (ifid_r1 == idex_rd || ifid_r2 == idex_rd)) begin
                 PC_write=1'b0; ifid_write=1'b0; whether_hazard=1'b1;
             end
@@ -37,7 +38,7 @@ module Hazard_detection(
                 PC_write=1'b1; ifid_write=1'b1; whether_hazard=1'b0;
             end  
         end
-        else if (whether_branch && exmem_mem_read) begin
+        else if (id_branch && exmem_mem_read) begin
             if ((exmem_rd!=0) && (ifid_r1 == exmem_rd || ifid_r2 == exmem_rd)) begin
                 PC_write=1'b0; ifid_write=1'b0; whether_hazard=1'b1;
             end

@@ -14,7 +14,7 @@ always #(CLK_PERIOD/2) clk=~clk;
 integer file;
 
 initial begin
-    file = $fopen("results/result.txt", "w");
+    file = $fopen("results/result_lab5.txt", "w");
     $dumpfile("tb_Pipelineprocessor.vcd");
     $dumpvars(0, tb_Pipelineprocessor);
 end
