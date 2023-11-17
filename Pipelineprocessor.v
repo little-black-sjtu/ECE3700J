@@ -75,9 +75,9 @@ module Pipelineprocessor(input clock); //Top Module
         .readdata2 (data_2)
     );
     Comparator cmp (
-        .func ({IF_ID_Instrct[2], IF_ID_Instrct[14:12]}),
-        .in1 (mux2_out),
-        .in2 (mux3_out),
+        .func ({1'b0, IF_ID_Instrct[14:12]}),
+        .in1 (data_1),
+        .in2 (data_2),
         .isZero (isZero)
     );
     ImmGen ImmGen (
@@ -109,6 +109,7 @@ module Pipelineprocessor(input clock); //Top Module
         .clock (clock),
         .IF_Flush(if_flush),
         .IF_ID_Write(IF_ID_write), 
+        .currPC (PC),
         .nextPC (Add_1),
         .Instruct (Instrct),
         .currPC_out (IF_ID_crntPC),
@@ -262,7 +263,7 @@ module Pipelineprocessor(input clock); //Top Module
     
     //Adder: Input_1, Input_2, Output.
     ADDconst Adder_1(.in1(PC), .out1(Add_1)); //PC+4
-    ADDshift Adder_2(.in1(ID_EX_crntPC), .in2(ID_EX_Imm), .out1(Add_2)); //PC+Imm
+    ADDshift Adder_2(.in1(IF_ID_crntPC), .in2(Imm), .out1(Add_2)); //PC+Imm
     Adder Adder_3(.data1(data_1), .data2(Imm), .result(Add_3));  //j
     
 //    and (isBranch, EX_MEM_Branch, EX_MEM_isZero);
