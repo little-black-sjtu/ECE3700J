@@ -1,3 +1,0 @@
-InstructionMemory.v
-RegisterFile.v
-main.v

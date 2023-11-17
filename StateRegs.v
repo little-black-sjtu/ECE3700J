@@ -21,9 +21,13 @@ module IF_ID_State_Reg(
             currPC_out <= 0; 
             nextPC_out <= 0; 
         end
-        currPC_out <= currPC;
-        nextPC_out<= nextPC;
-        Instruct_out <= Instruct;
+        else if(IF_ID_Write == 1'b1)begin
+            currPC_out <= currPC;
+            nextPC_out<= nextPC;
+            Instruct_out <= Instruct;
+        end
+
+
     end
     
 endmodule
@@ -100,9 +104,7 @@ module EX_MEM_State_Reg(
     input       [31:0]      imm,
     input       [31:0]      nextPC,
     input       [31:0]      ALUResult,
-    input       [31:0]      AddSum,
-    input       [31:0]      Read_rs1,
-    input       [31:0]      Read_rs2,
+    input       [31:0]      ForwardB,
     input       [4:0]       Reg_rs2_addr,
     input       [2:0]       Funct3,
     input       [4:0]       Write_rd,
@@ -113,8 +115,7 @@ module EX_MEM_State_Reg(
     output reg  [31:0]      imm_out,
     output reg  [31:0]      nextPC_out,
     output reg  [31:0]      ALUResult_out,
-    output reg  [31:0]      Read_rs2_out,
-    output reg  [31:0]      Read_rs1_out,
+    output reg  [31:0]      ForwardB_out,
     output reg  [2:0]       Funct3_out,
     output reg  [4:0]       write_rd_out,
     output reg  [4:0]       Reg_rs2_addr_out
@@ -122,7 +123,7 @@ module EX_MEM_State_Reg(
 
     initial begin
         RegWrite_out = 0; MemtoReg_out = 0; MemRead_out = 0; MemWrite_out = 0;  nextPC_out = 0;imm_out=0;
-        ALUResult_out = 0;  Read_rs2_out = 0; Read_rs1_out = 0; Funct3_out = 0;write_rd_out = 0;Reg_rs2_addr_out=0;
+        ALUResult_out = 0;  Funct3_out = 0;write_rd_out = 0;Reg_rs2_addr_out=0;
     end
 
     always @ (posedge clock) begin
@@ -134,8 +135,6 @@ module EX_MEM_State_Reg(
         nextPC_out      <= nextPC;
         ALUResult_out   <= ALUResult;
         imm_out <= imm;
-        Read_rs1_out     <= Read_rs1;
-        Read_rs2_out     <= Read_rs2;
         Funct3_out      <= Funct3;
         write_rd_out      <= Write_rd;
     end
@@ -149,8 +148,6 @@ module MEM_WB_State_Reg(
     input       [1:0]       MemtoReg,   //WB
     input       [31:0]      nextPC,
     input       [31:0]      imm,
-    input       [31:0]      Read_rs1,
-    input       [31:0]      Read_rs2,
     input       [31:0]      ReadData,
     input       [31:0]      ALUResult,
     input       [4:0]       Write_rd,
@@ -160,14 +157,12 @@ module MEM_WB_State_Reg(
     output reg  [31:0]      nextPC_out,
     output reg  [31:0]      imm_out,
     output reg  [31:0]      ReadData_out,
-    output reg  [31:0]      Read_rs2_out,
-    output reg  [31:0]      Read_rs1_out,
     output reg  [31:0]      ALUResult_out,
     output reg  [4:0]       write_rd_out
 );
 
     initial begin
-        RegWrite_out = 0; MemtoReg_out = 0; ReadData_out = 0; ALUResult_out = 0; write_rd_out = 0; nextPC_out=0;Read_rs2_out = 0; Read_rs1_out = 0;MemRead_out=0;imm_out=0;
+        RegWrite_out = 0; MemtoReg_out = 0; ReadData_out = 0; ALUResult_out = 0; write_rd_out = 0; nextPC_out=0;MemRead_out=0;imm_out=0;
     end
     
     always @ (posedge clock) begin
@@ -177,8 +172,6 @@ module MEM_WB_State_Reg(
         nextPC_out      <= nextPC;
         imm_out         <= imm;
         ReadData_out    <= ReadData;
-        Read_rs1_out     <= Read_rs1;
-        Read_rs2_out     <= Read_rs2;
         ALUResult_out   <= ALUResult;
         write_rd_out      <= Write_rd;
     end
