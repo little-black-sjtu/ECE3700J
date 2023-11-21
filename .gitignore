@@ -1,7 +1,2 @@
-*
-!.gitignore
-!*.v
-!*.txt
-!*.s
-!cases/
-!results/
+Pipelineprocessor/*
+Cache/*
