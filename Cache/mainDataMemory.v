@@ -1,6 +1,6 @@
 //main Data Memory
 module mainDataReg
-(input read,write,
+(input read_writeIn,
  input [9:0] TargetAddress,
  input [31:0] WriteData,
  output reg [31:0] ReadData,

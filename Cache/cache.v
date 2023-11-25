@@ -1,11 +1,11 @@
 //cache
 module cache
 (
-    input readIn,writeIn,doneFromMain,
+    input read_writeIn,doneFromMain,
     input [9:0] TargetAddressIn,
     input [31:0] WriteDataIn,
     input [31:0] ReadDataFromMain,
-    output reg readOut,writeOut,hit,miss,
+    output reg read_writeOut,hit_miss,
     output reg [9:0] TargetAdressOut,
     output reg [31:0] ReadDataOut,WriteDataOut 
 );
