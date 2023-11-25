@@ -20,7 +20,11 @@ module cache
         readOut<=0;
         writeOut<=0;
         TargetAdressOut<=0;
-        for(i=0;i<1024;i=i+1) mainDataReg[i]<=0;
+        for(i=0;i<1024;i=i+1) CacheReg[i]<=0;
     end
+
+    always @(*){
+        
+    }
 
 endmodule
