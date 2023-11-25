@@ -15,7 +15,7 @@ module mainDataReg
     end
 
     always @(*)   begin
-        if(read)
+        if(read_writeIn==0)
             begin
                 ReadData[7:0]<=mainDataReg[TargetAddress];
                 ReadData[15:8]<=mainDataReg[TargetAddress+1];
@@ -23,7 +23,7 @@ module mainDataReg
                 ReadData[31:24]<=mainDataReg[TargetAddress+3];
                 done=1;
             end
-        else if(write)
+        else if(read_writeIn==1)
             begin
                 mainDataReg[TargetAddress]<=WriteData[7:0];
                 mainDataReg[TargetAddress+1]<=WriteData[15:8];

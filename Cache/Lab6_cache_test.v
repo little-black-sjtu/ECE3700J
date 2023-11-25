@@ -14,10 +14,10 @@ module top( input clk);
     wire read_write_mem,Done;
     // You may add the signal you need. However, you cannot change the signals above.
 
-    Cache   Cache(.read_writeIn(read_write_cache), .TargetAddressIn(address_cache), .WriteDataIn(write_data_cache), .doneFromMain(Done), .ReadDataFromMain(read_data_mem)
+    cache   Cache(.read_writeIn(read_write_cache), .TargetAddressIn(address_cache), .WriteDataIn(write_data_cache), .doneFromMain(Done), .ReadDataFromMain(read_data_mem)
                   , .ReadDataOut(read_data_cache), .hit_miss(hit_miss), .read_writeOut(read_write_mem), .TargetAdressOut(address_mem), .WriteDataOut (write_data_mem));
-    main_memory            mem_db(.read_writeIn(read_write_mem), .TargetAddress(address_mem), .WriteData(write_data_mem), .ReadData(read_data_mem), .done(Done));
-    CPU                 CPU_db(hit_miss, clk,read_data_cache,read_write_cache, address_cache, write_data_cache);
+    mainDataMemory            mem_db(.read_writeIn(read_write_mem), .TargetAddress(address_mem), .WriteData(write_data_mem), .ReadData(read_data_mem), .done(Done));
+    lab6_cpu                 CPU_db(.hit_miss(hit_miss), .clock(clk),.Read_Data(read_data_cache),.read_write(read_write_cache), .address(address_cache), .write_data(write_data_cache));
 endmodule
 
 module CacheTest;
