@@ -49,4 +49,9 @@ module CacheTest;
     initial
         #200 $stop;
 
+    initial begin
+        $dumpfile("CacheTest.vcd");
+        $dumpvars(0, CacheTest);
+    end
+
 endmodule

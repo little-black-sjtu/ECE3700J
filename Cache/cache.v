@@ -27,6 +27,7 @@ module cache
     assign word_offset = TargetAddressIn[3:2];
 
     always @(*) begin
+        #2
         if(read_writeIn==1) begin   // if write
             if (CacheReg [index][133]==1 && CacheReg [index][131:128]==tag) begin  // if valid and hit
                 hit_miss<=1;
@@ -39,9 +40,10 @@ module cache
                     read_writeOut<=1;
                     TargetAdressOut<=TargetAddressIn;
                     WriteDataOut<=CacheReg [index][127:0];
-                    #2;
+                    
                 end
                 hit_miss<=0;
+                #2
                 //fetch
                 CacheReg [index][127:0]<=ReadDataFromMain;
                 CacheReg [index][133]<=1;

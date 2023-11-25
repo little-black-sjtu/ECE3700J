@@ -30,6 +30,7 @@ module CPU (
         read_write_test[11] = 0; address_test[11] = 10'b0110101001; write_data_test[11] = 0;//check load byte                               h003              
     end
     always @(posedge clock) begin
+        #1
         if (hit_miss == 1) request_num = request_num + 1;
         else request_num = request_num;
     end
