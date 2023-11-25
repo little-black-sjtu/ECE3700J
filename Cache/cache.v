@@ -27,40 +27,51 @@ module cache
     assign word_offset = TargetAddressIn[3:2];
 
     always @(*) begin
-        if(read_writeIn==1) begin
-            if (CacheReg [index][133]==1 && CacheReg [index][131:128]==tag) begin
+        if(read_writeIn==1) begin   // if write
+            if (CacheReg [index][133]==1 && CacheReg [index][131:128]==tag) begin  // if valid and hit
                 hit_miss<=1;
                 read_writeOut<=0;
-                CacheReg [index][(word_offset*32)+:31]<=WriteDataIn;
-                CacheReg [index][132]<=1;
+                // CacheReg [index][(word_offset*32)+:31]<=WriteDataIn;
+                // CacheReg [index][132]<=1;
             end
-            else begin
-                if(CacheReg [index][133]==0) begin
-                    CacheReg [index][127:0]<=ReadDataFromMain;
-                    CacheReg [index][133]<=1;
-                end
-            
-                hit_miss<=0;
-                if (CacheReg [index][132]==1) begin
+            else begin    // if not valid or not hit
+                if (CacheReg [index][132]==1) begin // if dirty, write back
                     read_writeOut<=1;
                     TargetAdressOut<=TargetAddressIn;
                     WriteDataOut<=CacheReg [index][127:0];
                     #100;
                 end
+                hit_miss<=0;
                 //fetch
                 CacheReg [index][127:0]<=ReadDataFromMain;
                 CacheReg [index][133]<=1;
                 CacheReg [index][132]<=0;
                 CacheReg [index][131:128]<=tag;
+                #100;
                 //////
-                if (CacheReg [index][(word_offset*32)+:31]!=WriteDataIn) begin
-                    CacheReg [index][(word_offset*32)+:31]<=WriteDataIn;
-                    CacheReg [index][132]<=1;
-                end
+            end
+            //write
+            if (CacheReg [index][(word_offset*32)+:31]!=WriteDataIn) begin
+                CacheReg [index][(word_offset*32)+:31]<=WriteDataIn;
+                CacheReg [index][132]<=1;
             end
         end
-        else begin
-            hit_miss<=1;
+        else begin // if read
+            if (CacheReg [index][133]==1 && CacheReg [index][131:128]==tag) begin // if valid and hit
+                hit_miss<=1;
+                read_writeOut<=0;
+            end
+            else begin // if not valid or not hit
+                hit_miss<=0;
+                //fetch
+                CacheReg [index][127:0]<=ReadDataFromMain;
+                CacheReg [index][133]<=1;
+                CacheReg [index][132]<=0;
+                CacheReg [index][131:128]<=tag;
+                #100;
+                //////
+            end
+            ReadDataOut<=CacheReg [index][(word_offset*32)+:31];
         end
     end
 
