@@ -39,7 +39,7 @@ module cache
                     read_writeOut<=1;
                     TargetAdressOut<=TargetAddressIn;
                     WriteDataOut<=CacheReg [index][127:0];
-                    #100;
+                    #2;
                 end
                 hit_miss<=0;
                 //fetch
@@ -47,7 +47,7 @@ module cache
                 CacheReg [index][133]<=1;
                 CacheReg [index][132]<=0;
                 CacheReg [index][131:128]<=tag;
-                #100;
+                #2;
                 //////
             end
             //write
@@ -68,7 +68,7 @@ module cache
                 CacheReg [index][133]<=1;
                 CacheReg [index][132]<=0;
                 CacheReg [index][131:128]<=tag;
-                #100;
+                #2;
                 //////
             end
             ReadDataOut<=CacheReg [index][(word_offset*32)+:31];
