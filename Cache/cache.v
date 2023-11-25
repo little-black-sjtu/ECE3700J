@@ -15,10 +15,8 @@ module cache
     initial begin
         ReadDataOut<=0;
         WriteDataOut<=0;
-        hit<=0;
-        miss<=0;
-        readOut<=0;
-        writeOut<=0;
+        hit_miss<=0;
+        read_writeOut<=0;
         TargetAdressOut<=0;
         for(i=0;i<1024;i=i+1) mainDataReg[i]<=0;
     end
