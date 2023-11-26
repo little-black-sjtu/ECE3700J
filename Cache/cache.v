@@ -5,7 +5,8 @@ module cache
     input [9:0] TargetAddressIn,
     input [31:0] WriteDataIn,
     input [127:0] ReadDataFromMain,
-    output reg read_writeOut,hit_miss,
+    output hit_miss,
+    output reg read_writeOut,
     output reg [9:0] TargetAdressOut,
     output reg [31:0] ReadDataOut,
     output reg [127:0] WriteDataOut 
@@ -14,66 +15,84 @@ module cache
     reg [133:0] CacheReg [3:0]; // [133]  [132]  [131-128]  [127:96]  [95:64]  [63:32]  [31:0]
                                 //   V      D        TAG      Word3    Word2    Word1   Word0
     initial begin
-        ReadDataOut<=0;
-        WriteDataOut<=0;
-        hit_miss<=0;
-        read_writeOut<=0;
-        TargetAdressOut<=0;
-        for(i=0;i<1024;i=i+1) CacheReg[i]<=0;
+        ReadDataOut=0;
+        WriteDataOut=0;
+        read_writeOut=0;
+        TargetAdressOut=0;
+        for(i=0;i<1024;i=i+1) CacheReg[i]=0;
     end
+
+    wire valid, dirty, tag_match;
+    wire [1:0] index, word_offset;
+    wire [3:0] tag ;
 
     assign index = TargetAddressIn[5:4];
     assign tag = TargetAddressIn[9:6];
     assign word_offset = TargetAddressIn[3:2];
 
-    always @(*) begin
-        #2
+    assign tag_match = CacheReg [index][131:128]==tag;
+    assign valid = CacheReg [index][133];
+    assign dirty = CacheReg [index][132];
+
+    and(hit_miss, valid, tag_match);
+    always @(*) begin  
+        $display("wo cao si nide sdfsdf %b", TargetAddressIn);
         if(read_writeIn==1) begin   // if write
-            if (CacheReg [index][133]==1 && CacheReg [index][131:128]==tag) begin  // if valid and hit
-                hit_miss<=1;
-                read_writeOut<=0;
-                // CacheReg [index][(word_offset*32)+:31]<=WriteDataIn;
-                // CacheReg [index][132]<=1;
+            if (hit_miss) begin  // if hit
+                read_writeOut=0;
             end
-            else begin    // if not valid or not hit
-                if (CacheReg [index][132]==1) begin // if dirty, write back
-                    read_writeOut<=1;
-                    TargetAdressOut<=TargetAddressIn;
-                    WriteDataOut<=CacheReg [index][127:0];
+            else begin    // if not hit
+                if (dirty) begin // if dirty, write back
+                    read_writeOut=1;
+                    TargetAdressOut={{CacheReg [index][131:128], index}, 4'b0000};
+                    WriteDataOut=CacheReg [index][127:0];
                     
                 end
-                hit_miss<=0;
-                #2
                 //fetch
-                CacheReg [index][127:0]<=ReadDataFromMain;
-                CacheReg [index][133]<=1;
-                CacheReg [index][132]<=0;
-                CacheReg [index][131:128]<=tag;
-                #2;
+                read_writeOut=0;
+                TargetAdressOut={TargetAddressIn[9:4], 4'b0000};
+                @(posedge doneFromMain) begin
+                    CacheReg [index][127:0]=ReadDataFromMain;
+                end
+                CacheReg [index][133]=1;
+                CacheReg [index][132]=0;
+                CacheReg [index][131:128]=tag;
                 //////
             end
             //write
             if (CacheReg [index][(word_offset*32)+:31]!=WriteDataIn) begin
-                CacheReg [index][(word_offset*32)+:31]<=WriteDataIn;
-                CacheReg [index][132]<=1;
+                CacheReg [index][(word_offset*32)+:31]=WriteDataIn;
+                CacheReg [index][132]=1;
             end
+            ReadDataOut = 0; // default readout = 0
         end
         else begin // if read
-            if (CacheReg [index][133]==1 && CacheReg [index][131:128]==tag) begin // if valid and hit
-                hit_miss<=1;
-                read_writeOut<=0;
+            if (hit_miss) begin // if hit
+                read_writeOut=0;
+                $display("wo cao si nide 22 %d, %b", read_writeOut, TargetAddressIn);
             end
-            else begin // if not valid or not hit
-                hit_miss<=0;
+            else begin // if not hit
+                if (dirty) begin // if dirty, write back
+                    read_writeOut=1;
+                    TargetAdressOut={{CacheReg [index][131:128], index}, 4'b0000};
+                    $display("wo cao si nide ma %d, %b, %b, dirty: %d", read_writeOut, TargetAdressOut, TargetAddressIn, dirty);
+                    WriteDataOut=CacheReg [index][127:0];
+                    #13 ReadDataOut=0;
+                end
+                $display("123123412242345");
                 //fetch
-                CacheReg [index][127:0]<=ReadDataFromMain;
-                CacheReg [index][133]<=1;
-                CacheReg [index][132]<=0;
-                CacheReg [index][131:128]<=tag;
-                #2;
+                read_writeOut=0;
+                TargetAdressOut={TargetAddressIn[9:4], 4'b0000};
+                $display("wo cao si nide choushabi %d, %b, %b, dirty: %d, hit: %d, tag: %b", read_writeOut, TargetAdressOut, TargetAddressIn, dirty, hit_miss, tag);
+                @(posedge doneFromMain) begin
+                    CacheReg [index][127:0]=ReadDataFromMain;
+                end
+                CacheReg [index][133]=1;
+                CacheReg [index][132]=0;
+                CacheReg [index][131:128]=tag;
                 //////
             end
-            ReadDataOut<=CacheReg [index][(word_offset*32)+:31];
+            ReadDataOut=CacheReg [index][(word_offset*32)+:31];
         end
     end
 

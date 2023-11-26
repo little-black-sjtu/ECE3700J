@@ -15,7 +15,8 @@ module CPU (
     reg [31:0] write_data_test[request_total-1:0]; 
     initial begin
         /* test cases */
-        #10 request_num = 0;
+        #21
+        request_num = 0;
         read_write_test[0] = 1; address_test[0] = 10'b0110101000; write_data_test[0] = 10'h3ab; //write miss + empty dirty=0
         read_write_test[1] = 0; address_test[1] = 10'b0110101000; write_data_test[1] = 0; //                                                h3ab
         read_write_test[2] = 1; address_test[2] = 10'b0110101000; write_data_test[2] = 10'h3ac;//write hit
@@ -31,8 +32,8 @@ module CPU (
     end
     always @(posedge clock) begin
         #1
-        if (hit_miss == 1) request_num = request_num + 1;
-        else request_num = request_num;
+        if (hit_miss == 1) request_num <= request_num + 1;
+        else request_num <= request_num;
     end
     assign address      = address_test[request_num];
     assign read_write   = read_write_test[request_num];

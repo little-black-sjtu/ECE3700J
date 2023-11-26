@@ -36,22 +36,26 @@ module CacheTest;
         clock = ~clock;
         t=t+1;
     end
-    
+    integer file;
+
+    initial begin
+        file = $fopen("result_lab6.txt", "w");
+        $dumpfile("CacheTest.vcd");
+        $dumpvars(0, CacheTest);
+    end
+
     always @(posedge clock) begin
-            $display("===============================================");
-            $display("Clock cycle %d", t/2);
-            $display("Read data = %H", test.read_data_cache);
-            $display("hit_miss = %d", test.hit_miss);
-            $display("read_write_cache = %d", test.read_write_cache);
-            $display("Request number = %d", test.CPU_db.request_num);
-            $display("===============================================");
+            $fdisplay(file, "===============================================");
+            $fdisplay(file, "Clock cycle %d", t/2);
+            $fdisplay(file, "Read data = %H", test.read_data_cache);
+            $fdisplay(file, "hit_miss = %d", test.hit_miss);
+            $fdisplay(file, "read_write_cache = %d", test.read_write_cache);
+            $fdisplay(file, "Request number = %d", test.CPU_db.request_num);
+            $fdisplay(file, "Cache[2][133:128] = %b", test.Cache.CacheReg[2][133:128]);
+            $fdisplay(file, "===============================================");
     end
     initial
         #200 $stop;
 
-    initial begin
-        $dumpfile("CacheTest.vcd");
-        $dumpvars(0, CacheTest);
-    end
 
 endmodule
