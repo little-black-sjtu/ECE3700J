@@ -16,7 +16,7 @@ module mainDataReg
 
     always @(*)   begin
         if(read_writeIn==0) begin
-            #12
+            #12   // here we give 12 delay for memory to read, it is about one period
             ReadData[7:0]=mainDataReg[TargetAddress];
             ReadData[15:8]=mainDataReg[TargetAddress+1];
             ReadData[23:16]=mainDataReg[TargetAddress+2];
@@ -36,13 +36,11 @@ module mainDataReg
             ReadData[111:104]=mainDataReg[TargetAddress+13];
             ReadData[119:112]=mainDataReg[TargetAddress+14];
             ReadData[127:120]=mainDataReg[TargetAddress+15];
-            #1 done = 1;
-            #1 done = 0;
-            
-            $display("wo cao si nide dieeeeeeeeeeeeeeeeee, %b, %h", TargetAddress, ReadData);
-        end
+            #1 done = 1;  // we give another 1 delay for done, done is to trigger the cache again to change the "hit"
+            #1 done = 0;  // we should reset the value to 0
+            end
         else if(read_writeIn==1) begin
-            #12
+            #12   // here we give 12 delay for memory to write, it is about one period
             mainDataReg[TargetAddress]=WriteData[7:0];
             mainDataReg[TargetAddress+1]=WriteData[15:8];
             mainDataReg[TargetAddress+2]=WriteData[23:16];
@@ -62,7 +60,6 @@ module mainDataReg
             mainDataReg[TargetAddress+13]=WriteData[111:104];
             mainDataReg[TargetAddress+14]=WriteData[119:112];
             mainDataReg[TargetAddress+15]=WriteData[127:120];
-            $display("wo cao si nide maaaaaaaaaaaaaaa, %b, %h", TargetAddress, WriteData[87:64]);
         end
     end
 endmodule
