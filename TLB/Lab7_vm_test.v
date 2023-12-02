@@ -1,18 +1,29 @@
 `timescale 1ns / 1ps
-`include New_Cache.v
+`include "New_Cache.v"
+`include "Translation_Look_Aside_Buffer.v"
+
 module vm_test;
     reg          clock;
     
     // interface between cache and CPU
-    wire [9:0]   physical_address;
-    wire [13:0]  virtual_address;
-    wire [31:0]  write_data_cache, physical_page_tag;
+    wire         write_read;
+    wire [31:0]  write_data_in_cache, read_data_out_cache;
+
     // interface between cache and main memory
-    wire [31:0]  read_data_mem, read_data_cache, write_data_mem;
+    wire         done_tlb, done_cache, write_read_mem ;
+    wire [31:0]  write_data_out_mem, read_data_in_mem;
     wire [9:0]   address_mem;
-    wire [5:0]   virtual_page_tag;
-    wire [5:0]   request_page_tag;
-    
+
+    //tlb
+    wire         Addr_prepared, write_to_table;
+    wire [5:0]   V_addr_PT_out;
+    wire [1:0]   P_addr_PT_out;
+    wire [9:0]   physical_address;
+    //page table
+    wire [1:0]   P_page_num;
+    //cpu
+    wire [13:0]  virtual_address;
+
     processor                     CPU(
         .hit_miss(hit_miss),
         .clock(clock),
@@ -42,17 +53,20 @@ module vm_test;
     );
 
     translation_look_aside_buffer TLB(
-        .virtual_address(virtual_address),
+        .virtual_address(Virtual_addr), // 
+
+        .write_back(write_to_table), // ?
+
         .input_read_write(read_write),
+
+        .virtual_page_tag(P_addr_PT_in),
         .physical_page_tag(physical_page_tag),
         .dirty_fetched(dirty_fetched),
         .reference_fetched(reference_fetched),
-        .physical_address(physical_address),
+        .physical_address(physical_address), // 
         .output_read_write(read_write_cache),
-        .dirty_write_back(dirty_write_back),
+        .dirty_write_back(write_to_table), // 
         .reference_write_back(reference_write_back),
-        .write_back(write_back),
-        .virtual_page_tag(virtual_page_tag),
         .page_fault(page_fault),
         .request_page_tag(request_page_tag)
     );
