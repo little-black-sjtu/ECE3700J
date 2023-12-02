@@ -47,24 +47,20 @@ module vm_test;
         .address_mem(address_mem),
         .write_data_mem(write_data_mem)
     );
+    
     translation_look_aside_buffer TLB(
-        .virtual_address(Virtual_addr), // 
-
-        .write_back(write_to_table), // ?
-
-        .input_read_write(read_write),
-
-        .virtual_page_tag(P_addr_PT_in),
-        .physical_page_tag(physical_page_tag),
-        .dirty_fetched(dirty_fetched),
-        .reference_fetched(reference_fetched),
-        .physical_address(physical_address), // 
-        .output_read_write(read_write_cache),
-        .dirty_write_back(write_to_table), // 
-        .reference_write_back(reference_write_back),
-        .page_fault(page_fault),
-        .request_page_tag(request_page_tag)
+        .done(done_tlb),
+        .Virtual_addr(virtual_address),
+        .P_addr_PT_in(P_page_num),
+        
+        .TLB_hit(TLB_hit),
+        .write_to_table(write_to_table),
+        .V_addr_PT_out(V_addr_PT_out),
+        .P_addr_PT_out(P_addr_PT_out),
+        .Physical_addr(physical_address),
+        .Addr_prepared(Addr_prepared)
     );
+
     main_mem                      memory(
         .read_write_mem(read_write_mem),
         .address_mem(address_mem),
