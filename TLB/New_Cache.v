@@ -18,7 +18,7 @@ module New_Cache (
     reg                             pos_done;           // NEW
     reg         [1:0]               LRU;
     reg         [134:0]             cache_setA          [1:0];  // 134    133   132:128 127:0
-    reg         [134:0]             cache_setB          [1:0];  //  VALID DIRST   TAG    WORD[0-3]
+    reg         [134:0]             cache_setB          [1:0];  //  VALID DIRTY   TAG    WORD[0-3]
     ////////////////////////////////////////////////////// 7 MSB of cache is V(1'b)+D(1'b)+Tag(5'b) // NEW
 
     wire                            hit_setA, hit_setB, equal_A, equal_B; // NEW
