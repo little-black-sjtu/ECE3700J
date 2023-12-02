@@ -2,7 +2,7 @@ module New_Cache (
     input                           done,               // From main memory
     input                           write_in,           // From CPU request, 1'b1 for write, 1'b0 for read
     input                           addr_prepared,      // From TLB address
-    input       [2:0]               funct,              // From CPU request, for differentiating lw,lb (,lbu )
+    input                           funct,              // From CPU request, for differentiating lw,lb (,lbu )
                                                         // 000 for lb/sb, 010 for lw/sw
     input       [9:0]               rqst_addr,          // From physicalTLB 
     input       [31:0]              read_data_in,       // From main memory
@@ -73,8 +73,7 @@ module New_Cache (
     .data2({{24{lw_out[7]}}, lw_out[15:8]}), .data3({{24{lw_out[7]}}, lw_out[23:16]}), 
     .data4({{24{lw_out[7]}}, lw_out[31:24]}), .sel(rqst_addr[1:0]), .result(lb_out));
 
-    _N_bit_8to1_MUX #(.N(32)) Mux_Data_Out (.data1(lb_out), .data3(lw_out), .data4(), //.data4(lbu_out), 
-    .data2(), .data5(), .data6(), .data7(), .data8(),  .sel(funct), .result(read_data_out));//////
+    _N_bit_2to1_MUX #(.N(32)) Mux_Data_Out (.data1(lb_out), .data2(lw_out), .sel(funct), .result(read_data_out));//////
 
     ////////////////////////////////////////////////////// To main memory
 //    always @(posedge done) begin // NEW // PLEASE take care of this delay
@@ -114,7 +113,7 @@ module New_Cache (
                         cache_setA[setIndex][135-1] = 1'b1; // Set Valid to True 
                         LRU[setIndex] = 1'b1; // Reset Least Resently Used 
                         case(funct)
-                            3'b000: begin i = 32 * rqst_addr[3:2] + 8 * rqst_addr[1:0] + 7;
+                            1'b1: begin i = 32 * rqst_addr[3:2] + 8 * rqst_addr[1:0] + 7;
                                     cache_setA[setIndex][i-: 8] = write_data_in[7:0]; end // sb
                             default:begin i = 31 + 32 * rqst_addr[3:2];
                                     cache_setA[setIndex][i-: 32] = write_data_in; end // sw
@@ -149,7 +148,7 @@ module New_Cache (
                         cache_setB[setIndex][135-1] = 1'b1; // Set Valid to True
                         LRU[setIndex] = 1'b0; // Reset Least Resently Used 
                         case(funct)
-                            3'b000: begin i = 32 * rqst_addr[3:2] + 8 * rqst_addr[1:0] + 7;
+                            1'b1: begin i = 32 * rqst_addr[3:2] + 8 * rqst_addr[1:0] + 7;
                                     cache_setB[setIndex][i-: 8] = write_data_in[7:0]; end // sb
                             default:begin i = 31 + 32 * rqst_addr[3:2];
                                     cache_setB[setIndex][i-: 32] = write_data_in; end // sw
@@ -160,7 +159,7 @@ module New_Cache (
                 end
                 else if (hit_setA) begin
                     case(funct)
-                        3'b000: begin i = 32 * rqst_addr[3:2] + 8 * rqst_addr[1:0] + 7;
+                        1'b1: begin i = 32 * rqst_addr[3:2] + 8 * rqst_addr[1:0] + 7;
                                 cache_setA[setIndex][i-: 8] = write_data_in[7:0]; end // sb
                         default:begin i = 31 + 32 * rqst_addr[3:2];
                                 cache_setA[setIndex][i-: 32] = write_data_in; end // sw
@@ -171,7 +170,7 @@ module New_Cache (
                 end
                 else if (hit_setB) begin
                     case(funct)
-                        3'b000: begin i = 32 * rqst_addr[3:2] + 8 * rqst_addr[1:0] + 7;
+                        1'b1: begin i = 32 * rqst_addr[3:2] + 8 * rqst_addr[1:0] + 7;
                                 cache_setB[setIndex][i-: 8] = write_data_in[7:0]; end // sb
                         default:begin i = 31 + 32 * rqst_addr[3:2];
                                 cache_setB[setIndex][i-: 32] = write_data_in; end // sw
@@ -280,18 +279,12 @@ module _N_bit_4to1_MUX #(
     
 endmodule
 
-module _N_bit_8to1_MUX #(
+module _N_bit_2to1_MUX #(
     parameter   N = 32
 )(
-    input       [2:0]       sel,
+    input                   sel,
     input       [N-1:0]     data1, 
     input       [N-1:0]     data2, 
-    input       [N-1:0]     data3, 
-    input       [N-1:0]     data4,
-    input       [N-1:0]     data5, 
-    input       [N-1:0]     data6, 
-    input       [N-1:0]     data7, 
-    input       [N-1:0]     data8,
     
     output reg  [N-1:0]     result
 );
@@ -302,14 +295,8 @@ module _N_bit_8to1_MUX #(
 
     always @ (*) begin
         case (sel)
-            3'b000: result = data1;
-            3'b001: result = data2;
-            3'b010: result = data3;
-            3'b011: result = data4;
-            3'b100: result = data5;
-            3'b101: result = data6;
-            3'b110: result = data7;
-            3'b111: result = data8;
+            1'b0: result = data1;
+            1'b1: result = data2;
             default:    result = 0;
         endcase
     end
