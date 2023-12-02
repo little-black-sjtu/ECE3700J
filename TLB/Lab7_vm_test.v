@@ -1,4 +1,5 @@
 `timescale 1ns / 1ps
+`include "New_Cache.v"
 `include "Translation_Look_Aside_Buffer.v"
 `include "Page_Table.v"
 `include "Main_Mem.v"
@@ -37,19 +38,21 @@ module vm_test;
         CACHE, TLB, MAIN_MEMORY, and PAGE_TABLE
         to adapt modules you designed to this testbench
     */
-    associative_back_cache        cache(
-        .read_write_cache(read_write_cache),
-        .address_cache(physical_address),
-        .write_data_cache(write_data_cache),
-        .read_data_mem(read_data_mem),
-        .done(done),
-        .read_data_cache(read_data_cache),
-        .hit_miss(hit_miss),
-        .read_write_mem(read_write_mem),
-        .address_mem(address_mem),
-        .write_data_mem(write_data_mem)
+        New_Cache   cache(
+            .done(done_cache),
+            .write_in(write_in),
+            .addr_prepared(Addr_prepared),//tlb
+            .funct(funct),
+            .rqst_addr(Physical_addr),//tlb
+            .read_data_in(read_data_in),
+            .write_data_in(write_data_in),
+                 
+            .hit(hit),
+            .write_out(write_out),
+            .read_data_out(read_data_out), 
+            .write_data_out(write_data_out),
+            .addr_out(addr_out)         
     );
-    
     translation_look_aside_buffer TLB(
         .done(done_tlb),
         .Virtual_addr(virtual_address),
