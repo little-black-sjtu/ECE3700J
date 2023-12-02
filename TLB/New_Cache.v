@@ -2,7 +2,7 @@ module New_Cache (
     input                           done,               // From main memory
     input                           write_in,           // From CPU request, 1'b1 for write, 1'b0 for read
     input                           addr_prepared,      // From TLB address
-    input       [2:0]               funct,              // From CPU request, for differentiating lw,lb (,lbu )
+    input                           funct,              // From CPU request, for differentiating lw,lb (,lbu )
                                                         // 000 for lb/sb, 010 for lw/sw
     input       [9:0]               rqst_addr,          // From physicalTLB 
     input       [31:0]              read_data_in,       // From main memory
@@ -73,8 +73,7 @@ module New_Cache (
     .data2({{24{lw_out[7]}}, lw_out[15:8]}), .data3({{24{lw_out[7]}}, lw_out[23:16]}), 
     .data4({{24{lw_out[7]}}, lw_out[31:24]}), .sel(rqst_addr[1:0]), .result(lb_out));
 
-    _N_bit_8to1_MUX #(.N(32)) Mux_Data_Out (.data1(lb_out), .data3(lw_out), .data4(), //.data4(lbu_out), 
-    .data2(), .data5(), .data6(), .data7(), .data8(),  .sel(funct), .result(read_data_out));//////
+    _N_bit_2to1_MUX #(.N(32)) Mux_Data_Out (.data1(lb_out), .data2(lw_out), .sel(funct), .result(read_data_out));//////
 
     ////////////////////////////////////////////////////// To main memory
 //    always @(posedge done) begin // NEW // PLEASE take care of this delay
@@ -111,16 +110,16 @@ module New_Cache (
                                 addr_out = addr_out + 4;
                             end
                         end
-                        cache_setA[setIndex][n-1] = 1'b1; // Set Valid to True 
+                        cache_setA[setIndex][135-1] = 1'b1; // Set Valid to True 
                         LRU[setIndex] = 1'b1; // Reset Least Resently Used 
                         case(funct)
-                            3'b000: begin i = 32 * rqst_addr[3:2] + 8 * rqst_addr[1:0] + 7;
+                            1'b1: begin i = 32 * rqst_addr[3:2] + 8 * rqst_addr[1:0] + 7;
                                     cache_setA[setIndex][i-: 8] = write_data_in[7:0]; end // sb
                             default:begin i = 31 + 32 * rqst_addr[3:2];
                                     cache_setA[setIndex][i-: 32] = write_data_in; end // sw
                         endcase
-                        cache_setA[setIndex][n-2] = 1'b1; // Mark cache_setA dirty
-                        cache_setA[setIndex][(n-3)-: tag] = rqst_addr[9-: tag];
+                        cache_setA[setIndex][135-2] = 1'b1; // Mark cache_setA dirty
+                        cache_setA[setIndex][(135-3)-: 5] = rqst_addr[9-: 5];
                     end 
                     else begin
                         // Write data from cache to memory if dirty
@@ -146,39 +145,39 @@ module New_Cache (
                                 addr_out = addr_out + 4;
                             end
                         end
-                        cache_setB[setIndex][n-1] = 1'b1; // Set Valid to True
+                        cache_setB[setIndex][135-1] = 1'b1; // Set Valid to True
                         LRU[setIndex] = 1'b0; // Reset Least Resently Used 
                         case(funct)
-                            3'b000: begin i = 32 * rqst_addr[3:2] + 8 * rqst_addr[1:0] + 7;
+                            1'b1: begin i = 32 * rqst_addr[3:2] + 8 * rqst_addr[1:0] + 7;
                                     cache_setB[setIndex][i-: 8] = write_data_in[7:0]; end // sb
                             default:begin i = 31 + 32 * rqst_addr[3:2];
                                     cache_setB[setIndex][i-: 32] = write_data_in; end // sw
                         endcase
-                        cache_setB[setIndex][n-2] = 1'b1; // Mark cache_setB dirty
-                        cache_setB[setIndex][(n-3)-: tag] = rqst_addr[9-: tag];
+                        cache_setB[setIndex][135-2] = 1'b1; // Mark cache_setB dirty
+                        cache_setB[setIndex][(135-3)-: 5] = rqst_addr[9-: 5];
                     end
                 end
                 else if (hit_setA) begin
                     case(funct)
-                        3'b000: begin i = 32 * rqst_addr[3:2] + 8 * rqst_addr[1:0] + 7;
+                        1'b1: begin i = 32 * rqst_addr[3:2] + 8 * rqst_addr[1:0] + 7;
                                 cache_setA[setIndex][i-: 8] = write_data_in[7:0]; end // sb
                         default:begin i = 31 + 32 * rqst_addr[3:2];
                                 cache_setA[setIndex][i-: 32] = write_data_in; end // sw
                     endcase
-                    cache_setA[setIndex][n-2] = 1'b1; // Mark cache_setA dirty
+                    cache_setA[setIndex][135-2] = 1'b1; // Mark cache_setA dirty
                     LRU[setIndex] = 1'b1; // Reset Least Resently Used to setB
-                    cache_setA[setIndex][(n-3)-: tag] = rqst_addr[9-: tag];
+                    cache_setA[setIndex][(135-3)-: 5] = rqst_addr[9-: 5];
                 end
                 else if (hit_setB) begin
                     case(funct)
-                        3'b000: begin i = 32 * rqst_addr[3:2] + 8 * rqst_addr[1:0] + 7;
+                        1'b1: begin i = 32 * rqst_addr[3:2] + 8 * rqst_addr[1:0] + 7;
                                 cache_setB[setIndex][i-: 8] = write_data_in[7:0]; end // sb
                         default:begin i = 31 + 32 * rqst_addr[3:2];
                                 cache_setB[setIndex][i-: 32] = write_data_in; end // sw
                     endcase
-                    cache_setB[setIndex][n-2] = 1'b1; // Mark cache_setA dirty
+                    cache_setB[setIndex][135-2] = 1'b1; // Mark cache_setA dirty
                     LRU[setIndex] = 1'b0; // Reset Least Resently Used to setA
-                    cache_setB[setIndex][(n-3)-: tag] = rqst_addr[9-: tag];
+                    cache_setB[setIndex][(135-3)-: 5] = rqst_addr[9-: 5];
                 end
             end
             else begin // read_out  // lw/lb
@@ -205,10 +204,10 @@ module New_Cache (
                                 addr_out = addr_out + 4;
                             end
                         end
-                        cache_setA[setIndex][n-2] = 1'b0; // Mark as NOT dirty
-                        cache_setA[setIndex][n-1] = 1'b1; // Set Valid to True 
+                        cache_setA[setIndex][135-2] = 1'b0; // Mark as NOT dirty
+                        cache_setA[setIndex][135-1] = 1'b1; // Set Valid to True 
                         LRU[setIndex] = 1'b1; // Reset Least Resently Used = B
-                        cache_setA[setIndex][(n-3)-: tag] = rqst_addr[9-: tag];
+                        cache_setA[setIndex][(135-3)-: 5] = rqst_addr[9-: 5];
                     end
                     else begin
                         // Write data from cache to memory if dirty
@@ -232,22 +231,74 @@ module New_Cache (
                                 addr_out = addr_out + 4;
                             end
                         end
-                        cache_setB[setIndex][n-2] = 1'b0; // Mark as NOT dirty
-                        cache_setB[setIndex][n-1] = 1'b1; // Set Valid to True 
+                        cache_setB[setIndex][135-2] = 1'b0; // Mark as NOT dirty
+                        cache_setB[setIndex][135-1] = 1'b1; // Set Valid to True 
                         LRU[setIndex] = 1'b0; // Reset Least Resently Used = A
-                        cache_setB[setIndex][(n-3)-: tag] = rqst_addr[9-: tag];
+                        cache_setB[setIndex][(135-3)-: 5] = rqst_addr[9-: 5];
                     end
                 end
                 else if (hit_setA) begin
-                    cache_setA[setIndex][(n-3)-: tag] = rqst_addr[9-: tag];
+                    cache_setA[setIndex][(135-3)-: 5] = rqst_addr[9-: 5];
                     LRU[setIndex] = 1'b1; // Reset Least Resently Used = B
                 end
                 else if (hit_setB) begin
-                    cache_setB[setIndex][(n-3)-: tag] = rqst_addr[9-: tag];
+                    cache_setB[setIndex][(135-3)-: 5] = rqst_addr[9-: 5];
                     LRU[setIndex] = 1'b0; // Reset Least Resently Used = A
                 end
             end
         end
     end        
 
+endmodule
+
+module _N_bit_4to1_MUX #(
+    parameter   N = 32
+)(
+    input       [1:0]       sel,
+    input       [N-1:0]     data1, 
+    input       [N-1:0]     data2, 
+    input       [N-1:0]     data3, 
+    input       [N-1:0]     data4,
+    
+    output reg  [N-1:0]     result
+);
+
+    initial begin
+        result = 0;
+    end
+
+    always @ (*) begin
+        case (sel)
+            2'b00:  result = data1;
+            2'b01:  result = data2;
+            2'b10:  result = data3;
+            2'b11:  result = data4;
+            default:    result = 0;
+        endcase
+    end
+    
+endmodule
+
+module _N_bit_2to1_MUX #(
+    parameter   N = 32
+)(
+    input                   sel,
+    input       [N-1:0]     data1, 
+    input       [N-1:0]     data2, 
+    
+    output reg  [N-1:0]     result
+);
+
+    initial begin
+        result = 0;
+    end
+
+    always @ (*) begin
+        case (sel)
+            1'b0: result = data1;
+            1'b1: result = data2;
+            default:    result = 0;
+        endcase
+    end
+    
 endmodule

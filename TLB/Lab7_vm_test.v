@@ -1,6 +1,8 @@
 `timescale 1ns / 1ps
 `include "New_Cache.v"
 `include "Translation_Look_Aside_Buffer.v"
+`include "Page_Table.v"
+`include "Main_Mem.v"
 
 module vm_test;
     reg          clock;
@@ -27,66 +29,59 @@ module vm_test;
     processor                     CPU(
         .hit_miss(hit_miss),
         .clock(clock),
-        .read_write(read_write),
+        .read_write(write_read),
         .address(virtual_address),
-        .write_data(write_data_cache)
+        .write_data(write_data_in_cache)
     );
     /*
         You can only modify the following parts:
         CACHE, TLB, MAIN_MEMORY, and PAGE_TABLE
         to adapt modules you designed to this testbench
     */
-        New_Cache   cache(
-            .done(done_cache),
-            .write_in(write_in),
-            .addr_prepared(Addr_prepared),//tlb
-            .funct(funct),
-            .rqst_addr(Physical_addr),//tlb
-            .read_data_in(read_data_in),
-            .write_data_in(write_data_in),
-                 
-            .hit(hit),
-            .write_out(write_out),
-            .read_data_out(read_data_out), 
-            .write_data_out(write_data_out),
-            .addr_out(addr_out)         
+    New_Cache   cache(
+        .done(done_cache),
+        .write_in(write_in),
+        .addr_prepared(Addr_prepared),//tlb
+        .funct(physical_address[0]),
+        .rqst_addr(physical_address),//tlb
+        .read_data_in(read_data_in_mem),
+        .write_data_in(write_data_in_cache),
+                
+        .hit(hit),
+        .write_out(write_read_mem),
+        .read_data_out(read_data_out_cache), 
+        .write_data_out(write_data_out_mem),
+        .addr_out(address_mem)         
     );
-
     translation_look_aside_buffer TLB(
-        .virtual_address(Virtual_addr), // 
-
-        .write_back(write_to_table), // ?
-
-        .input_read_write(read_write),
-
-        .virtual_page_tag(P_addr_PT_in),
-        .physical_page_tag(physical_page_tag),
-        .dirty_fetched(dirty_fetched),
-        .reference_fetched(reference_fetched),
-        .physical_address(physical_address), // 
-        .output_read_write(read_write_cache),
-        .dirty_write_back(write_to_table), // 
-        .reference_write_back(reference_write_back),
-        .page_fault(page_fault),
-        .request_page_tag(request_page_tag)
+        .done(done_tlb),
+        .Virtual_addr(virtual_address),
+        .P_addr_PT_in(P_page_num),
+        
+        .TLB_hit(TLB_hit),
+        .write_to_table(write_to_table),
+        .V_addr_PT_out(V_addr_PT_out),
+        .P_addr_PT_out(P_addr_PT_out),
+        .Physical_addr(physical_address),
+        .Addr_prepared(Addr_prepared)
     );
+
     main_mem                      memory(
-        .read_write_mem(read_write_mem),
-        .address_mem(address_mem),
-        .write_data_mem(write_data_mem),
-        .read_data_mem(read_data_mem),
-        .done(done)
+        .read_or_write(write_read_mem),
+        .address(address_mem),
+        .write_data(write_data_out_mem),
+        .read_data(read_data_in_mem),
+        .done(done_cache)         
     );
+    
     page_table                    PT(
-        .dirty_write_back(dirty_write_back),
-        .reference_write_back(reference_write_back),
-        .write_back(write_back),
-        .virtual_page_tag(virtual_page_tag),
-        .physical_page_tag(physical_page_tag),
-        .dirty_fetched(dirty_fetched),
-        .reference_fetched(reference_fetched),
-        .page_fault(page_fault),
-        .request_page_tag(request_page_tag)
+        .read_from_TLB(write_to_table),
+        .phy_page_num_in(P_addr_PT_out),
+        .vir_page_num_in(V_addr_PT_out),
+        
+        .done(done_tlb),
+        .phy_page_num(P_page_num),
+        .page_fault(page_fault)
     );
 
     /*
@@ -97,17 +92,17 @@ module vm_test;
     always @(posedge clock) begin
         $display("Request %d: ", CPU.request_num);
         $display("page fault: %b", PT.page_fault);
-        $display("data read posedge: %H", read_data_cache);
+        $display("data read posedge: %H", read_data_out_cache);
         $display("contents in TLB: ");
-        $display("block 00: tag: %2d, valid: %b, dirty: %b, reference: %b, VPN: %1d", TLB.tag[0], TLB.valid[0], TLB.dirty[0], TLB.reference[0], TLB.block[0]);
-        $display("block 01: tag: %2d, valid: %b, dirty: %b, reference: %b, VPN: %1d", TLB.tag[1], TLB.valid[1], TLB.dirty[1], TLB.reference[1], TLB.block[1]);
-        $display("block 10: tag: %2d, valid: %b, dirty: %b, reference: %b, VPN: %1d", TLB.tag[2], TLB.valid[2], TLB.dirty[2], TLB.reference[2], TLB.block[2]);
-        $display("block 11: tag: %2d, valid: %b, dirty: %b, reference: %b, VPN: %1d", TLB.tag[3], TLB.valid[3], TLB.dirty[3], TLB.reference[3], TLB.block[3]);
+        $display("block 00: tag: %2d, valid: %b, dirty: %b, reference: %b, VPN: %1d", TLB.TLB[0][7:2], TLB.TLB[0][11], TLB.TLB[0][10], TLB.TLB[0][9:8], TLB.Virtual_addr[13:8]);
+        $display("block 01: tag: %2d, valid: %b, dirty: %b, reference: %b, VPN: %1d", TLB.TLB[1][7:2], TLB.TLB[1][11], TLB.TLB[1][10], TLB.TLB[1][9:8], TLB.Virtual_addr[13:8]);
+        $display("block 10: tag: %2d, valid: %b, dirty: %b, reference: %b, VPN: %1d", TLB.TLB[2][7:2], TLB.TLB[2][11], TLB.TLB[2][10], TLB.TLB[2][9:8], TLB.Virtual_addr[13:8]);
+        $display("block 11: tag: %2d, valid: %b, dirty: %b, reference: %b, VPN: %1d", TLB.TLB[3][7:2], TLB.TLB[3][11], TLB.TLB[3][10], TLB.TLB[3][9:8], TLB.Virtual_addr[13:8]);
         $display("contents in cache: ");
-        $display("block 00: tag: %b, valid: %b, dirty: %b, word0: %H, word1: %H, word2: %H, word3: %H", cache.tag[0], cache.valid[0], cache.dirty[0], cache.block[0][127:96], cache.block[0][95:64], cache.block[0][63:32], cache.block[0][31:0]);
-        $display("block 01: tag: %b, valid: %b, dirty: %b, word0: %H, word1: %H, word2: %H, word3: %H", cache.tag[1], cache.valid[1], cache.dirty[1], cache.block[1][127:96], cache.block[1][95:64], cache.block[1][63:32], cache.block[1][31:0]);
-        $display("block 10: tag: %b, valid: %b, dirty: %b, word0: %H, word1: %H, word2: %H, word3: %H", cache.tag[2], cache.valid[2], cache.dirty[2], cache.block[2][127:96], cache.block[2][95:64], cache.block[2][63:32], cache.block[2][31:0]);
-        $display("block 11: tag: %b, valid: %b, dirty: %b, word0: %H, word1: %H, word2: %H, word3: %H", cache.tag[3], cache.valid[3], cache.dirty[3], cache.block[3][127:96], cache.block[3][95:64], cache.block[3][63:32], cache.block[3][31:0]);
+        $display("block 00: tag: %b, valid: %b, dirty: %b, word0: %H, word1: %H, word2: %H, word3: %H", cache.cache_setA[0][132:128], cache.cache_setA[0][134], cache.cache_setA[0][133], cache.cache_setA[0][31-:32], cache.cache_setA[0][63-:32], cache.cache_setA[0][95-:32], cache.cache_setA[0][127-:32]);
+        $display("block 01: tag: %b, valid: %b, dirty: %b, word0: %H, word1: %H, word2: %H, word3: %H", cache.cache_setA[1][132:128], cache.cache_setA[1][134], cache.cache_setA[1][133], cache.cache_setA[1][31-:32], cache.cache_setA[1][63-:32], cache.cache_setA[1][95-:32], cache.cache_setA[1][127-:32]);
+        $display("block 10: tag: %b, valid: %b, dirty: %b, word0: %H, word1: %H, word2: %H, word3: %H", cache.cache_setB[0][132:128], cache.cache_setB[0][134], cache.cache_setB[0][133], cache.cache_setB[0][31-:32], cache.cache_setB[0][63-:32], cache.cache_setB[0][95-:32], cache.cache_setB[0][127-:32]);
+        $display("block 11: tag: %b, valid: %b, dirty: %b, word0: %H, word1: %H, word2: %H, word3: %H", cache.cache_setB[1][132:128], cache.cache_setB[1][134], cache.cache_setB[1][133], cache.cache_setB[1][31-:32], cache.cache_setB[1][63-:32], cache.cache_setB[1][95-:32], cache.cache_setB[1][127-:32]);
     end
     
     initial begin
