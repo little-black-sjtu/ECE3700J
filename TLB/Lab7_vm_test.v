@@ -1,5 +1,7 @@
 `timescale 1ns / 1ps
 `include "Translation_Look_Aside_Buffer.v"
+`include "Page_Table.v"
+`include "Main_Mem.v"
 
 module vm_test;
     reg          clock;
@@ -62,22 +64,21 @@ module vm_test;
     );
 
     main_mem                      memory(
-        .read_write_mem(read_write_mem),
-        .address_mem(address_mem),
-        .write_data_mem(write_data_mem),
-        .read_data_mem(read_data_mem),
-        .done(done)
+        .read_or_write(write_read_mem),
+        .address(address_mem),
+        .write_data(write_data_out_mem),
+        .read_data(read_data_in_mem),
+        .done(done_cache)         
     );
+    
     page_table                    PT(
-        .dirty_write_back(dirty_write_back),
-        .reference_write_back(reference_write_back),
-        .write_back(write_back),
-        .virtual_page_tag(virtual_page_tag),
-        .physical_page_tag(physical_page_tag),
-        .dirty_fetched(dirty_fetched),
-        .reference_fetched(reference_fetched),
-        .page_fault(page_fault),
-        .request_page_tag(request_page_tag)
+        .read_from_TLB(write_to_table),
+        .phy_page_num_in(P_addr_PT_out),
+        .vir_page_num_in(V_addr_PT_out),
+        
+        .done(done_tlb),
+        .phy_page_num(P_page_num),
+        .page_fault(page_fault)
     );
 
     /*
