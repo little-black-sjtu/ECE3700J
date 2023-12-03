@@ -36,7 +36,7 @@ module translation_look_aside_buffer
         Physical_addr = 0; Addr_prepared = 0;
         write_to_table = 0;
         for (i = 0; i < 4; i = i + 1) begin///
-            TLB[i] = 0;
+            TLB[i] = 12'b0;
             TLB[i][9:8]=i;
         end
     end

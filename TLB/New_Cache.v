@@ -34,7 +34,7 @@ module New_Cache (
     initial begin
         pos_done = 0; addr_out = 0; 
         write_out = 0; write_data_out = 0; 
-        for (i = 0; i < 1; i = i + 1) begin
+        for (i = 0; i <= 1; i = i + 1) begin
             cache_setA[i] = 0; cache_setB[i] = 0; LRU[i] = 0;
         end
     end

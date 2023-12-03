@@ -35,7 +35,7 @@ module page_table (
         page_table[8][4] = 1;
         page_table[10][4] = 1;
 
-		done = 1'b0; page_fault = 1'b0;
+		//done = 1'b0; page_fault = 1'b0;
 	end
 	
 	//always @(read_from_TLB or address) begin

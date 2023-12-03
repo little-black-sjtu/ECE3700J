@@ -103,11 +103,22 @@ module vm_test;
         $display("block 01: tag: %b, valid: %b, dirty: %b, word0: %H, word1: %H, word2: %H, word3: %H", cache.cache_setA[1][132:128], cache.cache_setA[1][134], cache.cache_setA[1][133], cache.cache_setA[1][31-:32], cache.cache_setA[1][63-:32], cache.cache_setA[1][95-:32], cache.cache_setA[1][127-:32]);
         $display("block 10: tag: %b, valid: %b, dirty: %b, word0: %H, word1: %H, word2: %H, word3: %H", cache.cache_setB[0][132:128], cache.cache_setB[0][134], cache.cache_setB[0][133], cache.cache_setB[0][31-:32], cache.cache_setB[0][63-:32], cache.cache_setB[0][95-:32], cache.cache_setB[0][127-:32]);
         $display("block 11: tag: %b, valid: %b, dirty: %b, word0: %H, word1: %H, word2: %H, word3: %H", cache.cache_setB[1][132:128], cache.cache_setB[1][134], cache.cache_setB[1][133], cache.cache_setB[1][31-:32], cache.cache_setB[1][63-:32], cache.cache_setB[1][95-:32], cache.cache_setB[1][127-:32]);
+        $display("TLB P_addr_PT_out: %b", TLB.P_addr_PT_out);
+        $display("TLB V_addr_PT_out: %b", TLB.V_addr_PT_out);
+        $display("TLB_hit: %b", TLB.TLB_hit);
+        // show TLB.TLB
+        $display("TLB.TLB[0]: %b", TLB.TLB[0]);
+        $display("TLB.TLB[1]: %b", TLB.TLB[1]);
+        $display("TLB.TLB[2]: %b", TLB.TLB[2]);
+        $display("TLB.TLB[3]: %b", TLB.TLB[3]);
+        $display("P_addr_PT_in: %b", TLB.P_addr_PT_in);
+        $display("TLB.VPN: %b", TLB.VPN);
+        $display("Virtual_addr: %b", TLB.Virtual_addr);
     end
     
     initial begin
         clock = 0;
-        #160 $stop;
+        #160 $finish;  //use finish instead of $stop. The latter will make the terminal run forever.
     end
 endmodule
 /*
