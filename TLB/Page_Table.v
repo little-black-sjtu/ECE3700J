@@ -16,9 +16,10 @@ module page_table (
 	initial begin
 		//wait for initial data
 		for(i = 0; i < 64; i = i + 1) begin 
-            page_table[i][2] = 0;  // ref
-            page_table[i][3] = 0;  // dirty
-            page_table[i][4] = 0;  // valid
+           // page_table[i][2] = 0;  // ref
+           // page_table[i][3] = 0;  // dirty
+           // page_table[i][4] = 0;  // valid
+           page_table[i] = 0;
         end
         
         page_table[4][1:0] = 2;

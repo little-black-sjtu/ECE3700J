@@ -27,17 +27,16 @@ module translation_look_aside_buffer
     
     wire        [3:0]       Hit;                        // whether [Tag == VPN] && Valid in this rowS
     wire        [5:0]       VPN;                        // Data of Virtual Page Number, in Processor
-    
     ////////////////////////////////////////////////////// Initialization
-   
+    reg [1:0] stop_loop = 0; //for debug
     integer i, j, k;
     initial begin
-        V_addr_PT_out = 0; P_addr_PT_out = 0; 
-        Physical_addr = 0; Addr_prepared = 0;
-        write_to_table = 0;
-        for (i = 0; i < 4; i = i + 1) begin///
+        V_addr_PT_out <= 0; P_addr_PT_out <= 0; 
+        Physical_addr <= 0; Addr_prepared <= 0;
+        write_to_table <= 0;
+        for (i = 0; i <= 3; i = i + 1) begin///
             TLB[i] = 0;
-            TLB[i][9:8]=i;
+            TLB[i][9:8] =i;
         end
     end
     
@@ -53,7 +52,7 @@ module translation_look_aside_buffer
     always @(*) begin
         if (!TLB_hit) begin 
             Addr_prepared = 1'b0;
-            for (i = 0; i < 4; i = i + 1) begin // LRU_sel
+            for (i = 0; i <= 3; i = i + 1) begin // LRU_sel
                 if (TLB[i][9:8] == 2'b11) begin
                     // Write physical_addr from TLB to Page Table if dirty
                     if (TLB[i][10]) begin // If the certain block is dirty
@@ -63,11 +62,11 @@ module translation_look_aside_buffer
                     end 
                     // Read physical_addr from Page Table to TLB anyway
                     write_to_table = 1'b0;
-                    V_addr_PT_out = VPN;
+                    V_addr_PT_out <= Virtual_addr[13: 8];
                     # 1
                     if (done) begin
                         TLB[i][1:0] = P_addr_PT_in;
-                        TLB[i][7:2] = VPN; // Reset P_addr in TLB[i]
+                        TLB[i][7:2] = Virtual_addr[13: 8]; // Reset P_addr in TLB[i]
                     end
                     TLB[i][10] = 1'b0; // Mark as NOT dirty
                     TLB[i][11] = 1'b1; // Set Valid to True 
@@ -75,6 +74,7 @@ module translation_look_aside_buffer
 //                        TLB[j][9:8] = TLB[j][9:8] + 2'b01;
 //                    end
 //                    TLB[i][9:8] = 2'b00; // Reset 2-bit LRU 
+                    stop_loop =i[1:0]; //for debug
                 end
             end
         end

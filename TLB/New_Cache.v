@@ -34,7 +34,7 @@ module New_Cache (
     initial begin
         pos_done = 0; addr_out = 0; 
         write_out = 0; write_data_out = 0; 
-        for (i = 0; i < 1; i = i + 1) begin
+        for (i = 0; i <= 1; i = i + 1) begin
             cache_setA[i] = 0; cache_setB[i] = 0; LRU[i] = 0;
         end
     end
@@ -42,14 +42,14 @@ module New_Cache (
     assign  setIndex = rqst_addr[4];
     assign  block_A = cache_setA[setIndex];
     assign  block_B = cache_setB[setIndex];
-    assign  tagContent_A = block_A[(131)-: 5];
-    assign  tagContent_B = block_B[(131)-: 5];
+    assign  tagContent_A = block_A[(132)-: 5];
+    assign  tagContent_B = block_B[(132)-: 5];
     assign  equal_A = (tagContent_A == rqst_addr[(10-1)-: 5]);
     assign  equal_B = (tagContent_B == rqst_addr[(10-1)-: 5]);
-    assign  valid_A = block_A[133];
-    assign  valid_B = block_B[133];
-    assign  dirty_A = block_A[132];
-    assign  dirty_B = block_B[132];
+    assign  valid_A = block_A[134];
+    assign  valid_B = block_B[134];
+    assign  dirty_A = block_A[133];
+    assign  dirty_B = block_B[133];
     
     ////////////////////////////////////////////////////// To CPU request
     or  (hit, hit_setA, hit_setB);

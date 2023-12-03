@@ -27,7 +27,7 @@ module vm_test;
     wire [13:0]  virtual_address;
 
     processor                     CPU(
-        .hit_miss(hit_miss),
+        .hit_miss(hit),
         .clock(clock),
         .read_write(write_read),
         .address(virtual_address),
@@ -40,7 +40,7 @@ module vm_test;
     */
     New_Cache   cache(
         .done(done_cache),
-        .write_in(write_in),
+        .write_in(write_read),
         .addr_prepared(Addr_prepared),//tlb
         .funct(physical_address[0]),
         .rqst_addr(physical_address),//tlb
@@ -89,25 +89,33 @@ module vm_test;
     */
     always #5 clock = ~clock;
 
+    integer file;
+
+    initial begin
+        file = $fopen("result_lab7.txt", "w");
+        $dumpfile("vm_test.vcd");
+        $dumpvars(0, vm_test);
+    end
+
     always @(posedge clock) begin
-        $display("Request %d: ", CPU.request_num);
-        $display("page fault: %b", PT.page_fault);
-        $display("data read posedge: %H", read_data_out_cache);
-        $display("contents in TLB: ");
-        $display("block 00: tag: %2d, valid: %b, dirty: %b, reference: %b, VPN: %1d", TLB.TLB[0][7:2], TLB.TLB[0][11], TLB.TLB[0][10], TLB.TLB[0][9:8], TLB.Virtual_addr[13:8]);
-        $display("block 01: tag: %2d, valid: %b, dirty: %b, reference: %b, VPN: %1d", TLB.TLB[1][7:2], TLB.TLB[1][11], TLB.TLB[1][10], TLB.TLB[1][9:8], TLB.Virtual_addr[13:8]);
-        $display("block 10: tag: %2d, valid: %b, dirty: %b, reference: %b, VPN: %1d", TLB.TLB[2][7:2], TLB.TLB[2][11], TLB.TLB[2][10], TLB.TLB[2][9:8], TLB.Virtual_addr[13:8]);
-        $display("block 11: tag: %2d, valid: %b, dirty: %b, reference: %b, VPN: %1d", TLB.TLB[3][7:2], TLB.TLB[3][11], TLB.TLB[3][10], TLB.TLB[3][9:8], TLB.Virtual_addr[13:8]);
-        $display("contents in cache: ");
-        $display("block 00: tag: %b, valid: %b, dirty: %b, word0: %H, word1: %H, word2: %H, word3: %H", cache.cache_setA[0][132:128], cache.cache_setA[0][134], cache.cache_setA[0][133], cache.cache_setA[0][31-:32], cache.cache_setA[0][63-:32], cache.cache_setA[0][95-:32], cache.cache_setA[0][127-:32]);
-        $display("block 01: tag: %b, valid: %b, dirty: %b, word0: %H, word1: %H, word2: %H, word3: %H", cache.cache_setA[1][132:128], cache.cache_setA[1][134], cache.cache_setA[1][133], cache.cache_setA[1][31-:32], cache.cache_setA[1][63-:32], cache.cache_setA[1][95-:32], cache.cache_setA[1][127-:32]);
-        $display("block 10: tag: %b, valid: %b, dirty: %b, word0: %H, word1: %H, word2: %H, word3: %H", cache.cache_setB[0][132:128], cache.cache_setB[0][134], cache.cache_setB[0][133], cache.cache_setB[0][31-:32], cache.cache_setB[0][63-:32], cache.cache_setB[0][95-:32], cache.cache_setB[0][127-:32]);
-        $display("block 11: tag: %b, valid: %b, dirty: %b, word0: %H, word1: %H, word2: %H, word3: %H", cache.cache_setB[1][132:128], cache.cache_setB[1][134], cache.cache_setB[1][133], cache.cache_setB[1][31-:32], cache.cache_setB[1][63-:32], cache.cache_setB[1][95-:32], cache.cache_setB[1][127-:32]);
+        $fdisplay(file,"Request %d: ", CPU.request_num);
+        $fdisplay(file,"page fault: %b", PT.page_fault);
+        $fdisplay(file,"data read posedge: %H", read_data_out_cache);
+        $fdisplay(file,"contents in TLB: ");
+        $fdisplay(file,"block 00: tag: %2d, valid: %b, dirty: %b, reference: %b, VPN: %1d", TLB.TLB[0][7:2], TLB.TLB[0][11], TLB.TLB[0][10], TLB.TLB[0][9:8], TLB.Virtual_addr[13:8]);
+        $fdisplay(file,"block 01: tag: %2d, valid: %b, dirty: %b, reference: %b, VPN: %1d", TLB.TLB[1][7:2], TLB.TLB[1][11], TLB.TLB[1][10], TLB.TLB[1][9:8], TLB.Virtual_addr[13:8]);
+        $fdisplay(file,"block 10: tag: %2d, valid: %b, dirty: %b, reference: %b, VPN: %1d", TLB.TLB[2][7:2], TLB.TLB[2][11], TLB.TLB[2][10], TLB.TLB[2][9:8], TLB.Virtual_addr[13:8]);
+        $fdisplay(file,"block 11: tag: %2d, valid: %b, dirty: %b, reference: %b, VPN: %1d", TLB.TLB[3][7:2], TLB.TLB[3][11], TLB.TLB[3][10], TLB.TLB[3][9:8], TLB.Virtual_addr[13:8]);
+        $fdisplay(file,"contents in cache: ");
+        $fdisplay(file,"block 00: tag: %b, valid: %b, dirty: %b, word0: %H, word1: %H, word2: %H, word3: %H", cache.cache_setA[0][132:128], cache.cache_setA[0][134], cache.cache_setA[0][133], cache.cache_setA[0][31-:32], cache.cache_setA[0][63-:32], cache.cache_setA[0][95-:32], cache.cache_setA[0][127-:32]);
+        $fdisplay(file,"block 01: tag: %b, valid: %b, dirty: %b, word0: %H, word1: %H, word2: %H, word3: %H", cache.cache_setA[1][132:128], cache.cache_setA[1][134], cache.cache_setA[1][133], cache.cache_setA[1][31-:32], cache.cache_setA[1][63-:32], cache.cache_setA[1][95-:32], cache.cache_setA[1][127-:32]);
+        $fdisplay(file,"block 10: tag: %b, valid: %b, dirty: %b, word0: %H, word1: %H, word2: %H, word3: %H", cache.cache_setB[0][132:128], cache.cache_setB[0][134], cache.cache_setB[0][133], cache.cache_setB[0][31-:32], cache.cache_setB[0][63-:32], cache.cache_setB[0][95-:32], cache.cache_setB[0][127-:32]);
+        $fdisplay(file,"block 11: tag: %b, valid: %b, dirty: %b, word0: %H, word1: %H, word2: %H, word3: %H", cache.cache_setB[1][132:128], cache.cache_setB[1][134], cache.cache_setB[1][133], cache.cache_setB[1][31-:32], cache.cache_setB[1][63-:32], cache.cache_setB[1][95-:32], cache.cache_setB[1][127-:32]);
     end
     
     initial begin
         clock = 0;
-        #160 $stop;
+        #400 $finish;
     end
 endmodule
 /*
@@ -126,7 +134,7 @@ module processor (
     reg [13:0]  address_test[request_total-1:0];
     reg [31:0] write_data_test[request_total-1:0]; 
     initial begin
-        #10 request_num = 0;
+        request_num = 0;
         read_write_test[0]  = 1; address_test[0]  = 14'b000100_100_0_1000; write_data_test[0]  = 1;       // sw, virtual page  4, TLB miss, mapped to physical page 2, physical tag 10100, cache miss in set 0 block 0,
         read_write_test[1]  = 1; address_test[1]  = 14'b000000_100_1_1100; write_data_test[1]  = 12'hdac; // sw, virtual page  0, TLB miss, mapped to physical page 1, physical tag 01100, cache miss in set 1 block 0,
         read_write_test[2]  = 1; address_test[2]  = 14'b000001_100_1_1000; write_data_test[2]  = 12'hfac; // sw, virtual page  1, TLB miss, mapped to physical page 3, physical tag 11100, cache miss in set 1 block 1,
@@ -151,6 +159,7 @@ module processor (
         // But such requirement is cancelled considering your workload :)
     end
     always @(posedge clock) begin
+        #1
         if (hit_miss == 1) request_num = request_num + 1;
         else request_num = request_num;
     end
