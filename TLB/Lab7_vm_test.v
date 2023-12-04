@@ -107,10 +107,10 @@ module vm_test;
         $display("block 10: tag: %2d, valid: %b, dirty: %b, reference: %b, PPN: %1d", TLB.TLB[2][7:2], TLB.TLB[2][11], TLB.TLB[2][10], TLB.TLB[2][9:8], TLB.TLB[2][1:0]);
         $display("block 11: tag: %2d, valid: %b, dirty: %b, reference: %b, PPN: %1d", TLB.TLB[3][7:2], TLB.TLB[3][11], TLB.TLB[3][10], TLB.TLB[3][9:8], TLB.TLB[3][1:0]);
         $display("contents in cache: ");
-        $display("block 00: tag: %b, valid: %b, dirty: %b, word0: %H, word1: %H, word2: %H, word3: %H", cache.cache_setA[0][132:128], cache.cache_setA[0][134], cache.cache_setA[0][133], cache.cache_setA[0][127-: 32], cache.cache_setA[0][95-: 32], cache.cache_setA[0][63-: 32], cache.cache_setA[0][31-: 32]);
-        $display("block 01: tag: %b, valid: %b, dirty: %b, word0: %H, word1: %H, word2: %H, word3: %H", cache.cache_setA[1][132:128], cache.cache_setA[1][134], cache.cache_setA[1][133], cache.cache_setA[1][127-: 32], cache.cache_setA[1][95-: 32], cache.cache_setA[1][63-: 32], cache.cache_setA[1][31-: 32]);
-        $display("block 10: tag: %b, valid: %b, dirty: %b, word0: %H, word1: %H, word2: %H, word3: %H", cache.cache_setB[0][132:128], cache.cache_setB[0][134], cache.cache_setB[0][133], cache.cache_setB[0][127-: 32], cache.cache_setB[0][95-: 32], cache.cache_setB[0][63-: 32], cache.cache_setB[0][31-: 32]);
-        $display("block 11: tag: %b, valid: %b, dirty: %b, word0: %H, word1: %H, word2: %H, word3: %H", cache.cache_setB[1][132:128], cache.cache_setB[1][134], cache.cache_setB[1][133], cache.cache_setB[1][127-: 32], cache.cache_setB[1][95-: 32], cache.cache_setB[1][63-: 32], cache.cache_setB[1][31-: 32]);
+        $display("block 00: tag: %b, valid: %b, dirty: %b, word0: %H, word1: %H, word2: %H, word3: %H", cache.cache_setA[0][132:128], cache.cache_setA[0][134], cache.cache_setA[0][133], cache.cache_setA[0][31-:32], cache.cache_setA[0][63-:32], cache.cache_setA[0][95-:32], cache.cache_setA[0][127-:32]);
+        $display("block 01: tag: %b, valid: %b, dirty: %b, word0: %H, word1: %H, word2: %H, word3: %H", cache.cache_setA[1][132:128], cache.cache_setA[1][134], cache.cache_setA[1][133], cache.cache_setA[1][31-:32], cache.cache_setA[1][63-:32], cache.cache_setA[1][95-:32], cache.cache_setA[1][127-:32]);
+        $display("block 10: tag: %b, valid: %b, dirty: %b, word0: %H, word1: %H, word2: %H, word3: %H", cache.cache_setB[0][132:128], cache.cache_setB[0][134], cache.cache_setB[0][133], cache.cache_setB[0][31-:32], cache.cache_setB[0][63-:32], cache.cache_setB[0][95-:32], cache.cache_setB[0][127-:32]);
+        $display("block 11: tag: %b, valid: %b, dirty: %b, word0: %H, word1: %H, word2: %H, word3: %H", cache.cache_setB[1][132:128], cache.cache_setB[1][134], cache.cache_setB[1][133], cache.cache_setB[1][31-:32], cache.cache_setB[1][63-:32], cache.cache_setB[1][95-:32], cache.cache_setB[1][127-:32]);
         $display("TLB P_addr_PT_out: %b", TLB.P_addr_PT_out);
         $display("TLB V_addr_PT_out: %b", TLB.V_addr_PT_out);
         $display("TLB_hit: %b", TLB.TLB_hit);
@@ -147,6 +147,7 @@ module processor (
     reg [13:0]  address_test[request_total-1:0];
     reg [31:0] write_data_test[request_total-1:0]; 
     initial begin
+        
         request_num = 0;
         read_write_test[0]  = 1; address_test[0]  = 14'b000100_100_0_1000; write_data_test[0]  = 1;       // sw, virtual page  4, TLB miss, mapped to physical page 2, physical tag 10100, cache miss in set 0 block 0,
         read_write_test[1]  = 1; address_test[1]  = 14'b000000_100_1_1100; write_data_test[1]  = 12'hdac; // sw, virtual page  0, TLB miss, mapped to physical page 1, physical tag 01100, cache miss in set 1 block 0,

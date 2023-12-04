@@ -27,6 +27,7 @@ module New_Cache (
     
     ////////////////////////////////////////////////////// for simplicity by WL and CWQ
     wire                            setIndex; // NEW (Change From 2 bits To 1 bit)
+    wire        [134:0]             cache_set [1:0];
     wire        [4:0]               tagContent_A, tagContent_B; // NEW (Change From 4 bits To 5 bits)
     wire                            valid_A, dirty_A, valid_B, dirty_B; // NEW
 
@@ -40,8 +41,9 @@ module New_Cache (
     end
     
     assign  setIndex = rqst_addr[4];
-    assign  block_A = cache_setA[setIndex];
-    assign  block_B = cache_setB[setIndex];
+    assign  block_index = LRU[setIndex];
+    assign  block_A = setIndex == 0 ? cache_setA[0] : cache_setB[0];//block index instead of setIndex
+    assign  block_B = setIndex == 0 ? cache_setA[1] : cache_setB[1];
     assign  tagContent_A = block_A[(132)-: 5];
     assign  tagContent_B = block_B[(132)-: 5];
     assign  equal_A = (tagContent_A == rqst_addr[(10-1)-: 5]);
@@ -91,6 +93,8 @@ module New_Cache (
             $display("enter cache modification -- address prepared");
             if (write_in) begin // sw/sb
             $display("enter cache modification -- write");
+
+            if (setIndex == 0) begin
                 if (!hit) begin // miss
                 $display("enter cache modification -- write -- miss");
                     if (LRU[setIndex]==1'b0) begin
@@ -259,7 +263,8 @@ module New_Cache (
                 end
             end
         end
-    end        
+    end  
+    end      
 
 endmodule
 

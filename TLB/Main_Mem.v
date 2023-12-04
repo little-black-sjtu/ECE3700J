@@ -16,7 +16,8 @@ module main_mem (
 		for(i = 0; i < 256; i = i + 1) begin 
             main_memory[i] = 0; 
         end
-		main_memory[0] = 32'h55555555;
+		main_memory[0] = 32'h28d;
+		// modify from 55555555 to 28d
 		main_memory[1] = 32'hF;
 		main_memory[2] = 32'hE;
 		main_memory[3] = 32'hA;
