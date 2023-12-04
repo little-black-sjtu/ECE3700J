@@ -18,7 +18,7 @@ module New_Cache (
     reg                             pos_done;           // NEW
     reg         [1:0]               LRU;
     reg         [134:0]             cache_setA          [1:0];  // 134    133   132:128 127:0
-    reg         [134:0]             cache_setB          [1:0];  //  VALID DIRST   TAG    WORD[0-3]
+    reg         [134:0]             cache_setB          [1:0];  //  VALID DIRTY   TAG    WORD[0-3]
     ////////////////////////////////////////////////////// 7 MSB of cache is V(1'b)+D(1'b)+Tag(5'b) // NEW
 
     wire                            hit_setA, hit_setB, equal_A, equal_B; // NEW
@@ -42,14 +42,14 @@ module New_Cache (
     assign  setIndex = rqst_addr[4];
     assign  block_A = cache_setA[setIndex];
     assign  block_B = cache_setB[setIndex];
-    assign  tagContent_A = block_A[(131)-: 5];
-    assign  tagContent_B = block_B[(131)-: 5];
+    assign  tagContent_A = block_A[(132)-: 5];
+    assign  tagContent_B = block_B[(132)-: 5];
     assign  equal_A = (tagContent_A == rqst_addr[(10-1)-: 5]);
     assign  equal_B = (tagContent_B == rqst_addr[(10-1)-: 5]);
-    assign  valid_A = block_A[133];
-    assign  valid_B = block_B[133];
-    assign  dirty_A = block_A[132];
-    assign  dirty_B = block_B[132];
+    assign  valid_A = block_A[134];
+    assign  valid_B = block_B[134];
+    assign  dirty_A = block_A[133];
+    assign  dirty_B = block_B[133];
     
     ////////////////////////////////////////////////////// To CPU request
     or  (hit, hit_setA, hit_setB);

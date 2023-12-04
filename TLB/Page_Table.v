@@ -16,9 +16,10 @@ module page_table (
 	initial begin
 		//wait for initial data
 		for(i = 0; i < 64; i = i + 1) begin 
-            page_table[i][2] = 0;  // ref
-            page_table[i][3] = 0;  // dirty
-            page_table[i][4] = 0;  // valid
+           // page_table[i][2] = 0;  // ref
+           // page_table[i][3] = 0;  // dirty
+           // page_table[i][4] = 0;  // valid
+           page_table[i] = 0;
         end
         
         page_table[4][1:0] = 2;
@@ -35,7 +36,12 @@ module page_table (
         page_table[8][4] = 1;
         page_table[10][4] = 1;
 
-		//done = 1'b0; page_fault = 1'b0;
+		done = 1'b0; page_fault = 1'b0;
+
+        //display page table
+        for (i = 0; i < 64; i = i + 1) begin
+            $display("page_table[%d] = %b", i, page_table[i]);
+        end
 	end
 	
 	//always @(read_from_TLB or address) begin
@@ -45,6 +51,7 @@ module page_table (
                 page_table[vir_page_num_in][1:0] = phy_page_num_in;
                 page_table[vir_page_num_in][2] = 1;  // ref
                 page_table[vir_page_num_in][3] = 1;  // dirty
+                $display("read from TLB page_table[%d] = %b", vir_page_num_in, page_table[vir_page_num_in]);
             end
 	
             if (read_from_TLB == 1'b0) begin
@@ -52,6 +59,7 @@ module page_table (
                 phy_page_num = page_table[vir_page_num_in][1:0];
                 page_table[vir_page_num_in][2] = 1;  // ref
                 page_fault=1-page_table[vir_page_num_in][4];//
+                $display("write to TLB page_table[%d] = %b", vir_page_num_in, page_table[vir_page_num_in]);
             end
 		    done = 1'b1;
 		    #1 done = 1'b0;
