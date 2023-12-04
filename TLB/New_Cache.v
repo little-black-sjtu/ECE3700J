@@ -85,12 +85,19 @@ module New_Cache (
 
     always @ (*) begin
         #2
+        $display("physical address in cache = %b", rqst_addr);
+        $display("address_prepared = %b", addr_prepared);
         if (addr_prepared)begin
+            $display("enter cache modification -- address prepared");
             if (write_in) begin // sw/sb
+            $display("enter cache modification -- write");
                 if (!hit) begin // miss
+                $display("enter cache modification -- write -- miss");
                     if (LRU[setIndex]==1'b0) begin
+                        $display("enter cache modification -- write -- miss -- LRU[]=0");
                         // Write data from cache to memory if dirty
                         if (dirty_A) begin i = 31;
+                        $display("enter cache modification -- write -- miss -- LRU[]=0 -- dirty_A");
                             addr_out = {{tagContent_A,setIndex},{4{1'b0}}};
                             write_out = 1'b1;
                             for (i = 31; i <128; i = i + 32) begin
@@ -107,6 +114,7 @@ module New_Cache (
                         for (i = 31; i <128; i = i + 32) begin
                             @(posedge done) begin
                                 cache_setA[setIndex][i-: 32] = read_data_in;
+                                $display("enter read data from main memory1");
                                 addr_out = addr_out + 4;
                             end
                         end
@@ -120,6 +128,7 @@ module New_Cache (
                         endcase
                         cache_setA[setIndex][135-2] = 1'b1; // Mark cache_setA dirty
                         cache_setA[setIndex][(135-3)-: 5] = rqst_addr[9-: 5];
+                        $display("1 modify tag of set A, tag = %b", cache_setA[setIndex][(135-3)-: 5]);
                     end 
                     else begin
                         // Write data from cache to memory if dirty
@@ -167,6 +176,7 @@ module New_Cache (
                     cache_setA[setIndex][135-2] = 1'b1; // Mark cache_setA dirty
                     LRU[setIndex] = 1'b1; // Reset Least Resently Used to setB
                     cache_setA[setIndex][(135-3)-: 5] = rqst_addr[9-: 5];
+                    $display("2 modify tag of set A, tag = %b", cache_setA[setIndex][(135-3)-: 5]);
                 end
                 else if (hit_setB) begin
                     case(funct)
@@ -208,6 +218,7 @@ module New_Cache (
                         cache_setA[setIndex][135-1] = 1'b1; // Set Valid to True 
                         LRU[setIndex] = 1'b1; // Reset Least Resently Used = B
                         cache_setA[setIndex][(135-3)-: 5] = rqst_addr[9-: 5];
+                        $display("3 modify tag of set A, tag = %b", cache_setA[setIndex][(135-3)-: 5]);
                     end
                     else begin
                         // Write data from cache to memory if dirty
@@ -239,6 +250,7 @@ module New_Cache (
                 end
                 else if (hit_setA) begin
                     cache_setA[setIndex][(135-3)-: 5] = rqst_addr[9-: 5];
+                    $display("4 modify tag of set A, tag = %b", cache_setA[setIndex][(135-3)-: 5]);
                     LRU[setIndex] = 1'b1; // Reset Least Resently Used = B
                 end
                 else if (hit_setB) begin

@@ -39,13 +39,14 @@ module page_table (
 		done = 1'b0; page_fault = 1'b0;
 
         //display page table
-        for (i = 0; i < 64; i = i + 1) begin
-            $display("page_table[%d] = %b", i, page_table[i]);
-        end
+        // for (i = 0; i < 64; i = i + 1) begin
+        //     $display("page_table[%d] = %b", i, page_table[i]);
+        // end
 	end
 	
-	//always @(read_from_TLB or address) begin
-	always @(*) begin
+	always @(read_from_TLB or phy_page_num_in or vir_page_num_in) begin
+        $display("enter page_table modification");
+	//always @(*) begin
 	    # 0.75
             if (read_from_TLB == 1'b1) begin
                 page_table[vir_page_num_in][1:0] = phy_page_num_in;

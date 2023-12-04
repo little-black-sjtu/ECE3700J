@@ -24,13 +24,13 @@ module vm_test;
     //page table
     wire [1:0]   P_page_num;
     //cpu
-    wire [13:0]  virtual_address;
+    wire [13:0]  Virtual_address;
 
     processor                     CPU(
         .hit_miss(hit),
         .clock(clock),
         .read_write(write_read),
-        .address(virtual_address),
+        .address(Virtual_address),
         .write_data(write_data_in_cache)
     );
     /*
@@ -55,7 +55,7 @@ module vm_test;
     );
     translation_look_aside_buffer TLB(
         .done(done_tlb),
-        .Virtual_addr(virtual_address),
+        .Virtual_addr(Virtual_address),
         .P_addr_PT_in(P_page_num),
         
         .TLB_hit(TLB_hit),
@@ -102,15 +102,15 @@ module vm_test;
         $display("page fault: %b", PT.page_fault);
         $display("data read posedge: %H", read_data_out_cache);
         $display("contents in TLB: ");
-        $display("block 00: tag: %2d, valid: %b, dirty: %b, reference: %b, VPN: %1d", TLB.TLB[0][7:2], TLB.TLB[0][11], TLB.TLB[0][10], TLB.TLB[0][9:8], TLB.Virtual_addr[13:8]);
-        $display("block 01: tag: %2d, valid: %b, dirty: %b, reference: %b, VPN: %1d", TLB.TLB[1][7:2], TLB.TLB[1][11], TLB.TLB[1][10], TLB.TLB[1][9:8], TLB.Virtual_addr[13:8]);
-        $display("block 10: tag: %2d, valid: %b, dirty: %b, reference: %b, VPN: %1d", TLB.TLB[2][7:2], TLB.TLB[2][11], TLB.TLB[2][10], TLB.TLB[2][9:8], TLB.Virtual_addr[13:8]);
-        $display("block 11: tag: %2d, valid: %b, dirty: %b, reference: %b, VPN: %1d", TLB.TLB[3][7:2], TLB.TLB[3][11], TLB.TLB[3][10], TLB.TLB[3][9:8], TLB.Virtual_addr[13:8]);
+        $display("block 00: tag: %2d, valid: %b, dirty: %b, reference: %b, PPN: %1d", TLB.TLB[0][7:2], TLB.TLB[0][11], TLB.TLB[0][10], TLB.TLB[0][9:8], TLB.TLB[0][1:0]);
+        $display("block 01: tag: %2d, valid: %b, dirty: %b, reference: %b, PPN: %1d", TLB.TLB[1][7:2], TLB.TLB[1][11], TLB.TLB[1][10], TLB.TLB[1][9:8], TLB.TLB[1][1:0]);
+        $display("block 10: tag: %2d, valid: %b, dirty: %b, reference: %b, PPN: %1d", TLB.TLB[2][7:2], TLB.TLB[2][11], TLB.TLB[2][10], TLB.TLB[2][9:8], TLB.TLB[2][1:0]);
+        $display("block 11: tag: %2d, valid: %b, dirty: %b, reference: %b, PPN: %1d", TLB.TLB[3][7:2], TLB.TLB[3][11], TLB.TLB[3][10], TLB.TLB[3][9:8], TLB.TLB[3][1:0]);
         $display("contents in cache: ");
-        $display("block 00: tag: %b, valid: %b, dirty: %b, word0: %H, word1: %H, word2: %H, word3: %H", cache.cache_setA[0][132:128], cache.cache_setA[0][134], cache.cache_setA[0][133], cache.cache_setA[0][31-:32], cache.cache_setA[0][63-:32], cache.cache_setA[0][95-:32], cache.cache_setA[0][127-:32]);
-        $display("block 01: tag: %b, valid: %b, dirty: %b, word0: %H, word1: %H, word2: %H, word3: %H", cache.cache_setA[1][132:128], cache.cache_setA[1][134], cache.cache_setA[1][133], cache.cache_setA[1][31-:32], cache.cache_setA[1][63-:32], cache.cache_setA[1][95-:32], cache.cache_setA[1][127-:32]);
-        $display("block 10: tag: %b, valid: %b, dirty: %b, word0: %H, word1: %H, word2: %H, word3: %H", cache.cache_setB[0][132:128], cache.cache_setB[0][134], cache.cache_setB[0][133], cache.cache_setB[0][31-:32], cache.cache_setB[0][63-:32], cache.cache_setB[0][95-:32], cache.cache_setB[0][127-:32]);
-        $display("block 11: tag: %b, valid: %b, dirty: %b, word0: %H, word1: %H, word2: %H, word3: %H", cache.cache_setB[1][132:128], cache.cache_setB[1][134], cache.cache_setB[1][133], cache.cache_setB[1][31-:32], cache.cache_setB[1][63-:32], cache.cache_setB[1][95-:32], cache.cache_setB[1][127-:32]);
+        $display("block 00: tag: %b, valid: %b, dirty: %b, word0: %H, word1: %H, word2: %H, word3: %H", cache.cache_setA[0][132:128], cache.cache_setA[0][134], cache.cache_setA[0][133], cache.cache_setA[0][127-: 32], cache.cache_setA[0][95-: 32], cache.cache_setA[0][63-: 32], cache.cache_setA[0][31-: 32]);
+        $display("block 01: tag: %b, valid: %b, dirty: %b, word0: %H, word1: %H, word2: %H, word3: %H", cache.cache_setA[1][132:128], cache.cache_setA[1][134], cache.cache_setA[1][133], cache.cache_setA[1][127-: 32], cache.cache_setA[1][95-: 32], cache.cache_setA[1][63-: 32], cache.cache_setA[1][31-: 32]);
+        $display("block 10: tag: %b, valid: %b, dirty: %b, word0: %H, word1: %H, word2: %H, word3: %H", cache.cache_setB[0][132:128], cache.cache_setB[0][134], cache.cache_setB[0][133], cache.cache_setB[0][127-: 32], cache.cache_setB[0][95-: 32], cache.cache_setB[0][63-: 32], cache.cache_setB[0][31-: 32]);
+        $display("block 11: tag: %b, valid: %b, dirty: %b, word0: %H, word1: %H, word2: %H, word3: %H", cache.cache_setB[1][132:128], cache.cache_setB[1][134], cache.cache_setB[1][133], cache.cache_setB[1][127-: 32], cache.cache_setB[1][95-: 32], cache.cache_setB[1][63-: 32], cache.cache_setB[1][31-: 32]);
         $display("TLB P_addr_PT_out: %b", TLB.P_addr_PT_out);
         $display("TLB V_addr_PT_out: %b", TLB.V_addr_PT_out);
         $display("TLB_hit: %b", TLB.TLB_hit);
@@ -121,7 +121,7 @@ module vm_test;
         $display("TLB.TLB[3]: %b", TLB.TLB[3]);
         $display("P_addr_PT_in: %b", TLB.P_addr_PT_in);
         $display("TLB.VPN: %b", TLB.VPN);
-        $display("Virtual_addr: %b", TLB.Virtual_addr);
+        $display("Virtual_address: %b", TLB.Virtual_addr);
         $display("request_num: %b", CPU.request_num);
     end
     

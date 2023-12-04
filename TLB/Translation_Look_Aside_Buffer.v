@@ -39,6 +39,9 @@ module translation_look_aside_buffer
             TLB[i][9:8] =3-i;
             $display("TLB[%d] = %b", i, TLB[i]);
         end
+        #0.01
+        $display("VPN : %b", VPN);
+        $display("Hit : %b", Hit);
     end
     
     assign VPN = Virtual_addr[13: 8];
@@ -51,7 +54,9 @@ module translation_look_aside_buffer
     or (TLB_hit, Hit[0], Hit[1], Hit[2], Hit[3]);
     
     always @(*) begin
+        $display("virtual_addr = %b", Virtual_addr);
         if (!TLB_hit) begin 
+            $display("TLB miss!");
             Addr_prepared = 1'b0;
             for (i = 0; i <= 3; i = i + 1) begin // LRU_sel
                 if (TLB[i][9:8] == 2'b11) begin
@@ -63,11 +68,13 @@ module translation_look_aside_buffer
                     end 
                     // Read physical_addr from Page Table to TLB anyway
                     write_to_table = 1'b0;
-                    V_addr_PT_out <= Virtual_addr[13: 8];
+                    V_addr_PT_out <= Virtual_addr[13: 8]; //VPN
+                    $display("pass VPN to page_table now!");
                     # 1
                     if (done) begin
                         TLB[i][1:0] = P_addr_PT_in;
                         TLB[i][7:2] = Virtual_addr[13: 8]; // Reset P_addr in TLB[i]
+                        $display("after read from page_table, TLB[%d] = %b", i, TLB[i]);
                     end
                     TLB[i][10] = 1'b0; // Mark as NOT dirty
                     TLB[i][11] = 1'b1; // Set Valid to True 
@@ -76,12 +83,18 @@ module translation_look_aside_buffer
 //                    end
 //                    TLB[i][9:8] = 2'b00; // Reset 2-bit LRU 
                     stop_loop =i[1:0]; //for debug
+
+                    Physical_addr[9:0] <= {TLB[i][1:0],Virtual_addr[7:0]};
+                    // Physical_addr[9:8] <= TLB[i][1:0];
+                    $display("after read from page_table -- physical_addr = %b", Physical_addr);
+                    Addr_prepared = 1'b1;
                 end
             end
         end
         ////////////////////////////////////////////////////// To Cache Mem
         else begin
-            Physical_addr[7:0] = Virtual_addr[7:0];
+            Physical_addr[7:0] = Virtual_addr[7:0]; // offset
+            $display("whether hit %b", Hit);
             case (Hit)
                 4'b0001:  begin Physical_addr[9:8] = TLB[0][1:0];
                     k = 0;
@@ -97,6 +110,7 @@ module translation_look_aside_buffer
                 end
                 default:  Physical_addr[9:8] = Physical_addr[9:8];
             endcase
+            $display("after hit -- physical_addr = %b", Physical_addr);
             Addr_prepared = 1'b1;
             for (j = 0; j < 4; j = j + 1) begin
                 if (TLB[j][9:8] < TLB[k][9:8]) begin
