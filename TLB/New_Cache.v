@@ -26,7 +26,7 @@ module New_Cache (
     wire        [134:0]             block_A, block_B; // NEW
     
     ////////////////////////////////////////////////////// for simplicity by WL and CWQ
-    wire                            setIndex; // NEW (Change From 2 bits To 1 bit)
+    wire                            setIndex, block_index; // NEW (Change From 2 bits To 1 bit)
     wire        [134:0]             cache_set [1:0];
     wire        [4:0]               tagContent_A, tagContent_B; // NEW (Change From 4 bits To 5 bits)
     wire                            valid_A, dirty_A, valid_B, dirty_B; // NEW
@@ -67,17 +67,17 @@ module New_Cache (
     _N_bit_4to1_MUX #(.N(32)) Mux_CacheData(.data1(lw_out), .data2(data_A), .data3(data_B), .data4(lw_out), 
     .sel({hit_setB, hit_setA}), .result(lw_out));
     
-//    _N_bit_4to1_MUX #(.N(32)) Mux_Cache_lbu(.data1({{24{1'b0}}, lw_out[7:0]}), 
-//    .data2({{24{1'b0}}, lw_out[15:8]}), .data3({{24{1'b0}}, lw_out[23:16]}), 
-//    .data4({{24{1'b0}}, lw_out[31:24]}), .sel(rqst_addr[1:0]), .result(lbu_out));
+   _N_bit_4to1_MUX #(.N(32)) Mux_Cache_lbu(.data1({{24{1'b0}}, lw_out[7:0]}), 
+   .data2({{24{1'b0}}, lw_out[15:8]}), .data3({{24{1'b0}}, lw_out[23:16]}), 
+   .data4({{24{1'b0}}, lw_out[31:24]}), .sel(rqst_addr[1:0]), .result(lb_out));
 
-    _N_bit_4to1_MUX #(.N(32)) Mux_Cache_lb (.data1({{24{lw_out[7]}}, lw_out[7:0]}), 
-    .data2({{24{lw_out[7]}}, lw_out[15:8]}), .data3({{24{lw_out[7]}}, lw_out[23:16]}), 
-    .data4({{24{lw_out[7]}}, lw_out[31:24]}), .sel(rqst_addr[1:0]), .result(lb_out));
+    // _N_bit_4to1_MUX #(.N(32)) Mux_Cache_lb (.data1({{24{lw_out[7]}}, lw_out[7:0]}), 
+    // .data2({{24{lw_out[7]}}, lw_out[15:8]}), .data3({{24{lw_out[7]}}, lw_out[23:16]}), 
+    // .data4({{24{lw_out[7]}}, lw_out[31:24]}), .sel(rqst_addr[1:0]), .result(lb_out));
 
-    _N_bit_2to1_MUX #(.N(32)) Mux_Data_Out (.data1(lb_out), .data2(lw_out), .sel(funct), .result(read_data_out));//////
+    _N_bit_2to1_MUX #(.N(32)) Mux_Data_Out (.data1(lw_out), .data2(lb_out), .sel(funct), .result(read_data_out));//////
 
-    ////////////////////////////////////////////////////// To main memory
+    ////////////////////////////////////////////////////// To main memosry
 //    always @(posedge done) begin // NEW // PLEASE take care of this delay
 //        #1
 //        pos_done = 1'b1;
@@ -85,186 +85,373 @@ module New_Cache (
 //        pos_done = 1'b0;
 //    end
 
-    always @ (*) begin
+    always @ (posedge done or write_in or addr_prepared or funct or rqst_addr or read_data_in or write_data_in) begin
+        // after the write from main memory, the negedge done will stimulate the always and write the data into cache again
         #2
-        $display("physical address in cache = %b", rqst_addr);
-        $display("address_prepared = %b", addr_prepared);
+        // $display("physical address in cache = %b", rqst_addr);
+        // $display("address_prepared = %b", addr_prepared);
         if (addr_prepared)begin
-            $display("enter cache modification -- address prepared");
-            if (write_in) begin // sw/sb
-            $display("enter cache modification -- write");
-
+            // $display("enter cache modification -- address prepared");
             if (setIndex == 0) begin
-                if (!hit) begin // miss
-                $display("enter cache modification -- write -- miss");
-                    if (LRU[setIndex]==1'b0) begin
-                        $display("enter cache modification -- write -- miss -- LRU[]=0");
-                        // Write data from cache to memory if dirty
-                        if (dirty_A) begin i = 31;
-                        $display("enter cache modification -- write -- miss -- LRU[]=0 -- dirty_A");
-                            addr_out = {{tagContent_A,setIndex},{4{1'b0}}};
-                            write_out = 1'b1;
+                if (write_in) begin // sw/sb
+                // $display("enter cache modification -- write");
+                    if (!hit) begin // miss
+                    // $display("enter cache modification -- write -- miss");
+                        if (LRU[setIndex]==1'b0) begin // 0 means least recently used is block 0
+                            // $display("enter cache modification -- write -- miss -- LRU[]=0");
+                            // Write data from cache to memory if dirty
+                            if (dirty_A) begin i = 31;
+                            // $display("enter cache modification -- write -- miss -- LRU[]=0 -- dirty_A");
+                                addr_out = {{tagContent_A,setIndex},{4{1'b0}}};
+                                write_out = 1'b1;
+                                for (i = 31; i <128; i = i + 32) begin
+                                    write_data_out = block_A[i-: 32];
+                                    @(posedge done) begin
+                                        addr_out = addr_out + 4;
+                                    end
+                                end
+                                #5;
+                            end i = 31;
+                            // Read data from memory to cache anyway
+                            addr_out = {rqst_addr[9:4],{4{1'b0}}};
+                            write_out = 1'b0;
                             for (i = 31; i <128; i = i + 32) begin
-                                write_data_out = block_A[i-: 32];
                                 @(posedge done) begin
+                                    //cache_setA[setIndex][i-: 32] = read_data_in;
+                                    cache_setA[block_index][i-: 32] = read_data_in;                                
+                                    // $display("enter read data from main memory1");
                                     addr_out = addr_out + 4;
+                                    // fetch, mem write 4 times
                                 end
                             end
-                            #5;
-                        end i = 31;
-                        // Read data from memory to cache anyway
-                        addr_out = {rqst_addr[9:4],{4{1'b0}}};
-                        write_out = 1'b0;
-                        for (i = 31; i <128; i = i + 32) begin
-                            @(posedge done) begin
-                                cache_setA[setIndex][i-: 32] = read_data_in;
-                                $display("enter read data from main memory1");
-                                addr_out = addr_out + 4;
-                            end
-                        end
-                        cache_setA[setIndex][135-1] = 1'b1; // Set Valid to True 
-                        LRU[setIndex] = 1'b1; // Reset Least Resently Used 
-                        case(funct)
-                            1'b1: begin i = 32 * rqst_addr[3:2] + 8 * rqst_addr[1:0] + 7;
-                                    cache_setA[setIndex][i-: 8] = write_data_in[7:0]; end // sb
-                            default:begin i = 31 + 32 * rqst_addr[3:2];
-                                    cache_setA[setIndex][i-: 32] = write_data_in; end // sw
-                        endcase
-                        cache_setA[setIndex][135-2] = 1'b1; // Mark cache_setA dirty
-                        cache_setA[setIndex][(135-3)-: 5] = rqst_addr[9-: 5];
-                        $display("1 modify tag of set A, tag = %b", cache_setA[setIndex][(135-3)-: 5]);
-                    end 
-                    else begin
-                        // Write data from cache to memory if dirty
-                        if (dirty_B) begin i = 31;
+                            cache_setA[block_index][135-1] = 1'b1; // Set Valid to True
+                            case(funct)
+                                1'b1: begin i = 32 * rqst_addr[3:2] + 8 * rqst_addr[1:0] + 7;
+                                        cache_setA[block_index][i-: 8] = write_data_in[7:0]; end // sb
+                                default:begin i = 31 + 32 * rqst_addr[3:2];
+                                        cache_setA[block_index][i-: 32] = write_data_in; end // sw
+                            endcase
+                            cache_setA[block_index][135-2] = 1'b1; // Mark cache_setA dirty
+                            cache_setA[block_index][(135-3)-: 5] = rqst_addr[9-: 5]; 
+                            LRU[setIndex] = 1'b1; // Reset Least Resently Used 
+                            // $display("1 modify tag of set A, tag = %b", cache_setA[block_index][(135-3)-: 5]);
+                        end 
+                        else begin
+                            // Write data from cache to memory if dirty
+                            if (dirty_B) begin i = 31;
+                                #1
+                                addr_out = {{tagContent_B,setIndex},{4{1'b0}}};
+                                write_out = 1'b1;
+                                for (i = 31; i <128; i = i + 32) begin
+                                    write_data_out = block_B[i-: 32];
+                                    @(posedge done) begin
+                                        addr_out = addr_out + 4;
+                                    end
+                                end
+                                #5;
+                            end i = 31;
+                            // Read data from memory to cache anyway
                             #1
-                            addr_out = {{tagContent_B,setIndex},{4{1'b0}}};
-                            write_out = 1'b1;
+                            addr_out = {rqst_addr[9:4],{4{1'b0}}};
+                            write_out = 1'b0;
                             for (i = 31; i <128; i = i + 32) begin
-                                write_data_out = block_B[i-: 32];
                                 @(posedge done) begin
+                                    cache_setA[block_index][i-: 32] = read_data_in;
                                     addr_out = addr_out + 4;
                                 end
                             end
-                            #5;
-                        end i = 31;
-                        // Read data from memory to cache anyway
-                        #1
-                        addr_out = {rqst_addr[9:4],{4{1'b0}}};
-                        write_out = 1'b0;
-                        for (i = 31; i <128; i = i + 32) begin
-                            @(posedge done) begin
-                                cache_setB[setIndex][i-: 32] = read_data_in;
-                                addr_out = addr_out + 4;
-                            end
+                            cache_setA[block_index][135-1] = 1'b1; // Set Valid to True
+                            case(funct)
+                                1'b1: begin i = 32 * rqst_addr[3:2] + 8 * rqst_addr[1:0] + 7;
+                                        cache_setA[block_index][i-: 8] = write_data_in[7:0]; end // sb
+                                default:begin i = 31 + 32 * rqst_addr[3:2];
+                                        cache_setA[block_index][i-: 32] = write_data_in; end // sw
+                            endcase
+                            cache_setA[block_index][135-2] = 1'b1; // Mark cache_setB dirty
+                            cache_setA[block_index][(135-3)-: 5] = rqst_addr[9-: 5];
+                            LRU[setIndex] = 1'b0; // Reset Least Resently Used 
                         end
-                        cache_setB[setIndex][135-1] = 1'b1; // Set Valid to True
-                        LRU[setIndex] = 1'b0; // Reset Least Resently Used 
+                    end
+                    else if (hit_setA) begin
                         case(funct)
                             1'b1: begin i = 32 * rqst_addr[3:2] + 8 * rqst_addr[1:0] + 7;
-                                    cache_setB[setIndex][i-: 8] = write_data_in[7:0]; end // sb
+                                    cache_setA[block_index][i-: 8] = write_data_in[7:0]; end // sb
                             default:begin i = 31 + 32 * rqst_addr[3:2];
-                                    cache_setB[setIndex][i-: 32] = write_data_in; end // sw
+                                    cache_setA[block_index][i-: 32] = write_data_in; end // sw
                         endcase
-                        cache_setB[setIndex][135-2] = 1'b1; // Mark cache_setB dirty
-                        cache_setB[setIndex][(135-3)-: 5] = rqst_addr[9-: 5];
+                        cache_setA[block_index][135-2] = 1'b1; // Mark cache_setA dirty
+                        cache_setA[block_index][(135-3)-: 5] = rqst_addr[9-: 5];
+                        LRU[setIndex] = 1'b1; // Reset Least Resently Used to setB
+                        // $display("2 modify tag of set A, tag = %b", cache_setA[block_index][(135-3)-: 5]);
+                    end
+                    else if (hit_setB) begin
+                        case(funct)
+                            1'b1: begin i = 32 * rqst_addr[3:2] + 8 * rqst_addr[1:0] + 7;
+                                    cache_setA[block_index][i-: 8] = write_data_in[7:0]; end // sb
+                            default:begin i = 31 + 32 * rqst_addr[3:2];
+                                    cache_setA[block_index][i-: 32] = write_data_in; end // sw
+                        endcase
+                        cache_setA[block_index][135-2] = 1'b1; // Mark cache_setA dirty
+                        cache_setA[block_index][(135-3)-: 5] = rqst_addr[9-: 5];
+                        LRU[setIndex] = 1'b0; // Reset Least Resently Used to setA
                     end
                 end
-                else if (hit_setA) begin
-                    case(funct)
-                        1'b1: begin i = 32 * rqst_addr[3:2] + 8 * rqst_addr[1:0] + 7;
-                                cache_setA[setIndex][i-: 8] = write_data_in[7:0]; end // sb
-                        default:begin i = 31 + 32 * rqst_addr[3:2];
-                                cache_setA[setIndex][i-: 32] = write_data_in; end // sw
-                    endcase
-                    cache_setA[setIndex][135-2] = 1'b1; // Mark cache_setA dirty
-                    LRU[setIndex] = 1'b1; // Reset Least Resently Used to setB
-                    cache_setA[setIndex][(135-3)-: 5] = rqst_addr[9-: 5];
-                    $display("2 modify tag of set A, tag = %b", cache_setA[setIndex][(135-3)-: 5]);
-                end
-                else if (hit_setB) begin
-                    case(funct)
-                        1'b1: begin i = 32 * rqst_addr[3:2] + 8 * rqst_addr[1:0] + 7;
-                                cache_setB[setIndex][i-: 8] = write_data_in[7:0]; end // sb
-                        default:begin i = 31 + 32 * rqst_addr[3:2];
-                                cache_setB[setIndex][i-: 32] = write_data_in; end // sw
-                    endcase
-                    cache_setB[setIndex][135-2] = 1'b1; // Mark cache_setA dirty
-                    LRU[setIndex] = 1'b0; // Reset Least Resently Used to setA
-                    cache_setB[setIndex][(135-3)-: 5] = rqst_addr[9-: 5];
+
+
+                else begin // read_out  // lw/lb
+                    if (!hit) begin 
+                        if (LRU[setIndex]==1'b0) begin
+                            // Write data from cache to memory if dirty
+                            if (dirty_A) begin i = 31;
+                                addr_out = {{tagContent_A,setIndex},{4{1'b0}}};
+                                write_out = 1'b1;
+                                for (i = 31; i <128; i = i + 32) begin
+                                    write_data_out = block_A[i-: 32];
+                                    @(posedge done) begin
+                                        addr_out = addr_out + 4;
+                                    end
+                                end
+                                #5;
+                            end i = 31;
+                            // Read data from memory to cache anyway
+                            addr_out = {rqst_addr[9:4],{4{1'b0}}};
+                            write_out = 1'b0;
+                            for (i = 31; i <128; i = i + 32) begin
+                                @(posedge done) begin
+                                    cache_setA[block_index][i-: 32] = read_data_in;
+                                    addr_out = addr_out + 4;
+                                end
+                            end
+                            cache_setA[block_index][135-2] = 1'b0; // Mark as NOT dirty
+                            cache_setA[block_index][135-1] = 1'b1; // Set Valid to True
+                            cache_setA[block_index][(135-3)-: 5] = rqst_addr[9-: 5]; 
+                            LRU[setIndex] = 1'b1; // Reset Least Resently Used = B
+                            // $display("3 modify tag of set A, tag = %b", cache_setA[block_index][(135-3)-: 5]);
+                        end
+                        else begin
+                            // Write data from cache to memory if dirty
+                            if (dirty_B) begin i = 31;
+                                addr_out = {{tagContent_B,setIndex},{4{1'b0}}};
+                                write_out = 1'b1;
+                                for (i = 31; i <128; i = i + 32) begin
+                                    write_data_out = block_B[i-: 32];
+                                    @(posedge done) begin
+                                        addr_out = addr_out + 4;
+                                    end
+                                end
+                                #5;
+                            end i = 31;
+                            // Read data from memory to cache anyway
+                            addr_out = {rqst_addr[9:4],{4{1'b0}}};
+                            write_out = 1'b0;
+                            for (i = 31; i <128; i = i + 32) begin
+                                @(posedge done) begin
+                                    cache_setA[block_index][i-: 32] = read_data_in;
+                                    addr_out = addr_out + 4;
+                                end
+                            end
+                            cache_setA[block_index][135-2] = 1'b0; // Mark as NOT dirty
+                            cache_setA[block_index][135-1] = 1'b1; // Set Valid to True 
+                            cache_setA[block_index][(135-3)-: 5] = rqst_addr[9-: 5];
+                            LRU[setIndex] = 1'b0; // Reset Least Resently Used = A
+                        end
+                    end
+                    else if (hit_setA) begin
+                        cache_setA[block_index][(135-3)-: 5] = rqst_addr[9-: 5];
+                        // $display("4 modify tag of set A, tag = %b", cache_setA[block_index][(135-3)-: 5]);
+                        LRU[setIndex] = 1'b1; // Reset Least Resently Used = B
+                    end
+                    else if (hit_setB) begin
+                        case(funct)
+                            1'b1: begin i = 32 * rqst_addr[3:2] + 8 * rqst_addr[1:0] + 7;
+                                    cache_setA[block_index][i-: 8] = write_data_in[7:0]; end // lb
+                            default:begin i = 31 + 32 * rqst_addr[3:2];
+                                    cache_setA[block_index][i-: 32] = write_data_in; end // lw
+                        endcase
+
+                        cache_setA[block_index][(135-3)-: 5] = rqst_addr[9-: 5];
+                        LRU[setIndex] = 1'b0; // Reset Least Resently Used = A
+                    end
                 end
             end
-            else begin // read_out  // lw/lb
-                if (!hit) begin 
-                    if (LRU[setIndex]==1'b0) begin
-                        // Write data from cache to memory if dirty
-                        if (dirty_A) begin i = 31;
-                            addr_out = {{tagContent_A,setIndex},{4{1'b0}}};
-                            write_out = 1'b1;
+
+            else begin
+                if (write_in) begin // sw/sb
+                // $display("enter cache modification -- write");
+                    if (!hit) begin // miss
+                    // $display("enter cache modification -- write -- miss");
+                        if (LRU[setIndex]==1'b0) begin
+                            // $display("enter cache modification -- write -- miss -- LRU[]=0");
+                            // Write data from cache to memory if dirty
+                            if (dirty_A) begin i = 31;
+                            // $display("enter cache modification -- write -- miss -- LRU[]=0 -- dirty_A");
+                                addr_out = {{tagContent_A,setIndex},{4{1'b0}}};
+                                write_out = 1'b1;
+                                for (i = 31; i <128; i = i + 32) begin
+                                    write_data_out = block_A[i-: 32];
+                                    @(posedge done) begin
+                                        addr_out = addr_out + 4;
+                                    end
+                                end
+                                #5;
+                            end i = 31;
+                            // Read data from memory to cache anyway
+                            addr_out = {rqst_addr[9:4],{4{1'b0}}};
+                            write_out = 1'b0;
                             for (i = 31; i <128; i = i + 32) begin
-                                write_data_out = block_A[i-: 32];
                                 @(posedge done) begin
+                                    //cache_setA[setIndex][i-: 32] = read_data_in;
+                                    cache_setB[block_index][i-: 32] = read_data_in;                                
+                                    // $display("enter read data from main memory1");
                                     addr_out = addr_out + 4;
                                 end
                             end
-                            #5;
-                        end i = 31;
-                        // Read data from memory to cache anyway
-                        addr_out = {rqst_addr[9:4],{4{1'b0}}};
-                        write_out = 1'b0;
-                        for (i = 31; i <128; i = i + 32) begin
-                            @(posedge done) begin
-                                cache_setA[setIndex][i-: 32] = read_data_in;
-                                addr_out = addr_out + 4;
+                            cache_setB[block_index][135-1] = 1'b1; // Set Valid to True 
+                            case(funct)
+                                1'b1: begin i = 32 * rqst_addr[3:2] + 8 * rqst_addr[1:0] + 7;
+                                        cache_setB[block_index][i-: 8] = write_data_in[7:0]; end // sb
+                                default:begin i = 31 + 32 * rqst_addr[3:2];
+                                        cache_setB[block_index][i-: 32] = write_data_in; end // sw
+                            endcase
+                            cache_setB[block_index][135-2] = 1'b1; // Mark cache_setA dirty
+                            cache_setB[block_index][(135-3)-: 5] = rqst_addr[9-: 5];
+                            LRU[setIndex] = 1'b1; // Reset Least Resently Used 
+                            // $display("1 modify tag of set A, tag = %b", cache_setB[block_index][(135-3)-: 5]);
+                        end 
+                        else begin
+                            // Write data from cache to memory if dirty
+                            if (dirty_B) begin i = 31;
+                                #1
+                                addr_out = {{tagContent_B,setIndex},{4{1'b0}}};
+                                write_out = 1'b1;
+                                for (i = 31; i <128; i = i + 32) begin
+                                    write_data_out = block_B[i-: 32];
+                                    @(posedge done) begin
+                                        addr_out = addr_out + 4;
+                                    end
+                                end
+                                #5;
+                            end i = 31;
+                            // Read data from memory to cache anyway
+                            #1
+                            addr_out = {rqst_addr[9:4],{4{1'b0}}};
+                            write_out = 1'b0;
+                            for (i = 31; i <128; i = i + 32) begin
+                                @(posedge done) begin
+                                    cache_setB[block_index][i-: 32] = read_data_in;
+                                    addr_out = addr_out + 4;
+                                end
                             end
+                            cache_setB[block_index][135-1] = 1'b1; // Set Valid to True
+                            case(funct)
+                                1'b1: begin i = 32 * rqst_addr[3:2] + 8 * rqst_addr[1:0] + 7;
+                                        cache_setB[block_index][i-: 8] = write_data_in[7:0]; end // sb
+                                default:begin i = 31 + 32 * rqst_addr[3:2];
+                                        cache_setB[block_index][i-: 32] = write_data_in; end // sw
+                            endcase
+                            cache_setB[block_index][135-2] = 1'b1; // Mark cache_setB dirty
+                            cache_setB[block_index][(135-3)-: 5] = rqst_addr[9-: 5];
+                            LRU[setIndex] = 1'b0; // Reset Least Resently Used 
                         end
-                        cache_setA[setIndex][135-2] = 1'b0; // Mark as NOT dirty
-                        cache_setA[setIndex][135-1] = 1'b1; // Set Valid to True 
+                    end
+                    else if (hit_setA) begin
+                        case(funct)
+                            1'b1: begin i = 32 * rqst_addr[3:2] + 8 * rqst_addr[1:0] + 7;
+                                    cache_setB[block_index][i-: 8] = write_data_in[7:0]; end // sb
+                            default:begin i = 31 + 32 * rqst_addr[3:2];
+                                    cache_setB[block_index][i-: 32] = write_data_in; end // sw
+                        endcase
+                        cache_setB[block_index][135-2] = 1'b1; // Mark cache_setA dirty
+                        cache_setB[block_index][(135-3)-: 5] = rqst_addr[9-: 5];
+                        LRU[setIndex] = 1'b1; // Reset Least Resently Used to setB
+                        // $display("2 modify tag of set A, tag = %b", cache_setB[block_index][(135-3)-: 5]);
+                    end
+                    else if (hit_setB) begin
+                        case(funct)
+                            1'b1: begin i = 32 * rqst_addr[3:2] + 8 * rqst_addr[1:0] + 7;
+                                    cache_setB[block_index][i-: 8] = write_data_in[7:0]; end // sb
+                            default:begin i = 31 + 32 * rqst_addr[3:2];
+                                    cache_setB[block_index][i-: 32] = write_data_in; end // sw
+                        endcase
+                        cache_setB[block_index][135-2] = 1'b1; // Mark cache_setA dirty
+                        cache_setB[block_index][(135-3)-: 5] = rqst_addr[9-: 5];
+                        LRU[setIndex] = 1'b0; // Reset Least Resently Used to setA
+                    end
+                end
+
+
+                else begin // read_out  // lw/lb
+                    if (!hit) begin 
+                        if (LRU[setIndex]==1'b0) begin
+                            // Write data from cache to memory if dirty
+                            if (dirty_A) begin i = 31;
+                                addr_out = {{tagContent_A,setIndex},{4{1'b0}}};
+                                write_out = 1'b1;
+                                for (i = 31; i <128; i = i + 32) begin
+                                    write_data_out = block_A[i-: 32];
+                                    @(posedge done) begin
+                                        addr_out = addr_out + 4;
+                                    end
+                                end
+                                #5;
+                            end i = 31;
+                            // Read data from memory to cache anyway
+                            addr_out = {rqst_addr[9:4],{4{1'b0}}};
+                            write_out = 1'b0;
+                            for (i = 31; i <128; i = i + 32) begin
+                                @(posedge done) begin
+                                    cache_setB[block_index][i-: 32] = read_data_in;
+                                    addr_out = addr_out + 4;
+                                end
+                            end
+                            cache_setB[block_index][135-2] = 1'b0; // Mark as NOT dirty
+                            cache_setB[block_index][135-1] = 1'b1; // Set Valid to True 
+                            cache_setB[block_index][(135-3)-: 5] = rqst_addr[9-: 5];
+                            LRU[setIndex] = 1'b1; // Reset Least Resently Used = B
+                            // $display("3 modify tag of set A, tag = %b", cache_setB[block_index][(135-3)-: 5]);
+                        end
+                        else begin
+                            // Write data from cache to memory if dirty
+                            if (dirty_B) begin i = 31;
+                                addr_out = {{tagContent_B,setIndex},{4{1'b0}}};
+                                write_out = 1'b1;
+                                for (i = 31; i <128; i = i + 32) begin
+                                    write_data_out = block_B[i-: 32];
+                                    @(posedge done) begin
+                                        addr_out = addr_out + 4;
+                                    end
+                                end
+                                #5;
+                            end i = 31;
+                            // Read data from memory to cache anyway
+                            addr_out = {rqst_addr[9:4],{4{1'b0}}};
+                            write_out = 1'b0;
+                            for (i = 31; i <128; i = i + 32) begin
+                                @(posedge done) begin
+                                    cache_setB[block_index][i-: 32] = read_data_in;
+                                    addr_out = addr_out + 4;
+                                end
+                            end
+                            cache_setB[block_index][135-2] = 1'b0; // Mark as NOT dirty
+                            cache_setB[block_index][135-1] = 1'b1; // Set Valid to True 
+                            cache_setB[block_index][(135-3)-: 5] = rqst_addr[9-: 5];
+                            LRU[setIndex] = 1'b0; // Reset Least Resently Used = A
+                        end
+                    end
+                    else if (hit_setA) begin
+                        cache_setB[block_index][(135-3)-: 5] = rqst_addr[9-: 5];
+                        // $display("4 modify tag of set A, tag = %b", cache_setB[block_index][(135-3)-: 5]);
                         LRU[setIndex] = 1'b1; // Reset Least Resently Used = B
-                        cache_setA[setIndex][(135-3)-: 5] = rqst_addr[9-: 5];
-                        $display("3 modify tag of set A, tag = %b", cache_setA[setIndex][(135-3)-: 5]);
                     end
-                    else begin
-                        // Write data from cache to memory if dirty
-                        if (dirty_B) begin i = 31;
-                            addr_out = {{tagContent_B,setIndex},{4{1'b0}}};
-                            write_out = 1'b1;
-                            for (i = 31; i <128; i = i + 32) begin
-                                write_data_out = block_B[i-: 32];
-                                @(posedge done) begin
-                                    addr_out = addr_out + 4;
-                                end
-                            end
-                            #5;
-                        end i = 31;
-                        // Read data from memory to cache anyway
-                        addr_out = {rqst_addr[9:4],{4{1'b0}}};
-                        write_out = 1'b0;
-                        for (i = 31; i <128; i = i + 32) begin
-                            @(posedge done) begin
-                                cache_setB[setIndex][i-: 32] = read_data_in;
-                                addr_out = addr_out + 4;
-                            end
-                        end
-                        cache_setB[setIndex][135-2] = 1'b0; // Mark as NOT dirty
-                        cache_setB[setIndex][135-1] = 1'b1; // Set Valid to True 
+                    else if (hit_setB) begin
+                        cache_setB[block_index][(135-3)-: 5] = rqst_addr[9-: 5];
                         LRU[setIndex] = 1'b0; // Reset Least Resently Used = A
-                        cache_setB[setIndex][(135-3)-: 5] = rqst_addr[9-: 5];
                     end
-                end
-                else if (hit_setA) begin
-                    cache_setA[setIndex][(135-3)-: 5] = rqst_addr[9-: 5];
-                    $display("4 modify tag of set A, tag = %b", cache_setA[setIndex][(135-3)-: 5]);
-                    LRU[setIndex] = 1'b1; // Reset Least Resently Used = B
-                end
-                else if (hit_setB) begin
-                    cache_setB[setIndex][(135-3)-: 5] = rqst_addr[9-: 5];
-                    LRU[setIndex] = 1'b0; // Reset Least Resently Used = A
                 end
             end
         end
     end  
-    end      
+          
 
 endmodule
 

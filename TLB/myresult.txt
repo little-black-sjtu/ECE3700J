@@ -1,35 +1,4 @@
-TLB[          0] = 001100000000
-TLB[          1] = 001000000000
-TLB[          2] = 000100000000
-TLB[          3] = 000000000000
 VCD info: dumpfile vm_test.vcd opened for output.
-virtual_addr = 00010010001000
-whether hit xxxx
-after hit -- physical_addr = xx10001000
-virtual_addr = 00010010001000
-whether hit 0000
-after hit -- physical_addr = xx10001000
-virtual_addr = 00010010001000
-TLB miss!
-pass VPN to page_table now!
-enter page_table modification
-VPN : 000100
-Hit : 0000
-write to TLB page_table[ 4] = 10110
-after read from page_table, TLB[          0] = 001100010010
-after read from page_table -- physical_addr = 0000000000
-virtual_addr = 00010010001000
-TLB miss!
-pass VPN to page_table now!
-physical address in cache = 1010001000
-address_prepared = 0
-after read from page_table -- physical_addr = 1010001000
-physical address in cache = 1010001000
-address_prepared = 1
-enter cache modification -- address prepared
-enter cache modification -- write
-enter cache modification -- write -- miss
-enter cache modification -- write -- miss -- LRU[]=0
 Request  0: 
 page fault: 0
 data read posedge: 00000000
@@ -43,20 +12,6 @@ block 00: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word
 block 01: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
 block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
 block 11: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000100
-TLB_hit: 1
-TLB.TLB[0]: 101100010010
-TLB.TLB[1]: 001000000000
-TLB.TLB[2]: 000100000000
-TLB.TLB[3]: 000000000000
-P_addr_PT_in: 10
-TLB.VPN: 000100
-Virtual_address: 00010010001000
-request_num: 00000
-enter read data from main memory1
-enter read data from main memory1
-enter read data from main memory1
 Request  0: 
 page fault: 0
 data read posedge: 00000000
@@ -70,24 +25,6 @@ block 00: tag: 00000, valid: 0, dirty: 0, word0: 0000028d, word1: 00000285, word
 block 01: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
 block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
 block 11: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000100
-TLB_hit: 1
-TLB.TLB[0]: 101100010010
-TLB.TLB[1]: 001000000000
-TLB.TLB[2]: 000100000000
-TLB.TLB[3]: 000000000000
-P_addr_PT_in: 10
-TLB.VPN: 000100
-Virtual_address: 00010010001000
-request_num: 00000
-enter read data from main memory1
-1 modify tag of set A, tag = 10100
-physical address in cache = 1010001000
-address_prepared = 1
-enter cache modification -- address prepared
-enter cache modification -- write
-2 modify tag of set A, tag = 10100
 Request  0: 
 page fault: 0
 data read posedge: 00000001
@@ -101,45 +38,9 @@ block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word
 block 01: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
 block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
 block 11: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000100
-TLB_hit: 1
-TLB.TLB[0]: 101100010010
-TLB.TLB[1]: 001000000000
-TLB.TLB[2]: 000100000000
-TLB.TLB[3]: 000000000000
-P_addr_PT_in: 10
-TLB.VPN: 000100
-Virtual_address: 00010010001000
-request_num: 00000
-virtual_addr = 00000010011100
-whether hit 0001
-after hit -- physical_addr = 1010011100
-virtual_addr = 00000010011100
-whether hit 0000
-after hit -- physical_addr = 1010011100
-virtual_addr = 00000010011100
-TLB miss!
-pass VPN to page_table now!
-enter page_table modification
-write to TLB page_table[ 0] = 10101
-after read from page_table, TLB[          1] = 001100000001
-after read from page_table -- physical_addr = 1010011100
-virtual_addr = 00000010011100
-TLB miss!
-pass VPN to page_table now!
-physical address in cache = 0110011100
-address_prepared = 0
-after read from page_table -- physical_addr = 0110011100
-physical address in cache = 0110011100
-address_prepared = 1
-enter cache modification -- address prepared
-enter cache modification -- write
-enter cache modification -- write -- miss
-enter cache modification -- write -- miss -- LRU[]=0
 Request  1: 
 page fault: 0
-data read posedge: ffffff81
+data read posedge: 00000281
 contents in TLB: 
 block 00: tag:  4, valid: 1, dirty: 0, reference: 00, PPN: 2
 block 01: tag:  0, valid: 1, dirty: 0, reference: 11, PPN: 1
@@ -150,23 +51,9 @@ block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word
 block 01: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
 block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
 block 11: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000000
-TLB_hit: 1
-TLB.TLB[0]: 100000010010
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 001000000000
-TLB.TLB[3]: 000100000000
-P_addr_PT_in: 01
-TLB.VPN: 000000
-Virtual_address: 00000010011100
-request_num: 00001
-enter read data from main memory1
-enter read data from main memory1
-enter read data from main memory1
 Request  1: 
 page fault: 0
-data read posedge: ffffff81
+data read posedge: 00000281
 contents in TLB: 
 block 00: tag:  4, valid: 1, dirty: 0, reference: 00, PPN: 2
 block 01: tag:  0, valid: 1, dirty: 0, reference: 11, PPN: 1
@@ -174,30 +61,12 @@ block 10: tag:  0, valid: 0, dirty: 0, reference: 10, PPN: 0
 block 11: tag:  0, valid: 0, dirty: 0, reference: 01, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 00000, valid: 0, dirty: 0, word0: 00000191, word1: 00000199, word2: 00000195, word3: 00000000
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 01: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000191, word1: 00000199, word2: 00000195, word3: 00000000
 block 11: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000000
-TLB_hit: 1
-TLB.TLB[0]: 100000010010
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 001000000000
-TLB.TLB[3]: 000100000000
-P_addr_PT_in: 01
-TLB.VPN: 000000
-Virtual_address: 00000010011100
-request_num: 00001
-enter read data from main memory1
-1 modify tag of set A, tag = 01100
-physical address in cache = 0110011100
-address_prepared = 1
-enter cache modification -- address prepared
-enter cache modification -- write
-2 modify tag of set A, tag = 01100
 Request  1: 
 page fault: 0
-data read posedge: ffffffac
+data read posedge: 00000dac
 contents in TLB: 
 block 00: tag:  4, valid: 1, dirty: 0, reference: 00, PPN: 2
 block 01: tag:  0, valid: 1, dirty: 0, reference: 11, PPN: 1
@@ -205,47 +74,12 @@ block 10: tag:  0, valid: 0, dirty: 0, reference: 10, PPN: 0
 block 11: tag:  0, valid: 0, dirty: 0, reference: 01, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 1, word0: 00000191, word1: 00000199, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 01: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 01100, valid: 1, dirty: 1, word0: 00000191, word1: 00000199, word2: 00000195, word3: 00000dac
 block 11: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000000
-TLB_hit: 1
-TLB.TLB[0]: 100000010010
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 001000000000
-TLB.TLB[3]: 000100000000
-P_addr_PT_in: 01
-TLB.VPN: 000000
-Virtual_address: 00000010011100
-request_num: 00001
-virtual_addr = 00000110011000
-whether hit 0010
-after hit -- physical_addr = 0110011000
-virtual_addr = 00000110011000
-whether hit 0000
-after hit -- physical_addr = 0110011000
-virtual_addr = 00000110011000
-TLB miss!
-pass VPN to page_table now!
-enter page_table modification
-write to TLB page_table[ 1] = 10111
-after read from page_table, TLB[          2] = 001100000111
-after read from page_table -- physical_addr = 0110011000
-virtual_addr = 00000110011000
-TLB miss!
-pass VPN to page_table now!
-physical address in cache = 1110011000
-address_prepared = 0
-after read from page_table -- physical_addr = 1110011000
-physical address in cache = 1110011000
-address_prepared = 1
-enter cache modification -- address prepared
-enter cache modification -- write
-enter cache modification -- write -- miss
 Request  2: 
 page fault: 0
-data read posedge: ffffff95
+data read posedge: 00000195
 contents in TLB: 
 block 00: tag:  4, valid: 1, dirty: 0, reference: 01, PPN: 2
 block 01: tag:  0, valid: 1, dirty: 0, reference: 00, PPN: 1
@@ -253,23 +87,12 @@ block 10: tag:  1, valid: 1, dirty: 0, reference: 11, PPN: 3
 block 11: tag:  0, valid: 0, dirty: 0, reference: 10, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 1, word0: 00000191, word1: 00000199, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 01: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 01100, valid: 1, dirty: 1, word0: 00000191, word1: 00000199, word2: 00000195, word3: 00000dac
 block 11: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000001
-TLB_hit: 1
-TLB.TLB[0]: 100100010010
-TLB.TLB[1]: 100000000001
-TLB.TLB[2]: 101100000111
-TLB.TLB[3]: 001000000000
-P_addr_PT_in: 11
-TLB.VPN: 000001
-Virtual_address: 00000110011000
-request_num: 00010
 Request  2: 
 page fault: 0
-data read posedge: ffffff95
+data read posedge: 00000195
 contents in TLB: 
 block 00: tag:  4, valid: 1, dirty: 0, reference: 01, PPN: 2
 block 01: tag:  0, valid: 1, dirty: 0, reference: 00, PPN: 1
@@ -277,27 +100,12 @@ block 10: tag:  1, valid: 1, dirty: 0, reference: 11, PPN: 3
 block 11: tag:  0, valid: 0, dirty: 0, reference: 10, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 1, word0: 00000191, word1: 00000199, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 01: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 01100, valid: 1, dirty: 1, word0: 00000191, word1: 00000199, word2: 00000195, word3: 00000dac
 block 11: tag: 00000, valid: 0, dirty: 0, word0: 0000039d, word1: 00000395, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000001
-TLB_hit: 1
-TLB.TLB[0]: 100100010010
-TLB.TLB[1]: 100000000001
-TLB.TLB[2]: 101100000111
-TLB.TLB[3]: 001000000000
-P_addr_PT_in: 11
-TLB.VPN: 000001
-Virtual_address: 00000110011000
-request_num: 00010
-physical address in cache = 1110011000
-address_prepared = 1
-enter cache modification -- address prepared
-enter cache modification -- write
 Request  2: 
 page fault: 0
-data read posedge: ffffffac
+data read posedge: 00000fac
 contents in TLB: 
 block 00: tag:  4, valid: 1, dirty: 0, reference: 01, PPN: 2
 block 01: tag:  0, valid: 1, dirty: 0, reference: 00, PPN: 1
@@ -305,34 +113,12 @@ block 10: tag:  1, valid: 1, dirty: 0, reference: 11, PPN: 3
 block 11: tag:  0, valid: 0, dirty: 0, reference: 10, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 1, word0: 00000191, word1: 00000199, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 01: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 01100, valid: 1, dirty: 1, word0: 00000191, word1: 00000199, word2: 00000195, word3: 00000dac
 block 11: tag: 11100, valid: 1, dirty: 1, word0: 0000039d, word1: 00000395, word2: 00000fac, word3: 00000391
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000001
-TLB_hit: 1
-TLB.TLB[0]: 100100010010
-TLB.TLB[1]: 100000000001
-TLB.TLB[2]: 101100000111
-TLB.TLB[3]: 001000000000
-P_addr_PT_in: 11
-TLB.VPN: 000001
-Virtual_address: 00000110011000
-request_num: 00010
-virtual_addr = 00000010010101
-whether hit 0100
-after hit -- physical_addr = 1110010101
-virtual_addr = 00000010010101
-whether hit 0010
-after hit -- physical_addr = 0110010101
-physical address in cache = 0110010101
-address_prepared = 1
-enter cache modification -- address prepared
-enter cache modification -- write
-2 modify tag of set A, tag = 01100
 Request  3: 
 page fault: 0
-data read posedge: 0000ac99
+data read posedge: 000000ac
 contents in TLB: 
 block 00: tag:  4, valid: 1, dirty: 0, reference: 10, PPN: 2
 block 01: tag:  0, valid: 1, dirty: 0, reference: 00, PPN: 1
@@ -340,46 +126,12 @@ block 10: tag:  1, valid: 1, dirty: 0, reference: 01, PPN: 3
 block 11: tag:  0, valid: 0, dirty: 0, reference: 11, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 1, word0: 00000191, word1: 0000ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 01: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 01100, valid: 1, dirty: 1, word0: 00000191, word1: 0000ac99, word2: 00000195, word3: 00000dac
 block 11: tag: 11100, valid: 1, dirty: 1, word0: 0000039d, word1: 00000395, word2: 00000fac, word3: 00000391
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000001
-TLB_hit: 1
-TLB.TLB[0]: 101000010010
-TLB.TLB[1]: 100000000001
-TLB.TLB[2]: 100100000111
-TLB.TLB[3]: 001100000000
-P_addr_PT_in: 11
-TLB.VPN: 000000
-Virtual_address: 00000010010101
-request_num: 00011
-virtual_addr = 00011110010101
-whether hit 0010
-after hit -- physical_addr = 0110010101
-virtual_addr = 00011110010101
-whether hit 0000
-after hit -- physical_addr = 0110010101
-virtual_addr = 00011110010101
-TLB miss!
-pass VPN to page_table now!
-enter page_table modification
-write to TLB page_table[ 7] = 10101
-after read from page_table, TLB[          3] = 001100011101
-after read from page_table -- physical_addr = 0110010101
-virtual_addr = 00011110010101
-TLB miss!
-pass VPN to page_table now!
-physical address in cache = 0110010101
-address_prepared = 0
-after read from page_table -- physical_addr = 0110010101
-physical address in cache = 0110010101
-address_prepared = 1
-enter cache modification -- address prepared
-4 modify tag of set A, tag = 01100
 Request  4: 
 page fault: 0
-data read posedge: 0000ac99
+data read posedge: 000000ac
 contents in TLB: 
 block 00: tag:  4, valid: 1, dirty: 0, reference: 10, PPN: 2
 block 01: tag:  0, valid: 1, dirty: 0, reference: 00, PPN: 1
@@ -387,45 +139,12 @@ block 10: tag:  1, valid: 1, dirty: 0, reference: 01, PPN: 3
 block 11: tag:  7, valid: 1, dirty: 0, reference: 11, PPN: 1
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 1, word0: 00000191, word1: 0000ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 11100, valid: 1, dirty: 1, word0: 0000039d, word1: 00000395, word2: 00000fac, word3: 00000391
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000111
-TLB_hit: 1
-TLB.TLB[0]: 101000010010
-TLB.TLB[1]: 100000000001
-TLB.TLB[2]: 100100000111
-TLB.TLB[3]: 101100011101
-P_addr_PT_in: 01
-TLB.VPN: 000111
-Virtual_address: 00011110010101
-request_num: 00100
-virtual_addr = 00100011010101
-whether hit 1000
-after hit -- physical_addr = 0111010101
-virtual_addr = 00100011010101
-whether hit 0000
-after hit -- physical_addr = 0111010101
-virtual_addr = 00100011010101
-TLB miss!
-pass VPN to page_table now!
-enter page_table modification
-write to TLB page_table[ 8] = 10101
-after read from page_table, TLB[          0] = 101100100001
-after read from page_table -- physical_addr = 0111010101
-virtual_addr = 00100011010101
-TLB miss!
-pass VPN to page_table now!
-physical address in cache = 0111010101
-address_prepared = 0
-after read from page_table -- physical_addr = 0111010101
-physical address in cache = 0111010101
-address_prepared = 1
-enter cache modification -- address prepared
+block 01: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 01100, valid: 1, dirty: 1, word0: 00000191, word1: 0000ac99, word2: 00000195, word3: 00000dac
+block 11: tag: 01100, valid: 1, dirty: 1, word0: 0000039d, word1: 00000395, word2: 00000fac, word3: 00000391
 Request  5: 
 page fault: 0
-data read posedge: 0000ac99
+data read posedge: 000000ac
 contents in TLB: 
 block 00: tag:  8, valid: 1, dirty: 0, reference: 11, PPN: 1
 block 01: tag:  0, valid: 1, dirty: 0, reference: 01, PPN: 1
@@ -433,23 +152,12 @@ block 10: tag:  1, valid: 1, dirty: 0, reference: 10, PPN: 3
 block 11: tag:  7, valid: 1, dirty: 0, reference: 00, PPN: 1
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 1, word0: 00000191, word1: 0000ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 11100, valid: 1, dirty: 1, word0: 0000039d, word1: 00000395, word2: 00000fac, word3: 00000391
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 001000
-TLB_hit: 1
-TLB.TLB[0]: 101100100001
-TLB.TLB[1]: 100100000001
-TLB.TLB[2]: 101000000111
-TLB.TLB[3]: 100000011101
-P_addr_PT_in: 01
-TLB.VPN: 001000
-Virtual_address: 00100011010101
-request_num: 00101
+block 01: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 01100, valid: 1, dirty: 1, word0: 00000191, word1: 0000ac99, word2: 00000195, word3: 00000dac
+block 11: tag: 01100, valid: 1, dirty: 1, word0: 0000039d, word1: 00000395, word2: 00000fac, word3: 00000391
 Request  5: 
 page fault: 0
-data read posedge: 0000ac99
+data read posedge: 000000ac
 contents in TLB: 
 block 00: tag:  8, valid: 1, dirty: 0, reference: 11, PPN: 1
 block 01: tag:  0, valid: 1, dirty: 0, reference: 01, PPN: 1
@@ -457,23 +165,12 @@ block 10: tag:  1, valid: 1, dirty: 0, reference: 10, PPN: 3
 block 11: tag:  7, valid: 1, dirty: 0, reference: 00, PPN: 1
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 1, word0: 00000191, word1: 0000ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 11100, valid: 1, dirty: 1, word0: 0000039d, word1: 00000395, word2: 00000fac, word3: 00000391
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 001000
-TLB_hit: 1
-TLB.TLB[0]: 101100100001
-TLB.TLB[1]: 100100000001
-TLB.TLB[2]: 101000000111
-TLB.TLB[3]: 100000011101
-P_addr_PT_in: 01
-TLB.VPN: 001000
-Virtual_address: 00100011010101
-request_num: 00101
+block 01: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 01100, valid: 1, dirty: 1, word0: 00000191, word1: 0000ac99, word2: 00000195, word3: 00000dac
+block 11: tag: 01100, valid: 1, dirty: 1, word0: 0000039d, word1: 00000395, word2: 00000fac, word3: 00000391
 Request  5: 
 page fault: 0
-data read posedge: 0000ac99
+data read posedge: 000000ac
 contents in TLB: 
 block 00: tag:  8, valid: 1, dirty: 0, reference: 11, PPN: 1
 block 01: tag:  0, valid: 1, dirty: 0, reference: 01, PPN: 1
@@ -481,23 +178,12 @@ block 10: tag:  1, valid: 1, dirty: 0, reference: 10, PPN: 3
 block 11: tag:  7, valid: 1, dirty: 0, reference: 00, PPN: 1
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 1, word0: 00000191, word1: 0000ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 11100, valid: 1, dirty: 1, word0: 0000039d, word1: 00000395, word2: 00000fac, word3: 00000391
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 001000
-TLB_hit: 1
-TLB.TLB[0]: 101100100001
-TLB.TLB[1]: 100100000001
-TLB.TLB[2]: 101000000111
-TLB.TLB[3]: 100000011101
-P_addr_PT_in: 01
-TLB.VPN: 001000
-Virtual_address: 00100011010101
-request_num: 00101
+block 01: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 01100, valid: 1, dirty: 1, word0: 00000191, word1: 0000ac99, word2: 00000195, word3: 00000dac
+block 11: tag: 01100, valid: 1, dirty: 1, word0: 0000039d, word1: 00000395, word2: 00000fac, word3: 00000391
 Request  5: 
 page fault: 0
-data read posedge: 0000ac99
+data read posedge: 000000ac
 contents in TLB: 
 block 00: tag:  8, valid: 1, dirty: 0, reference: 11, PPN: 1
 block 01: tag:  0, valid: 1, dirty: 0, reference: 01, PPN: 1
@@ -505,59 +191,38 @@ block 10: tag:  1, valid: 1, dirty: 0, reference: 10, PPN: 3
 block 11: tag:  7, valid: 1, dirty: 0, reference: 00, PPN: 1
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 1, word0: 00000191, word1: 0000ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 11100, valid: 1, dirty: 1, word0: 000001dd, word1: 000001d9, word2: 00000fac, word3: 00000391
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 001000
-TLB_hit: 1
-TLB.TLB[0]: 101100100001
-TLB.TLB[1]: 100100000001
-TLB.TLB[2]: 101000000111
-TLB.TLB[3]: 100000011101
-P_addr_PT_in: 01
-TLB.VPN: 001000
-Virtual_address: 00100011010101
-request_num: 00101
-physical address in cache = 0111010101
-address_prepared = 1
-enter cache modification -- address prepared
+block 01: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 01100, valid: 1, dirty: 1, word0: 00000191, word1: 0000ac99, word2: 00000195, word3: 00000dac
+block 11: tag: 01100, valid: 1, dirty: 1, word0: 000001dd, word1: 000001d9, word2: 00000fac, word3: 00000391
 Request  5: 
+page fault: 0
+data read posedge: 00000001
+contents in TLB: 
+block 00: tag:  8, valid: 1, dirty: 0, reference: 11, PPN: 1
+block 01: tag:  0, valid: 1, dirty: 0, reference: 01, PPN: 1
+block 10: tag:  1, valid: 1, dirty: 0, reference: 10, PPN: 3
+block 11: tag:  7, valid: 1, dirty: 0, reference: 00, PPN: 1
+contents in cache: 
+block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
+block 01: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 01100, valid: 1, dirty: 1, word0: 00000191, word1: 0000ac99, word2: 00000195, word3: 00000dac
+block 11: tag: 01110, valid: 1, dirty: 0, word0: 000001dd, word1: 000001d9, word2: 000001d5, word3: 000001d1
+Request  6: 
 page fault: 0
 data read posedge: 000001d9
 contents in TLB: 
-block 00: tag:  8, valid: 1, dirty: 0, reference: 11, PPN: 1
-block 01: tag:  0, valid: 1, dirty: 0, reference: 01, PPN: 1
-block 10: tag:  1, valid: 1, dirty: 0, reference: 10, PPN: 3
-block 11: tag:  7, valid: 1, dirty: 0, reference: 00, PPN: 1
+block 00: tag:  8, valid: 1, dirty: 0, reference: 01, PPN: 1
+block 01: tag:  0, valid: 1, dirty: 0, reference: 11, PPN: 1
+block 10: tag:  1, valid: 1, dirty: 0, reference: 00, PPN: 3
+block 11: tag:  7, valid: 1, dirty: 0, reference: 10, PPN: 1
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 1, word0: 00000191, word1: 0000ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 01: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 01100, valid: 1, dirty: 1, word0: 00000191, word1: 0000ac99, word2: 00000195, word3: 00000dac
 block 11: tag: 01110, valid: 1, dirty: 0, word0: 000001dd, word1: 000001d9, word2: 000001d5, word3: 000001d1
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 001000
-TLB_hit: 1
-TLB.TLB[0]: 101100100001
-TLB.TLB[1]: 100100000001
-TLB.TLB[2]: 101000000111
-TLB.TLB[3]: 100000011101
-P_addr_PT_in: 01
-TLB.VPN: 001000
-Virtual_address: 00100011010101
-request_num: 00101
-virtual_addr = 00000111010100
-whether hit 0001
-after hit -- physical_addr = 0111010100
-virtual_addr = 00000111010100
-whether hit 0100
-after hit -- physical_addr = 1111010100
-physical address in cache = 1111010100
-address_prepared = 1
-enter cache modification -- address prepared
 Request  6: 
 page fault: 0
-data read posedge: ffffffd9
+data read posedge: 000001d9
 contents in TLB: 
 block 00: tag:  8, valid: 1, dirty: 0, reference: 01, PPN: 1
 block 01: tag:  0, valid: 1, dirty: 0, reference: 11, PPN: 1
@@ -565,23 +230,12 @@ block 10: tag:  1, valid: 1, dirty: 0, reference: 00, PPN: 3
 block 11: tag:  7, valid: 1, dirty: 0, reference: 10, PPN: 1
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 1, word0: 00000191, word1: 0000ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 01: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 01100, valid: 1, dirty: 1, word0: 00000191, word1: 0000ac99, word2: 00000195, word3: 00000dac
 block 11: tag: 01110, valid: 1, dirty: 0, word0: 000001dd, word1: 000001d9, word2: 000001d5, word3: 000001d1
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 001000
-TLB_hit: 1
-TLB.TLB[0]: 100100100001
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 100000000111
-TLB.TLB[3]: 101000011101
-P_addr_PT_in: 01
-TLB.VPN: 000001
-Virtual_address: 00000111010100
-request_num: 00110
 Request  6: 
 page fault: 0
-data read posedge: ffffffd9
+data read posedge: 000001d9
 contents in TLB: 
 block 00: tag:  8, valid: 1, dirty: 0, reference: 01, PPN: 1
 block 01: tag:  0, valid: 1, dirty: 0, reference: 11, PPN: 1
@@ -589,23 +243,12 @@ block 10: tag:  1, valid: 1, dirty: 0, reference: 00, PPN: 3
 block 11: tag:  7, valid: 1, dirty: 0, reference: 10, PPN: 1
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 1, word0: 00000191, word1: 0000ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 01: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 01100, valid: 1, dirty: 1, word0: 00000191, word1: 0000ac99, word2: 00000195, word3: 00000dac
 block 11: tag: 01110, valid: 1, dirty: 0, word0: 000001dd, word1: 000001d9, word2: 000001d5, word3: 000001d1
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 001000
-TLB_hit: 1
-TLB.TLB[0]: 100100100001
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 100000000111
-TLB.TLB[3]: 101000011101
-P_addr_PT_in: 01
-TLB.VPN: 000001
-Virtual_address: 00000111010100
-request_num: 00110
 Request  6: 
 page fault: 0
-data read posedge: ffffffd9
+data read posedge: 000001d9
 contents in TLB: 
 block 00: tag:  8, valid: 1, dirty: 0, reference: 01, PPN: 1
 block 01: tag:  0, valid: 1, dirty: 0, reference: 11, PPN: 1
@@ -613,87 +256,25 @@ block 10: tag:  1, valid: 1, dirty: 0, reference: 00, PPN: 3
 block 11: tag:  7, valid: 1, dirty: 0, reference: 10, PPN: 1
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 1, word0: 00000191, word1: 0000ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 01: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 01100, valid: 1, dirty: 1, word0: 000003dd, word1: 000003d9, word2: 000003d5, word3: 00000dac
 block 11: tag: 01110, valid: 1, dirty: 0, word0: 000001dd, word1: 000001d9, word2: 000001d5, word3: 000001d1
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 001000
-TLB_hit: 1
-TLB.TLB[0]: 100100100001
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 100000000111
-TLB.TLB[3]: 101000011101
-P_addr_PT_in: 01
-TLB.VPN: 000001
-Virtual_address: 00000111010100
-request_num: 00110
 Request  6: 
-page fault: 0
-data read posedge: ffffffd9
-contents in TLB: 
-block 00: tag:  8, valid: 1, dirty: 0, reference: 01, PPN: 1
-block 01: tag:  0, valid: 1, dirty: 0, reference: 11, PPN: 1
-block 10: tag:  1, valid: 1, dirty: 0, reference: 00, PPN: 3
-block 11: tag:  7, valid: 1, dirty: 0, reference: 10, PPN: 1
-contents in cache: 
-block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 1, word0: 000003dd, word1: 000003d9, word2: 000003d5, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 01110, valid: 1, dirty: 0, word0: 000001dd, word1: 000001d9, word2: 000001d5, word3: 000001d1
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 001000
-TLB_hit: 1
-TLB.TLB[0]: 100100100001
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 100000000111
-TLB.TLB[3]: 101000011101
-P_addr_PT_in: 01
-TLB.VPN: 000001
-Virtual_address: 00000111010100
-request_num: 00110
-3 modify tag of set A, tag = 11110
-physical address in cache = 1111010100
-address_prepared = 1
-enter cache modification -- address prepared
-4 modify tag of set A, tag = 11110
-Request  6: 
-page fault: 0
-data read posedge: ffffffd9
-contents in TLB: 
-block 00: tag:  8, valid: 1, dirty: 0, reference: 01, PPN: 1
-block 01: tag:  0, valid: 1, dirty: 0, reference: 11, PPN: 1
-block 10: tag:  1, valid: 1, dirty: 0, reference: 00, PPN: 3
-block 11: tag:  7, valid: 1, dirty: 0, reference: 10, PPN: 1
-contents in cache: 
-block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 11110, valid: 1, dirty: 0, word0: 000003dd, word1: 000003d9, word2: 000003d5, word3: 000003d1
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 01110, valid: 1, dirty: 0, word0: 000001dd, word1: 000001d9, word2: 000001d5, word3: 000001d1
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 001000
-TLB_hit: 1
-TLB.TLB[0]: 100100100001
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 100000000111
-TLB.TLB[3]: 101000011101
-P_addr_PT_in: 01
-TLB.VPN: 000001
-Virtual_address: 00000111010100
-request_num: 00110
-virtual_addr = 00011110010111
-whether hit 0100
-after hit -- physical_addr = 1110010111
-virtual_addr = 00011110010111
-whether hit 1000
-after hit -- physical_addr = 0110010111
-physical address in cache = 0110010111
-address_prepared = 1
-enter cache modification -- address prepared
-enter cache modification -- write
-enter cache modification -- write -- miss
-Request  7: 
 page fault: 0
 data read posedge: 000003d9
+contents in TLB: 
+block 00: tag:  8, valid: 1, dirty: 0, reference: 01, PPN: 1
+block 01: tag:  0, valid: 1, dirty: 0, reference: 11, PPN: 1
+block 10: tag:  1, valid: 1, dirty: 0, reference: 00, PPN: 3
+block 11: tag:  7, valid: 1, dirty: 0, reference: 10, PPN: 1
+contents in cache: 
+block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
+block 01: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 11110, valid: 1, dirty: 0, word0: 000003dd, word1: 000003d9, word2: 000003d5, word3: 000003d1
+block 11: tag: 01110, valid: 1, dirty: 0, word0: 000001dd, word1: 000001d9, word2: 000001d5, word3: 000001d1
+Request  7: 
+page fault: 0
+data read posedge: 00000000
 contents in TLB: 
 block 00: tag:  8, valid: 1, dirty: 0, reference: 10, PPN: 1
 block 01: tag:  0, valid: 1, dirty: 0, reference: 11, PPN: 1
@@ -701,23 +282,12 @@ block 10: tag:  1, valid: 1, dirty: 0, reference: 01, PPN: 3
 block 11: tag:  7, valid: 1, dirty: 0, reference: 00, PPN: 1
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 11110, valid: 1, dirty: 0, word0: 000003dd, word1: 000003d9, word2: 000003d5, word3: 000003d1
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 01: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 11110, valid: 1, dirty: 0, word0: 000003dd, word1: 000003d9, word2: 000003d5, word3: 000003d1
 block 11: tag: 01110, valid: 1, dirty: 0, word0: 00000191, word1: 000001d9, word2: 000001d5, word3: 000001d1
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 001000
-TLB_hit: 1
-TLB.TLB[0]: 101000100001
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 100100000111
-TLB.TLB[3]: 100000011101
-P_addr_PT_in: 01
-TLB.VPN: 000111
-Virtual_address: 00011110010111
-request_num: 00111
 Request  7: 
 page fault: 0
-data read posedge: 000003d9
+data read posedge: 00000000
 contents in TLB: 
 block 00: tag:  8, valid: 1, dirty: 0, reference: 10, PPN: 1
 block 01: tag:  0, valid: 1, dirty: 0, reference: 11, PPN: 1
@@ -725,27 +295,12 @@ block 10: tag:  1, valid: 1, dirty: 0, reference: 01, PPN: 3
 block 11: tag:  7, valid: 1, dirty: 0, reference: 00, PPN: 1
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 11110, valid: 1, dirty: 0, word0: 000003dd, word1: 000003d9, word2: 000003d5, word3: 000003d1
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 01: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 11110, valid: 1, dirty: 0, word0: 000003dd, word1: 000003d9, word2: 000003d5, word3: 000003d1
 block 11: tag: 01110, valid: 1, dirty: 0, word0: 00000191, word1: 0000ac99, word2: 00000195, word3: 000001d1
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 001000
-TLB_hit: 1
-TLB.TLB[0]: 101000100001
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 100100000111
-TLB.TLB[3]: 100000011101
-P_addr_PT_in: 01
-TLB.VPN: 000111
-Virtual_address: 00011110010111
-request_num: 00111
-physical address in cache = 0110010111
-address_prepared = 1
-enter cache modification -- address prepared
-enter cache modification -- write
 Request  7: 
 page fault: 0
-data read posedge: 4800ac99
+data read posedge: 00000048
 contents in TLB: 
 block 00: tag:  8, valid: 1, dirty: 0, reference: 10, PPN: 1
 block 01: tag:  0, valid: 1, dirty: 0, reference: 11, PPN: 1
@@ -753,32 +308,12 @@ block 10: tag:  1, valid: 1, dirty: 0, reference: 01, PPN: 3
 block 11: tag:  7, valid: 1, dirty: 0, reference: 00, PPN: 1
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 11110, valid: 1, dirty: 0, word0: 000003dd, word1: 000003d9, word2: 000003d5, word3: 000003d1
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 01: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 11110, valid: 1, dirty: 0, word0: 000003dd, word1: 000003d9, word2: 000003d5, word3: 000003d1
 block 11: tag: 01100, valid: 1, dirty: 1, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 001000
-TLB_hit: 1
-TLB.TLB[0]: 101000100001
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 100100000111
-TLB.TLB[3]: 100000011101
-P_addr_PT_in: 01
-TLB.VPN: 000111
-Virtual_address: 00011110010111
-request_num: 00111
-virtual_addr = 00000010011000
-whether hit 1000
-after hit -- physical_addr = 0110011000
-virtual_addr = 00000010011000
-whether hit 0010
-after hit -- physical_addr = 0110011000
-physical address in cache = 0110011000
-address_prepared = 1
-enter cache modification -- address prepared
 Request  8: 
 page fault: 0
-data read posedge: ffffff95
+data read posedge: 00000195
 contents in TLB: 
 block 00: tag:  8, valid: 1, dirty: 0, reference: 11, PPN: 1
 block 01: tag:  0, valid: 1, dirty: 0, reference: 00, PPN: 1
@@ -786,45 +321,12 @@ block 10: tag:  1, valid: 1, dirty: 0, reference: 10, PPN: 3
 block 11: tag:  7, valid: 1, dirty: 0, reference: 01, PPN: 1
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 11110, valid: 1, dirty: 0, word0: 000003dd, word1: 000003d9, word2: 000003d5, word3: 000003d1
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 01: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 01100, valid: 1, dirty: 0, word0: 000003dd, word1: 000003d9, word2: 000003d5, word3: 000003d1
 block 11: tag: 01100, valid: 1, dirty: 1, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 001000
-TLB_hit: 1
-TLB.TLB[0]: 101100100001
-TLB.TLB[1]: 100000000001
-TLB.TLB[2]: 101000000111
-TLB.TLB[3]: 100100011101
-P_addr_PT_in: 01
-TLB.VPN: 000000
-Virtual_address: 00000010011000
-request_num: 01000
-virtual_addr = 00101010010100
-whether hit 0010
-after hit -- physical_addr = 0110010100
-virtual_addr = 00101010010100
-whether hit 0000
-after hit -- physical_addr = 0110010100
-virtual_addr = 00101010010100
-TLB miss!
-pass VPN to page_table now!
-enter page_table modification
-write to TLB page_table[10] = 10101
-after read from page_table, TLB[          0] = 101100101001
-after read from page_table -- physical_addr = 0110010100
-virtual_addr = 00101010010100
-TLB miss!
-pass VPN to page_table now!
-physical address in cache = 0110010100
-address_prepared = 0
-after read from page_table -- physical_addr = 0110010100
-physical address in cache = 0110010100
-address_prepared = 1
-enter cache modification -- address prepared
 Request  9: 
 page fault: 0
-data read posedge: ffffff99
+data read posedge: 00000195
 contents in TLB: 
 block 00: tag: 10, valid: 1, dirty: 0, reference: 11, PPN: 1
 block 01: tag:  0, valid: 1, dirty: 0, reference: 00, PPN: 1
@@ -832,32 +334,12 @@ block 10: tag:  1, valid: 1, dirty: 0, reference: 10, PPN: 3
 block 11: tag:  7, valid: 1, dirty: 0, reference: 01, PPN: 1
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 11110, valid: 1, dirty: 0, word0: 000003dd, word1: 000003d9, word2: 000003d5, word3: 000003d1
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 01: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 01100, valid: 1, dirty: 0, word0: 000003dd, word1: 000003d9, word2: 000003d5, word3: 000003d1
 block 11: tag: 01100, valid: 1, dirty: 1, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 001010
-TLB_hit: 1
-TLB.TLB[0]: 101100101001
-TLB.TLB[1]: 100000000001
-TLB.TLB[2]: 101000000111
-TLB.TLB[3]: 100100011101
-P_addr_PT_in: 01
-TLB.VPN: 001010
-Virtual_address: 00101010010100
-request_num: 01001
-virtual_addr = 00000011010100
-whether hit 0001
-after hit -- physical_addr = 0111010100
-virtual_addr = 00000011010100
-whether hit 0010
-after hit -- physical_addr = 0111010100
-physical address in cache = 0111010100
-address_prepared = 1
-enter cache modification -- address prepared
 Request 10: 
 page fault: 0
-data read posedge: ffffff99
+data read posedge: 00000195
 contents in TLB: 
 block 00: tag: 10, valid: 1, dirty: 0, reference: 01, PPN: 1
 block 01: tag:  0, valid: 1, dirty: 0, reference: 00, PPN: 1
@@ -865,23 +347,12 @@ block 10: tag:  1, valid: 1, dirty: 0, reference: 11, PPN: 3
 block 11: tag:  7, valid: 1, dirty: 0, reference: 10, PPN: 1
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 11110, valid: 1, dirty: 0, word0: 000001dd, word1: 000003d9, word2: 000003d5, word3: 000003d1
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 01: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 01100, valid: 1, dirty: 0, word0: 000003dd, word1: 000003d9, word2: 000003d5, word3: 000003d1
 block 11: tag: 01100, valid: 1, dirty: 1, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 001010
-TLB_hit: 1
-TLB.TLB[0]: 100100101001
-TLB.TLB[1]: 100000000001
-TLB.TLB[2]: 101100000111
-TLB.TLB[3]: 101000011101
-P_addr_PT_in: 01
-TLB.VPN: 000000
-Virtual_address: 00000011010100
-request_num: 01010
 Request 10: 
 page fault: 0
-data read posedge: ffffff99
+data read posedge: 00000195
 contents in TLB: 
 block 00: tag: 10, valid: 1, dirty: 0, reference: 01, PPN: 1
 block 01: tag:  0, valid: 1, dirty: 0, reference: 00, PPN: 1
@@ -889,44 +360,48 @@ block 10: tag:  1, valid: 1, dirty: 0, reference: 11, PPN: 3
 block 11: tag:  7, valid: 1, dirty: 0, reference: 10, PPN: 1
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 11110, valid: 1, dirty: 0, word0: 000001dd, word1: 000001d9, word2: 000001d5, word3: 000003d1
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 01: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 01100, valid: 1, dirty: 0, word0: 000003dd, word1: 000003d9, word2: 000003d5, word3: 000003d1
 block 11: tag: 01100, valid: 1, dirty: 1, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 001010
-TLB_hit: 1
-TLB.TLB[0]: 100100101001
-TLB.TLB[1]: 100000000001
-TLB.TLB[2]: 101100000111
-TLB.TLB[3]: 101000011101
-P_addr_PT_in: 01
-TLB.VPN: 000000
-Virtual_address: 00000011010100
-request_num: 01010
-3 modify tag of set A, tag = 01110
-virtual_addr = 00010010001000
-whether hit 0010
-after hit -- physical_addr = 0110001000
-virtual_addr = 00010010001000
-whether hit 0000
-after hit -- physical_addr = 0110001000
-virtual_addr = 00010010001000
-TLB miss!
-pass VPN to page_table now!
-enter page_table modification
-write to TLB page_table[ 4] = 10110
-physical address in cache = 0110001000
-address_prepared = 0
-after read from page_table, TLB[          2] = 101100010010
-after read from page_table -- physical_addr = 0110001000
-virtual_addr = 00010010001000
-TLB miss!
-pass VPN to page_table now!
-after read from page_table -- physical_addr = 1010001000
-physical address in cache = 1010001000
-address_prepared = 1
-enter cache modification -- address prepared
-4 modify tag of set A, tag = 10100
+Request 10: 
+page fault: 0
+data read posedge: 00000195
+contents in TLB: 
+block 00: tag: 10, valid: 1, dirty: 0, reference: 01, PPN: 1
+block 01: tag:  0, valid: 1, dirty: 0, reference: 00, PPN: 1
+block 10: tag:  1, valid: 1, dirty: 0, reference: 11, PPN: 3
+block 11: tag:  7, valid: 1, dirty: 0, reference: 10, PPN: 1
+contents in cache: 
+block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
+block 01: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 01100, valid: 1, dirty: 0, word0: 000003dd, word1: 000003d9, word2: 000003d5, word3: 000003d1
+block 11: tag: 01100, valid: 1, dirty: 1, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
+Request 10: 
+page fault: 0
+data read posedge: 00000195
+contents in TLB: 
+block 00: tag: 10, valid: 1, dirty: 0, reference: 01, PPN: 1
+block 01: tag:  0, valid: 1, dirty: 0, reference: 00, PPN: 1
+block 10: tag:  1, valid: 1, dirty: 0, reference: 11, PPN: 3
+block 11: tag:  7, valid: 1, dirty: 0, reference: 10, PPN: 1
+contents in cache: 
+block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
+block 01: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 01100, valid: 1, dirty: 0, word0: 000003dd, word1: 000003d9, word2: 000003d5, word3: 000003d1
+block 11: tag: 01100, valid: 1, dirty: 1, word0: 000001dd, word1: 000001d9, word2: 000001d5, word3: 00000dac
+Request 10: 
+page fault: 0
+data read posedge: 000001d9
+contents in TLB: 
+block 00: tag: 10, valid: 1, dirty: 0, reference: 01, PPN: 1
+block 01: tag:  0, valid: 1, dirty: 0, reference: 00, PPN: 1
+block 10: tag:  1, valid: 1, dirty: 0, reference: 11, PPN: 3
+block 11: tag:  7, valid: 1, dirty: 0, reference: 10, PPN: 1
+contents in cache: 
+block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
+block 01: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 01100, valid: 1, dirty: 0, word0: 000003dd, word1: 000003d9, word2: 000003d5, word3: 000003d1
+block 11: tag: 01110, valid: 1, dirty: 0, word0: 000001dd, word1: 000001d9, word2: 000001d5, word3: 000001d1
 Request 11: 
 page fault: 0
 data read posedge: 00000001
@@ -937,42 +412,9 @@ block 10: tag:  4, valid: 1, dirty: 0, reference: 11, PPN: 2
 block 11: tag:  7, valid: 1, dirty: 0, reference: 10, PPN: 1
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01110, valid: 1, dirty: 0, word0: 000001dd, word1: 000001d9, word2: 000001d5, word3: 000001d1
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 01100, valid: 1, dirty: 1, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000100
-TLB_hit: 1
-TLB.TLB[0]: 100100101001
-TLB.TLB[1]: 100000000001
-TLB.TLB[2]: 101100010010
-TLB.TLB[3]: 101000011101
-P_addr_PT_in: 10
-TLB.VPN: 000100
-Virtual_address: 00010010001000
-request_num: 01011
-virtual_addr = 00001011010100
-whether hit 0100
-after hit -- physical_addr = 1011010100
-virtual_addr = 00001011010100
-whether hit 0000
-after hit -- physical_addr = 1011010100
-virtual_addr = 00001011010100
-TLB miss!
-pass VPN to page_table now!
-enter page_table modification
-write to TLB page_table[ 2] = 00100
-after read from page_table, TLB[          3] = 101100001000
-after read from page_table -- physical_addr = 1011010100
-virtual_addr = 00001011010100
-TLB miss!
-pass VPN to page_table now!
-physical address in cache = 0011010100
-address_prepared = 0
-after read from page_table -- physical_addr = 0011010100
-physical address in cache = 0011010100
-address_prepared = 1
-enter cache modification -- address prepared
+block 01: tag: 10100, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 01100, valid: 1, dirty: 0, word0: 000003dd, word1: 000003d9, word2: 000003d5, word3: 000003d1
+block 11: tag: 01110, valid: 1, dirty: 0, word0: 000001dd, word1: 000001d9, word2: 000001d5, word3: 000001d1
 Request 12: 
 page fault: 1
 data read posedge: 00000001
@@ -983,20 +425,9 @@ block 10: tag:  4, valid: 1, dirty: 0, reference: 00, PPN: 2
 block 11: tag:  2, valid: 1, dirty: 0, reference: 11, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01110, valid: 1, dirty: 0, word0: 000001dd, word1: 000001d9, word2: 000001d5, word3: 000001d1
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 01100, valid: 1, dirty: 1, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000010
-TLB_hit: 1
-TLB.TLB[0]: 101000101001
-TLB.TLB[1]: 100100000001
-TLB.TLB[2]: 100000010010
-TLB.TLB[3]: 101100001000
-P_addr_PT_in: 00
-TLB.VPN: 000010
-Virtual_address: 00001011010100
-request_num: 01100
+block 01: tag: 10100, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 01100, valid: 1, dirty: 0, word0: 000003dd, word1: 000003d9, word2: 000003d5, word3: 000003d1
+block 11: tag: 01110, valid: 1, dirty: 0, word0: 000001dd, word1: 000001d9, word2: 000001d5, word3: 000001d1
 Request 12: 
 page fault: 1
 data read posedge: 00000001
@@ -1007,71 +438,9 @@ block 10: tag:  4, valid: 1, dirty: 0, reference: 00, PPN: 2
 block 11: tag:  2, valid: 1, dirty: 0, reference: 11, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01110, valid: 1, dirty: 0, word0: 000001dd, word1: 000001d9, word2: 000001d5, word3: 000001d1
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 01100, valid: 1, dirty: 1, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000010
-TLB_hit: 1
-TLB.TLB[0]: 101000101001
-TLB.TLB[1]: 100100000001
-TLB.TLB[2]: 100000010010
-TLB.TLB[3]: 101100001000
-P_addr_PT_in: 00
-TLB.VPN: 000010
-Virtual_address: 00001011010100
-request_num: 01100
-Request 12: 
-page fault: 1
-data read posedge: 00000001
-contents in TLB: 
-block 00: tag: 10, valid: 1, dirty: 0, reference: 10, PPN: 1
-block 01: tag:  0, valid: 1, dirty: 0, reference: 01, PPN: 1
-block 10: tag:  4, valid: 1, dirty: 0, reference: 00, PPN: 2
-block 11: tag:  2, valid: 1, dirty: 0, reference: 11, PPN: 0
-contents in cache: 
-block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01110, valid: 1, dirty: 0, word0: 000001dd, word1: 000001d9, word2: 000001d5, word3: 000001d1
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 01100, valid: 1, dirty: 1, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000010
-TLB_hit: 1
-TLB.TLB[0]: 101000101001
-TLB.TLB[1]: 100100000001
-TLB.TLB[2]: 100000010010
-TLB.TLB[3]: 101100001000
-P_addr_PT_in: 00
-TLB.VPN: 000010
-Virtual_address: 00001011010100
-request_num: 01100
-Request 12: 
-page fault: 1
-data read posedge: 00000001
-contents in TLB: 
-block 00: tag: 10, valid: 1, dirty: 0, reference: 10, PPN: 1
-block 01: tag:  0, valid: 1, dirty: 0, reference: 01, PPN: 1
-block 10: tag:  4, valid: 1, dirty: 0, reference: 00, PPN: 2
-block 11: tag:  2, valid: 1, dirty: 0, reference: 11, PPN: 0
-contents in cache: 
-block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01110, valid: 1, dirty: 0, word0: 000001dd, word1: 000001d9, word2: 000001d5, word3: 000001d1
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 01100, valid: 1, dirty: 1, word0: 00000000, word1: 00000000, word2: 00000195, word3: 00000dac
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000010
-TLB_hit: 1
-TLB.TLB[0]: 101000101001
-TLB.TLB[1]: 100100000001
-TLB.TLB[2]: 100000010010
-TLB.TLB[3]: 101100001000
-P_addr_PT_in: 00
-TLB.VPN: 000010
-Virtual_address: 00001011010100
-request_num: 01100
-physical address in cache = 0011010100
-address_prepared = 1
-enter cache modification -- address prepared
+block 01: tag: 10100, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 01100, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 000003d1
+block 11: tag: 01110, valid: 1, dirty: 0, word0: 000001dd, word1: 000001d9, word2: 000001d5, word3: 000001d1
 Request 12: 
 page fault: 1
 data read posedge: 00000000
@@ -1082,42 +451,9 @@ block 10: tag:  4, valid: 1, dirty: 0, reference: 00, PPN: 2
 block 11: tag:  2, valid: 1, dirty: 0, reference: 11, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01110, valid: 1, dirty: 0, word0: 000001dd, word1: 000001d9, word2: 000001d5, word3: 000001d1
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000010
-TLB_hit: 1
-TLB.TLB[0]: 101000101001
-TLB.TLB[1]: 100100000001
-TLB.TLB[2]: 100000010010
-TLB.TLB[3]: 101100001000
-P_addr_PT_in: 00
-TLB.VPN: 000010
-Virtual_address: 00001011010100
-request_num: 01100
-virtual_addr = 00011110011100
-whether hit 1000
-after hit -- physical_addr = 0010011100
-virtual_addr = 00011110011100
-whether hit 0000
-after hit -- physical_addr = 0010011100
-virtual_addr = 00011110011100
-TLB miss!
-pass VPN to page_table now!
-enter page_table modification
-write to TLB page_table[ 7] = 10101
-after read from page_table, TLB[          0] = 101100011101
-after read from page_table -- physical_addr = 0010011100
-virtual_addr = 00011110011100
-TLB miss!
-pass VPN to page_table now!
-physical address in cache = 0110011100
-address_prepared = 0
-after read from page_table -- physical_addr = 0110011100
-physical address in cache = 0110011100
-address_prepared = 1
-enter cache modification -- address prepared
+block 01: tag: 10100, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 11: tag: 01110, valid: 1, dirty: 0, word0: 000001dd, word1: 000001d9, word2: 000001d5, word3: 000001d1
 Request 13: 
 page fault: 0
 data read posedge: 00000000
@@ -1128,20 +464,9 @@ block 10: tag:  4, valid: 1, dirty: 0, reference: 01, PPN: 2
 block 11: tag:  2, valid: 1, dirty: 0, reference: 00, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01110, valid: 1, dirty: 0, word0: 000001dd, word1: 000001d9, word2: 000001d5, word3: 000001d1
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000111
-TLB_hit: 1
-TLB.TLB[0]: 101100011101
-TLB.TLB[1]: 101000000001
-TLB.TLB[2]: 100100010010
-TLB.TLB[3]: 100000001000
-P_addr_PT_in: 01
-TLB.VPN: 000111
-Virtual_address: 00011110011100
-request_num: 01101
+block 01: tag: 10100, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 11: tag: 01110, valid: 1, dirty: 0, word0: 000001dd, word1: 000001d9, word2: 000001d5, word3: 000001d1
 Request 13: 
 page fault: 0
 data read posedge: 00000000
@@ -1152,28 +477,12 @@ block 10: tag:  4, valid: 1, dirty: 0, reference: 01, PPN: 2
 block 11: tag:  2, valid: 1, dirty: 0, reference: 00, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01110, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 000001d1
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000111
-TLB_hit: 1
-TLB.TLB[0]: 101100011101
-TLB.TLB[1]: 101000000001
-TLB.TLB[2]: 100100010010
-TLB.TLB[3]: 100000001000
-P_addr_PT_in: 01
-TLB.VPN: 000111
-Virtual_address: 00011110011100
-request_num: 01101
-3 modify tag of set A, tag = 01100
-physical address in cache = 0110011100
-address_prepared = 1
-enter cache modification -- address prepared
-4 modify tag of set A, tag = 01100
+block 01: tag: 10100, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 11: tag: 01110, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 000001d1
 Request 13: 
 page fault: 0
-data read posedge: ffffffac
+data read posedge: 00000dac
 contents in TLB: 
 block 00: tag:  7, valid: 1, dirty: 0, reference: 11, PPN: 1
 block 01: tag:  0, valid: 1, dirty: 0, reference: 10, PPN: 1
@@ -1181,32 +490,9 @@ block 10: tag:  4, valid: 1, dirty: 0, reference: 01, PPN: 2
 block 11: tag:  2, valid: 1, dirty: 0, reference: 00, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000111
-TLB_hit: 1
-TLB.TLB[0]: 101100011101
-TLB.TLB[1]: 101000000001
-TLB.TLB[2]: 100100010010
-TLB.TLB[3]: 100000001000
-P_addr_PT_in: 01
-TLB.VPN: 000111
-Virtual_address: 00011110011100
-request_num: 01101
-virtual_addr = xxxxxxxxxxxxxx
-whether hit 0001
-after hit -- physical_addr = 01xxxxxxxx
-virtual_addr = xxxxxxxxxxxxxx
-whether hit xxxx
-after hit -- physical_addr = 01xxxxxxxx
-virtual_addr = xxxxxxxxxxxxxx
-whether hit xxxx
-after hit -- physical_addr = 01xxxxxxxx
-physical address in cache = 01xxxxxxxx
-address_prepared = 1
-enter cache modification -- address prepared
+block 01: tag: 10100, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 11: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
 Request 14: 
 page fault: 0
 data read posedge: 00000000
@@ -1217,20 +503,9 @@ block 10: tag:  4, valid: 1, dirty: 0, reference: 10, PPN: 2
 block 11: tag:  2, valid: 1, dirty: 0, reference: 01, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000111
-TLB_hit: x
-TLB.TLB[0]: 100000011101
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 101000010010
-TLB.TLB[3]: 100100001000
-P_addr_PT_in: 01
-TLB.VPN: xxxxxx
-Virtual_address: xxxxxxxxxxxxxx
-request_num: 01110
+block 01: tag: 10100, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 11: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
 Request 14: 
 page fault: 0
 data read posedge: 00000000
@@ -1241,20 +516,9 @@ block 10: tag:  4, valid: 1, dirty: 0, reference: 10, PPN: 2
 block 11: tag:  2, valid: 1, dirty: 0, reference: 01, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000111
-TLB_hit: x
-TLB.TLB[0]: 100000011101
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 101000010010
-TLB.TLB[3]: 100100001000
-P_addr_PT_in: 01
-TLB.VPN: xxxxxx
-Virtual_address: xxxxxxxxxxxxxx
-request_num: 01110
+block 01: tag: 10100, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 11: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
 Request 14: 
 page fault: 0
 data read posedge: 00000000
@@ -1265,20 +529,9 @@ block 10: tag:  4, valid: 1, dirty: 0, reference: 10, PPN: 2
 block 11: tag:  2, valid: 1, dirty: 0, reference: 01, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000111
-TLB_hit: x
-TLB.TLB[0]: 100000011101
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 101000010010
-TLB.TLB[3]: 100100001000
-P_addr_PT_in: 01
-TLB.VPN: xxxxxx
-Virtual_address: xxxxxxxxxxxxxx
-request_num: 01110
+block 01: tag: 10100, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 11: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
 Request 14: 
 page fault: 0
 data read posedge: 00000000
@@ -1289,20 +542,9 @@ block 10: tag:  4, valid: 1, dirty: 0, reference: 10, PPN: 2
 block 11: tag:  2, valid: 1, dirty: 0, reference: 01, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000111
-TLB_hit: x
-TLB.TLB[0]: 100000011101
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 101000010010
-TLB.TLB[3]: 100100001000
-P_addr_PT_in: 01
-TLB.VPN: xxxxxx
-Virtual_address: xxxxxxxxxxxxxx
-request_num: 01110
+block 01: tag: 10100, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 11: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
 Request 14: 
 page fault: 0
 data read posedge: 00000000
@@ -1313,20 +555,9 @@ block 10: tag:  4, valid: 1, dirty: 0, reference: 10, PPN: 2
 block 11: tag:  2, valid: 1, dirty: 0, reference: 01, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000111
-TLB_hit: x
-TLB.TLB[0]: 100000011101
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 101000010010
-TLB.TLB[3]: 100100001000
-P_addr_PT_in: 01
-TLB.VPN: xxxxxx
-Virtual_address: xxxxxxxxxxxxxx
-request_num: 01110
+block 01: tag: 10100, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 11: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
 Request 14: 
 page fault: 0
 data read posedge: 00000000
@@ -1337,20 +568,9 @@ block 10: tag:  4, valid: 1, dirty: 0, reference: 10, PPN: 2
 block 11: tag:  2, valid: 1, dirty: 0, reference: 01, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000111
-TLB_hit: x
-TLB.TLB[0]: 100000011101
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 101000010010
-TLB.TLB[3]: 100100001000
-P_addr_PT_in: 01
-TLB.VPN: xxxxxx
-Virtual_address: xxxxxxxxxxxxxx
-request_num: 01110
+block 01: tag: 10100, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 11: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
 Request 14: 
 page fault: 0
 data read posedge: 00000000
@@ -1361,20 +581,9 @@ block 10: tag:  4, valid: 1, dirty: 0, reference: 10, PPN: 2
 block 11: tag:  2, valid: 1, dirty: 0, reference: 01, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000111
-TLB_hit: x
-TLB.TLB[0]: 100000011101
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 101000010010
-TLB.TLB[3]: 100100001000
-P_addr_PT_in: 01
-TLB.VPN: xxxxxx
-Virtual_address: xxxxxxxxxxxxxx
-request_num: 01110
+block 01: tag: 10100, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 11: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
 Request 14: 
 page fault: 0
 data read posedge: 00000000
@@ -1385,20 +594,9 @@ block 10: tag:  4, valid: 1, dirty: 0, reference: 10, PPN: 2
 block 11: tag:  2, valid: 1, dirty: 0, reference: 01, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000111
-TLB_hit: x
-TLB.TLB[0]: 100000011101
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 101000010010
-TLB.TLB[3]: 100100001000
-P_addr_PT_in: 01
-TLB.VPN: xxxxxx
-Virtual_address: xxxxxxxxxxxxxx
-request_num: 01110
+block 01: tag: 10100, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 11: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
 Request 14: 
 page fault: 0
 data read posedge: 00000000
@@ -1409,20 +607,9 @@ block 10: tag:  4, valid: 1, dirty: 0, reference: 10, PPN: 2
 block 11: tag:  2, valid: 1, dirty: 0, reference: 01, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000111
-TLB_hit: x
-TLB.TLB[0]: 100000011101
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 101000010010
-TLB.TLB[3]: 100100001000
-P_addr_PT_in: 01
-TLB.VPN: xxxxxx
-Virtual_address: xxxxxxxxxxxxxx
-request_num: 01110
+block 01: tag: 10100, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 11: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
 Request 14: 
 page fault: 0
 data read posedge: 00000000
@@ -1433,20 +620,9 @@ block 10: tag:  4, valid: 1, dirty: 0, reference: 10, PPN: 2
 block 11: tag:  2, valid: 1, dirty: 0, reference: 01, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000111
-TLB_hit: x
-TLB.TLB[0]: 100000011101
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 101000010010
-TLB.TLB[3]: 100100001000
-P_addr_PT_in: 01
-TLB.VPN: xxxxxx
-Virtual_address: xxxxxxxxxxxxxx
-request_num: 01110
+block 01: tag: 10100, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 11: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
 Request 14: 
 page fault: 0
 data read posedge: 00000000
@@ -1457,20 +633,9 @@ block 10: tag:  4, valid: 1, dirty: 0, reference: 10, PPN: 2
 block 11: tag:  2, valid: 1, dirty: 0, reference: 01, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000111
-TLB_hit: x
-TLB.TLB[0]: 100000011101
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 101000010010
-TLB.TLB[3]: 100100001000
-P_addr_PT_in: 01
-TLB.VPN: xxxxxx
-Virtual_address: xxxxxxxxxxxxxx
-request_num: 01110
+block 01: tag: 10100, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 11: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
 Request 14: 
 page fault: 0
 data read posedge: 00000000
@@ -1481,20 +646,9 @@ block 10: tag:  4, valid: 1, dirty: 0, reference: 10, PPN: 2
 block 11: tag:  2, valid: 1, dirty: 0, reference: 01, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000111
-TLB_hit: x
-TLB.TLB[0]: 100000011101
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 101000010010
-TLB.TLB[3]: 100100001000
-P_addr_PT_in: 01
-TLB.VPN: xxxxxx
-Virtual_address: xxxxxxxxxxxxxx
-request_num: 01110
+block 01: tag: 10100, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 11: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
 Request 14: 
 page fault: 0
 data read posedge: 00000000
@@ -1505,20 +659,9 @@ block 10: tag:  4, valid: 1, dirty: 0, reference: 10, PPN: 2
 block 11: tag:  2, valid: 1, dirty: 0, reference: 01, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000111
-TLB_hit: x
-TLB.TLB[0]: 100000011101
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 101000010010
-TLB.TLB[3]: 100100001000
-P_addr_PT_in: 01
-TLB.VPN: xxxxxx
-Virtual_address: xxxxxxxxxxxxxx
-request_num: 01110
+block 01: tag: 10100, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 11: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
 Request 14: 
 page fault: 0
 data read posedge: 00000000
@@ -1529,20 +672,9 @@ block 10: tag:  4, valid: 1, dirty: 0, reference: 10, PPN: 2
 block 11: tag:  2, valid: 1, dirty: 0, reference: 01, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000111
-TLB_hit: x
-TLB.TLB[0]: 100000011101
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 101000010010
-TLB.TLB[3]: 100100001000
-P_addr_PT_in: 01
-TLB.VPN: xxxxxx
-Virtual_address: xxxxxxxxxxxxxx
-request_num: 01110
+block 01: tag: 10100, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 11: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
 Request 14: 
 page fault: 0
 data read posedge: 00000000
@@ -1553,20 +685,9 @@ block 10: tag:  4, valid: 1, dirty: 0, reference: 10, PPN: 2
 block 11: tag:  2, valid: 1, dirty: 0, reference: 01, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000111
-TLB_hit: x
-TLB.TLB[0]: 100000011101
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 101000010010
-TLB.TLB[3]: 100100001000
-P_addr_PT_in: 01
-TLB.VPN: xxxxxx
-Virtual_address: xxxxxxxxxxxxxx
-request_num: 01110
+block 01: tag: 10100, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 11: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
 Request 14: 
 page fault: 0
 data read posedge: 00000000
@@ -1577,20 +698,9 @@ block 10: tag:  4, valid: 1, dirty: 0, reference: 10, PPN: 2
 block 11: tag:  2, valid: 1, dirty: 0, reference: 01, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000111
-TLB_hit: x
-TLB.TLB[0]: 100000011101
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 101000010010
-TLB.TLB[3]: 100100001000
-P_addr_PT_in: 01
-TLB.VPN: xxxxxx
-Virtual_address: xxxxxxxxxxxxxx
-request_num: 01110
+block 01: tag: 10100, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 11: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
 Request 14: 
 page fault: 0
 data read posedge: 00000000
@@ -1601,20 +711,9 @@ block 10: tag:  4, valid: 1, dirty: 0, reference: 10, PPN: 2
 block 11: tag:  2, valid: 1, dirty: 0, reference: 01, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000111
-TLB_hit: x
-TLB.TLB[0]: 100000011101
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 101000010010
-TLB.TLB[3]: 100100001000
-P_addr_PT_in: 01
-TLB.VPN: xxxxxx
-Virtual_address: xxxxxxxxxxxxxx
-request_num: 01110
+block 01: tag: 10100, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 11: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
 Request 14: 
 page fault: 0
 data read posedge: 00000000
@@ -1625,20 +724,9 @@ block 10: tag:  4, valid: 1, dirty: 0, reference: 10, PPN: 2
 block 11: tag:  2, valid: 1, dirty: 0, reference: 01, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000111
-TLB_hit: x
-TLB.TLB[0]: 100000011101
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 101000010010
-TLB.TLB[3]: 100100001000
-P_addr_PT_in: 01
-TLB.VPN: xxxxxx
-Virtual_address: xxxxxxxxxxxxxx
-request_num: 01110
+block 01: tag: 10100, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 11: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
 Request 14: 
 page fault: 0
 data read posedge: 00000000
@@ -1649,20 +737,9 @@ block 10: tag:  4, valid: 1, dirty: 0, reference: 10, PPN: 2
 block 11: tag:  2, valid: 1, dirty: 0, reference: 01, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000111
-TLB_hit: x
-TLB.TLB[0]: 100000011101
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 101000010010
-TLB.TLB[3]: 100100001000
-P_addr_PT_in: 01
-TLB.VPN: xxxxxx
-Virtual_address: xxxxxxxxxxxxxx
-request_num: 01110
+block 01: tag: 10100, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 11: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
 Request 14: 
 page fault: 0
 data read posedge: 00000000
@@ -1673,20 +750,9 @@ block 10: tag:  4, valid: 1, dirty: 0, reference: 10, PPN: 2
 block 11: tag:  2, valid: 1, dirty: 0, reference: 01, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000111
-TLB_hit: x
-TLB.TLB[0]: 100000011101
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 101000010010
-TLB.TLB[3]: 100100001000
-P_addr_PT_in: 01
-TLB.VPN: xxxxxx
-Virtual_address: xxxxxxxxxxxxxx
-request_num: 01110
+block 01: tag: 10100, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 11: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
 Request 14: 
 page fault: 0
 data read posedge: 00000000
@@ -1697,20 +763,9 @@ block 10: tag:  4, valid: 1, dirty: 0, reference: 10, PPN: 2
 block 11: tag:  2, valid: 1, dirty: 0, reference: 01, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000111
-TLB_hit: x
-TLB.TLB[0]: 100000011101
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 101000010010
-TLB.TLB[3]: 100100001000
-P_addr_PT_in: 01
-TLB.VPN: xxxxxx
-Virtual_address: xxxxxxxxxxxxxx
-request_num: 01110
+block 01: tag: 10100, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 11: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
 Request 14: 
 page fault: 0
 data read posedge: 00000000
@@ -1721,20 +776,9 @@ block 10: tag:  4, valid: 1, dirty: 0, reference: 10, PPN: 2
 block 11: tag:  2, valid: 1, dirty: 0, reference: 01, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000111
-TLB_hit: x
-TLB.TLB[0]: 100000011101
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 101000010010
-TLB.TLB[3]: 100100001000
-P_addr_PT_in: 01
-TLB.VPN: xxxxxx
-Virtual_address: xxxxxxxxxxxxxx
-request_num: 01110
+block 01: tag: 10100, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 11: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
 Request 14: 
 page fault: 0
 data read posedge: 00000000
@@ -1745,20 +789,9 @@ block 10: tag:  4, valid: 1, dirty: 0, reference: 10, PPN: 2
 block 11: tag:  2, valid: 1, dirty: 0, reference: 01, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000111
-TLB_hit: x
-TLB.TLB[0]: 100000011101
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 101000010010
-TLB.TLB[3]: 100100001000
-P_addr_PT_in: 01
-TLB.VPN: xxxxxx
-Virtual_address: xxxxxxxxxxxxxx
-request_num: 01110
+block 01: tag: 10100, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 11: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
 Request 14: 
 page fault: 0
 data read posedge: 00000000
@@ -1769,20 +802,9 @@ block 10: tag:  4, valid: 1, dirty: 0, reference: 10, PPN: 2
 block 11: tag:  2, valid: 1, dirty: 0, reference: 01, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000111
-TLB_hit: x
-TLB.TLB[0]: 100000011101
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 101000010010
-TLB.TLB[3]: 100100001000
-P_addr_PT_in: 01
-TLB.VPN: xxxxxx
-Virtual_address: xxxxxxxxxxxxxx
-request_num: 01110
+block 01: tag: 10100, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 11: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
 Request 14: 
 page fault: 0
 data read posedge: 00000000
@@ -1793,20 +815,9 @@ block 10: tag:  4, valid: 1, dirty: 0, reference: 10, PPN: 2
 block 11: tag:  2, valid: 1, dirty: 0, reference: 01, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000111
-TLB_hit: x
-TLB.TLB[0]: 100000011101
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 101000010010
-TLB.TLB[3]: 100100001000
-P_addr_PT_in: 01
-TLB.VPN: xxxxxx
-Virtual_address: xxxxxxxxxxxxxx
-request_num: 01110
+block 01: tag: 10100, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 11: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
 Request 14: 
 page fault: 0
 data read posedge: 00000000
@@ -1817,20 +828,9 @@ block 10: tag:  4, valid: 1, dirty: 0, reference: 10, PPN: 2
 block 11: tag:  2, valid: 1, dirty: 0, reference: 01, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000111
-TLB_hit: x
-TLB.TLB[0]: 100000011101
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 101000010010
-TLB.TLB[3]: 100100001000
-P_addr_PT_in: 01
-TLB.VPN: xxxxxx
-Virtual_address: xxxxxxxxxxxxxx
-request_num: 01110
+block 01: tag: 10100, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 11: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
 Request 14: 
 page fault: 0
 data read posedge: 00000000
@@ -1841,20 +841,9 @@ block 10: tag:  4, valid: 1, dirty: 0, reference: 10, PPN: 2
 block 11: tag:  2, valid: 1, dirty: 0, reference: 01, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000111
-TLB_hit: x
-TLB.TLB[0]: 100000011101
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 101000010010
-TLB.TLB[3]: 100100001000
-P_addr_PT_in: 01
-TLB.VPN: xxxxxx
-Virtual_address: xxxxxxxxxxxxxx
-request_num: 01110
+block 01: tag: 10100, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 11: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
 Request 14: 
 page fault: 0
 data read posedge: 00000000
@@ -1865,20 +854,9 @@ block 10: tag:  4, valid: 1, dirty: 0, reference: 10, PPN: 2
 block 11: tag:  2, valid: 1, dirty: 0, reference: 01, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000111
-TLB_hit: x
-TLB.TLB[0]: 100000011101
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 101000010010
-TLB.TLB[3]: 100100001000
-P_addr_PT_in: 01
-TLB.VPN: xxxxxx
-Virtual_address: xxxxxxxxxxxxxx
-request_num: 01110
+block 01: tag: 10100, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 11: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
 Request 14: 
 page fault: 0
 data read posedge: 00000000
@@ -1889,20 +867,9 @@ block 10: tag:  4, valid: 1, dirty: 0, reference: 10, PPN: 2
 block 11: tag:  2, valid: 1, dirty: 0, reference: 01, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000111
-TLB_hit: x
-TLB.TLB[0]: 100000011101
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 101000010010
-TLB.TLB[3]: 100100001000
-P_addr_PT_in: 01
-TLB.VPN: xxxxxx
-Virtual_address: xxxxxxxxxxxxxx
-request_num: 01110
+block 01: tag: 10100, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 11: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
 Request 14: 
 page fault: 0
 data read posedge: 00000000
@@ -1913,20 +880,9 @@ block 10: tag:  4, valid: 1, dirty: 0, reference: 10, PPN: 2
 block 11: tag:  2, valid: 1, dirty: 0, reference: 01, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000111
-TLB_hit: x
-TLB.TLB[0]: 100000011101
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 101000010010
-TLB.TLB[3]: 100100001000
-P_addr_PT_in: 01
-TLB.VPN: xxxxxx
-Virtual_address: xxxxxxxxxxxxxx
-request_num: 01110
+block 01: tag: 10100, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 11: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
 Request 14: 
 page fault: 0
 data read posedge: 00000000
@@ -1937,20 +893,9 @@ block 10: tag:  4, valid: 1, dirty: 0, reference: 10, PPN: 2
 block 11: tag:  2, valid: 1, dirty: 0, reference: 01, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000111
-TLB_hit: x
-TLB.TLB[0]: 100000011101
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 101000010010
-TLB.TLB[3]: 100100001000
-P_addr_PT_in: 01
-TLB.VPN: xxxxxx
-Virtual_address: xxxxxxxxxxxxxx
-request_num: 01110
+block 01: tag: 10100, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 11: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
 Request 14: 
 page fault: 0
 data read posedge: 00000000
@@ -1961,20 +906,9 @@ block 10: tag:  4, valid: 1, dirty: 0, reference: 10, PPN: 2
 block 11: tag:  2, valid: 1, dirty: 0, reference: 01, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000111
-TLB_hit: x
-TLB.TLB[0]: 100000011101
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 101000010010
-TLB.TLB[3]: 100100001000
-P_addr_PT_in: 01
-TLB.VPN: xxxxxx
-Virtual_address: xxxxxxxxxxxxxx
-request_num: 01110
+block 01: tag: 10100, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 11: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
 Request 14: 
 page fault: 0
 data read posedge: 00000000
@@ -1985,20 +919,9 @@ block 10: tag:  4, valid: 1, dirty: 0, reference: 10, PPN: 2
 block 11: tag:  2, valid: 1, dirty: 0, reference: 01, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000111
-TLB_hit: x
-TLB.TLB[0]: 100000011101
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 101000010010
-TLB.TLB[3]: 100100001000
-P_addr_PT_in: 01
-TLB.VPN: xxxxxx
-Virtual_address: xxxxxxxxxxxxxx
-request_num: 01110
+block 01: tag: 10100, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 11: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
 Request 14: 
 page fault: 0
 data read posedge: 00000000
@@ -2009,20 +932,9 @@ block 10: tag:  4, valid: 1, dirty: 0, reference: 10, PPN: 2
 block 11: tag:  2, valid: 1, dirty: 0, reference: 01, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000111
-TLB_hit: x
-TLB.TLB[0]: 100000011101
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 101000010010
-TLB.TLB[3]: 100100001000
-P_addr_PT_in: 01
-TLB.VPN: xxxxxx
-Virtual_address: xxxxxxxxxxxxxx
-request_num: 01110
+block 01: tag: 10100, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 11: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
 Request 14: 
 page fault: 0
 data read posedge: 00000000
@@ -2033,20 +945,9 @@ block 10: tag:  4, valid: 1, dirty: 0, reference: 10, PPN: 2
 block 11: tag:  2, valid: 1, dirty: 0, reference: 01, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000111
-TLB_hit: x
-TLB.TLB[0]: 100000011101
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 101000010010
-TLB.TLB[3]: 100100001000
-P_addr_PT_in: 01
-TLB.VPN: xxxxxx
-Virtual_address: xxxxxxxxxxxxxx
-request_num: 01110
+block 01: tag: 10100, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 11: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
 Request 14: 
 page fault: 0
 data read posedge: 00000000
@@ -2057,20 +958,9 @@ block 10: tag:  4, valid: 1, dirty: 0, reference: 10, PPN: 2
 block 11: tag:  2, valid: 1, dirty: 0, reference: 01, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000111
-TLB_hit: x
-TLB.TLB[0]: 100000011101
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 101000010010
-TLB.TLB[3]: 100100001000
-P_addr_PT_in: 01
-TLB.VPN: xxxxxx
-Virtual_address: xxxxxxxxxxxxxx
-request_num: 01110
+block 01: tag: 10100, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 11: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
 Request 14: 
 page fault: 0
 data read posedge: 00000000
@@ -2081,20 +971,9 @@ block 10: tag:  4, valid: 1, dirty: 0, reference: 10, PPN: 2
 block 11: tag:  2, valid: 1, dirty: 0, reference: 01, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000111
-TLB_hit: x
-TLB.TLB[0]: 100000011101
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 101000010010
-TLB.TLB[3]: 100100001000
-P_addr_PT_in: 01
-TLB.VPN: xxxxxx
-Virtual_address: xxxxxxxxxxxxxx
-request_num: 01110
+block 01: tag: 10100, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 11: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
 Request 14: 
 page fault: 0
 data read posedge: 00000000
@@ -2105,20 +984,9 @@ block 10: tag:  4, valid: 1, dirty: 0, reference: 10, PPN: 2
 block 11: tag:  2, valid: 1, dirty: 0, reference: 01, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000111
-TLB_hit: x
-TLB.TLB[0]: 100000011101
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 101000010010
-TLB.TLB[3]: 100100001000
-P_addr_PT_in: 01
-TLB.VPN: xxxxxx
-Virtual_address: xxxxxxxxxxxxxx
-request_num: 01110
+block 01: tag: 10100, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 11: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
 Request 14: 
 page fault: 0
 data read posedge: 00000000
@@ -2129,20 +997,9 @@ block 10: tag:  4, valid: 1, dirty: 0, reference: 10, PPN: 2
 block 11: tag:  2, valid: 1, dirty: 0, reference: 01, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000111
-TLB_hit: x
-TLB.TLB[0]: 100000011101
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 101000010010
-TLB.TLB[3]: 100100001000
-P_addr_PT_in: 01
-TLB.VPN: xxxxxx
-Virtual_address: xxxxxxxxxxxxxx
-request_num: 01110
+block 01: tag: 10100, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 11: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
 Request 14: 
 page fault: 0
 data read posedge: 00000000
@@ -2153,20 +1010,9 @@ block 10: tag:  4, valid: 1, dirty: 0, reference: 10, PPN: 2
 block 11: tag:  2, valid: 1, dirty: 0, reference: 01, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000111
-TLB_hit: x
-TLB.TLB[0]: 100000011101
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 101000010010
-TLB.TLB[3]: 100100001000
-P_addr_PT_in: 01
-TLB.VPN: xxxxxx
-Virtual_address: xxxxxxxxxxxxxx
-request_num: 01110
+block 01: tag: 10100, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 11: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
 Request 14: 
 page fault: 0
 data read posedge: 00000000
@@ -2177,20 +1023,9 @@ block 10: tag:  4, valid: 1, dirty: 0, reference: 10, PPN: 2
 block 11: tag:  2, valid: 1, dirty: 0, reference: 01, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000111
-TLB_hit: x
-TLB.TLB[0]: 100000011101
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 101000010010
-TLB.TLB[3]: 100100001000
-P_addr_PT_in: 01
-TLB.VPN: xxxxxx
-Virtual_address: xxxxxxxxxxxxxx
-request_num: 01110
+block 01: tag: 10100, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 11: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
 Request 14: 
 page fault: 0
 data read posedge: 00000000
@@ -2201,42 +1036,7 @@ block 10: tag:  4, valid: 1, dirty: 0, reference: 10, PPN: 2
 block 11: tag:  2, valid: 1, dirty: 0, reference: 01, PPN: 0
 contents in cache: 
 block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000111
-TLB_hit: x
-TLB.TLB[0]: 100000011101
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 101000010010
-TLB.TLB[3]: 100100001000
-P_addr_PT_in: 01
-TLB.VPN: xxxxxx
-Virtual_address: xxxxxxxxxxxxxx
-request_num: 01110
-Request 14: 
-page fault: 0
-data read posedge: 00000000
-contents in TLB: 
-block 00: tag:  7, valid: 1, dirty: 0, reference: 00, PPN: 1
-block 01: tag:  0, valid: 1, dirty: 0, reference: 11, PPN: 1
-block 10: tag:  4, valid: 1, dirty: 0, reference: 10, PPN: 2
-block 11: tag:  2, valid: 1, dirty: 0, reference: 01, PPN: 0
-contents in cache: 
-block 00: tag: 10100, valid: 1, dirty: 1, word0: 0000028d, word1: 00000285, word2: 00000001, word3: 00000281
-block 01: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
-block 10: tag: 00000, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-block 11: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
-TLB P_addr_PT_out: 00
-TLB V_addr_PT_out: 000111
-TLB_hit: x
-TLB.TLB[0]: 100000011101
-TLB.TLB[1]: 101100000001
-TLB.TLB[2]: 101000010010
-TLB.TLB[3]: 100100001000
-P_addr_PT_in: 01
-TLB.VPN: xxxxxx
-Virtual_address: xxxxxxxxxxxxxx
-request_num: 01110
+block 01: tag: 10100, valid: 0, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 10: tag: 00110, valid: 1, dirty: 0, word0: 00000000, word1: 00000000, word2: 00000000, word3: 00000000
+block 11: tag: 01100, valid: 1, dirty: 0, word0: 00000191, word1: 4800ac99, word2: 00000195, word3: 00000dac
 Lab7_vm_test.v:131: $finish called at 800000 (1ps)

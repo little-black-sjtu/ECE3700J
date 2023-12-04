@@ -40,19 +40,19 @@ module page_table (
 
         //display page table
         // for (i = 0; i < 64; i = i + 1) begin
-        //     $display("page_table[%d] = %b", i, page_table[i]);
+        //     // $display("page_table[%d] = %b", i, page_table[i]);
         // end
 	end
 	
 	always @(read_from_TLB or phy_page_num_in or vir_page_num_in) begin
-        $display("enter page_table modification");
+        // $display("enter page_table modification");
 	//always @(*) begin
 	    # 0.75
             if (read_from_TLB == 1'b1) begin
                 page_table[vir_page_num_in][1:0] = phy_page_num_in;
                 page_table[vir_page_num_in][2] = 1;  // ref
                 page_table[vir_page_num_in][3] = 1;  // dirty
-                $display("read from TLB page_table[%d] = %b", vir_page_num_in, page_table[vir_page_num_in]);
+                // $display("read from TLB page_table[%d] = %b", vir_page_num_in, page_table[vir_page_num_in]);
             end
 	
             if (read_from_TLB == 1'b0) begin
@@ -60,7 +60,7 @@ module page_table (
                 phy_page_num = page_table[vir_page_num_in][1:0];
                 page_table[vir_page_num_in][2] = 1;  // ref
                 page_fault=1-page_table[vir_page_num_in][4];//
-                $display("write to TLB page_table[%d] = %b", vir_page_num_in, page_table[vir_page_num_in]);
+                // $display("write to TLB page_table[%d] = %b", vir_page_num_in, page_table[vir_page_num_in]);
             end
 		    done = 1'b1;
 		    #1 done = 1'b0;

@@ -111,18 +111,18 @@ module vm_test;
         $display("block 01: tag: %b, valid: %b, dirty: %b, word0: %H, word1: %H, word2: %H, word3: %H", cache.cache_setA[1][132:128], cache.cache_setA[1][134], cache.cache_setA[1][133], cache.cache_setA[1][31-:32], cache.cache_setA[1][63-:32], cache.cache_setA[1][95-:32], cache.cache_setA[1][127-:32]);
         $display("block 10: tag: %b, valid: %b, dirty: %b, word0: %H, word1: %H, word2: %H, word3: %H", cache.cache_setB[0][132:128], cache.cache_setB[0][134], cache.cache_setB[0][133], cache.cache_setB[0][31-:32], cache.cache_setB[0][63-:32], cache.cache_setB[0][95-:32], cache.cache_setB[0][127-:32]);
         $display("block 11: tag: %b, valid: %b, dirty: %b, word0: %H, word1: %H, word2: %H, word3: %H", cache.cache_setB[1][132:128], cache.cache_setB[1][134], cache.cache_setB[1][133], cache.cache_setB[1][31-:32], cache.cache_setB[1][63-:32], cache.cache_setB[1][95-:32], cache.cache_setB[1][127-:32]);
-        $display("TLB P_addr_PT_out: %b", TLB.P_addr_PT_out);
-        $display("TLB V_addr_PT_out: %b", TLB.V_addr_PT_out);
-        $display("TLB_hit: %b", TLB.TLB_hit);
+        // $display("TLB P_addr_PT_out: %b", TLB.P_addr_PT_out);
+        // $display("TLB V_addr_PT_out: %b", TLB.V_addr_PT_out);
+        // $display("TLB_hit: %b", TLB.TLB_hit);
         // show TLB.TLB
-        $display("TLB.TLB[0]: %b", TLB.TLB[0]);
-        $display("TLB.TLB[1]: %b", TLB.TLB[1]);
-        $display("TLB.TLB[2]: %b", TLB.TLB[2]);
-        $display("TLB.TLB[3]: %b", TLB.TLB[3]);
-        $display("P_addr_PT_in: %b", TLB.P_addr_PT_in);
-        $display("TLB.VPN: %b", TLB.VPN);
-        $display("Virtual_address: %b", TLB.Virtual_addr);
-        $display("request_num: %b", CPU.request_num);
+        // $display("TLB.TLB[0]: %b", TLB.TLB[0]);
+        // $display("TLB.TLB[1]: %b", TLB.TLB[1]);
+        // $display("TLB.TLB[2]: %b", TLB.TLB[2]);
+        // $display("TLB.TLB[3]: %b", TLB.TLB[3]);
+        // $display("P_addr_PT_in: %b", TLB.P_addr_PT_in);
+        // $display("TLB.VPN: %b", TLB.VPN);
+        // $display("Virtual_address: %b", TLB.Virtual_addr);
+        // $display("request_num: %b", CPU.request_num);
     end
     
     initial begin
@@ -161,7 +161,7 @@ module processor (
         read_write_test[8]  = 0; address_test[8]  = 14'b000000_100_1_1000; write_data_test[8]  = 0;       // lw, virtual page  0, TLB hit,  mapped to physical page 1, physical tag 01100, cache hit  in set 1 block 1,
         read_write_test[9]  = 0; address_test[9]  = 14'b001010_100_1_0100; write_data_test[9]  = 0;       // lw, virtual page 10, TLB miss, mapped to physical page 1, virtual page 8 replaced, write back entry with virtual tag 8,
                                                                                                           //                                                           physical tag 01100, cache hit  in set 1 block 1,
-        read_write_test[10] = 0; address_test[10] = 14'b000000_110_1_0100; write_data_test[10] = 0;       // lw, virtual page  0, TLB hit,  mapped to physical page 1, physical tag 01110, cache miss in set 1, set 1 block 1 replaced
+        read_write_test[10] = 0; address_test[10] = 14'b000000_110_1_0100; write_data_test[10] = 0;       // lw, virtual page  0, TLB hit,  mapped to physical page 1, physical tag 01110, cache miss in set 1, set 1 block 1 replaced// SET 1 BLOCK 0
         read_write_test[11] = 0; address_test[11] = 14'b000100_100_0_1000; write_data_test[11] = 0;       // lw, virtual page  4, TLB miss, mapped to physical page 2, virtual page 1 replaced, write back entry with virtual tag 1,
                                                                                                           //                                                           physical tag 10100, cache hit  in set 1 block 0
         read_write_test[12] = 0; address_test[12] = 14'b000010_110_1_0100; write_data_test[12] = 0;       // lw, virtual page  2, TLB miss, page fault
