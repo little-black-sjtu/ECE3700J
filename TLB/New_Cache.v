@@ -175,24 +175,24 @@ module New_Cache (
                     else if (hit_setA) begin
                         case(funct)
                             1'b1: begin i = 32 * rqst_addr[3:2] + 8 * rqst_addr[1:0] + 7;
-                                    cache_setA[block_index][i-: 8] = write_data_in[7:0]; end // sb
+                                    cache_setA[0][i-: 8] = write_data_in[7:0]; end // sb
                             default:begin i = 31 + 32 * rqst_addr[3:2];
-                                    cache_setA[block_index][i-: 32] = write_data_in; end // sw
+                                    cache_setA[0][i-: 32] = write_data_in; end // sw
                         endcase
-                        cache_setA[block_index][135-2] = 1'b1; // Mark cache_setA dirty
-                        cache_setA[block_index][(135-3)-: 5] = rqst_addr[9-: 5];
+                        cache_setA[0][135-2] = 1'b1; // Mark cache_setA dirty
+                        cache_setA[0][(135-3)-: 5] = rqst_addr[9-: 5];
                         LRU[setIndex] = 1'b1; // Reset Least Resently Used to setB
                         // $display("2 modify tag of set A, tag = %b", cache_setA[block_index][(135-3)-: 5]);
                     end
                     else if (hit_setB) begin
                         case(funct)
                             1'b1: begin i = 32 * rqst_addr[3:2] + 8 * rqst_addr[1:0] + 7;
-                                    cache_setA[block_index][i-: 8] = write_data_in[7:0]; end // sb
+                                    cache_setA[1][i-: 8] = write_data_in[7:0]; end // sb
                             default:begin i = 31 + 32 * rqst_addr[3:2];
-                                    cache_setA[block_index][i-: 32] = write_data_in; end // sw
+                                    cache_setA[1][i-: 32] = write_data_in; end // sw
                         endcase
-                        cache_setA[block_index][135-2] = 1'b1; // Mark cache_setA dirty
-                        cache_setA[block_index][(135-3)-: 5] = rqst_addr[9-: 5];
+                        cache_setA[1][135-2] = 1'b1; // Mark cache_setA dirty
+                        cache_setA[1][(135-3)-: 5] = rqst_addr[9-: 5];
                         LRU[setIndex] = 1'b0; // Reset Least Resently Used to setA
                     end
                 end
@@ -257,19 +257,19 @@ module New_Cache (
                         end
                     end
                     else if (hit_setA) begin
-                        cache_setA[block_index][(135-3)-: 5] = rqst_addr[9-: 5];
+                        cache_setA[0][(135-3)-: 5] = rqst_addr[9-: 5];
                         // $display("4 modify tag of set A, tag = %b", cache_setA[block_index][(135-3)-: 5]);
                         LRU[setIndex] = 1'b1; // Reset Least Resently Used = B
                     end
                     else if (hit_setB) begin
                         case(funct)
                             1'b1: begin i = 32 * rqst_addr[3:2] + 8 * rqst_addr[1:0] + 7;
-                                    cache_setA[block_index][i-: 8] = write_data_in[7:0]; end // lb
+                                    cache_setA[1][i-: 8] = write_data_in[7:0]; end // lb
                             default:begin i = 31 + 32 * rqst_addr[3:2];
-                                    cache_setA[block_index][i-: 32] = write_data_in; end // lw
+                                    cache_setA[1][i-: 32] = write_data_in; end // lw
                         endcase
 
-                        cache_setA[block_index][(135-3)-: 5] = rqst_addr[9-: 5];
+                        cache_setA[1][(135-3)-: 5] = rqst_addr[9-: 5];
                         LRU[setIndex] = 1'b0; // Reset Least Resently Used = A
                     end
                 end
@@ -357,24 +357,24 @@ module New_Cache (
                     else if (hit_setA) begin
                         case(funct)
                             1'b1: begin i = 32 * rqst_addr[3:2] + 8 * rqst_addr[1:0] + 7;
-                                    cache_setB[block_index][i-: 8] = write_data_in[7:0]; end // sb
+                                    cache_setB[0][i-: 8] = write_data_in[7:0]; end // sb
                             default:begin i = 31 + 32 * rqst_addr[3:2];
-                                    cache_setB[block_index][i-: 32] = write_data_in; end // sw
+                                    cache_setB[0][i-: 32] = write_data_in; end // sw
                         endcase
-                        cache_setB[block_index][135-2] = 1'b1; // Mark cache_setA dirty
-                        cache_setB[block_index][(135-3)-: 5] = rqst_addr[9-: 5];
+                        cache_setB[0][135-2] = 1'b1; // Mark cache_setA dirty
+                        cache_setB[0][(135-3)-: 5] = rqst_addr[9-: 5];
                         LRU[setIndex] = 1'b1; // Reset Least Resently Used to setB
                         // $display("2 modify tag of set A, tag = %b", cache_setB[block_index][(135-3)-: 5]);
                     end
                     else if (hit_setB) begin
                         case(funct)
                             1'b1: begin i = 32 * rqst_addr[3:2] + 8 * rqst_addr[1:0] + 7;
-                                    cache_setB[block_index][i-: 8] = write_data_in[7:0]; end // sb
+                                    cache_setB[1][i-: 8] = write_data_in[7:0]; end // sb
                             default:begin i = 31 + 32 * rqst_addr[3:2];
-                                    cache_setB[block_index][i-: 32] = write_data_in; end // sw
+                                    cache_setB[1][i-: 32] = write_data_in; end // sw
                         endcase
-                        cache_setB[block_index][135-2] = 1'b1; // Mark cache_setA dirty
-                        cache_setB[block_index][(135-3)-: 5] = rqst_addr[9-: 5];
+                        cache_setB[1][135-2] = 1'b1; // Mark cache_setA dirty
+                        cache_setB[1][(135-3)-: 5] = rqst_addr[9-: 5];
                         LRU[setIndex] = 1'b0; // Reset Least Resently Used to setA
                     end
                 end
@@ -439,12 +439,12 @@ module New_Cache (
                         end
                     end
                     else if (hit_setA) begin
-                        cache_setB[block_index][(135-3)-: 5] = rqst_addr[9-: 5];
+                        cache_setB[0][(135-3)-: 5] = rqst_addr[9-: 5];
                         // $display("4 modify tag of set A, tag = %b", cache_setB[block_index][(135-3)-: 5]);
                         LRU[setIndex] = 1'b1; // Reset Least Resently Used = B
                     end
                     else if (hit_setB) begin
-                        cache_setB[block_index][(135-3)-: 5] = rqst_addr[9-: 5];
+                        cache_setB[1][(135-3)-: 5] = rqst_addr[9-: 5];
                         LRU[setIndex] = 1'b0; // Reset Least Resently Used = A
                     end
                 end
