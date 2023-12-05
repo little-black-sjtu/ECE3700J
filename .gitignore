@@ -1,4 +1,8 @@
-Pipelineprocessor/*
-Cache/*
-TLB/*
-*.md
+*
+!Pipelineprocessor/
+!Pipelineprocessor/*
+!Cache/
+!Cache/*
+!TLB/
+!TLB/*
+!*.md
