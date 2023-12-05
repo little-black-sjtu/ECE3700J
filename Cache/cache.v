@@ -35,7 +35,8 @@ module cache
     assign valid = CacheReg [index][133];
     assign dirty = CacheReg [index][132];
 
-    and(hit_miss, valid, tag_match);
+    and(
+        , valid, tag_match);
     always @(*) begin  
         #1  // another 1 delay to avoid the ambiguity, make the trigger definitely happen
         if(read_writeIn==1) begin   // if write
